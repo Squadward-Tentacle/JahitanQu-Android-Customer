@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "71736492227",
+    "firebase_url": "https://jahitanqu-customer.firebaseio.com",
+    "project_id": "jahitanqu-customer",
+    "storage_bucket": "jahitanqu-customer.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:71736492227:android:34a919fc960ffa7612a276",
+        "android_client_info": {
+          "package_name": "com.example.jahitanqu_customer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "71736492227-nu1ua07i0ckqisd5ruj6l6nb4ggifv6s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.jahitanqu_customer",
+            "certificate_hash": "98edb26b1b269f4b171cf40f9b98c37e128ac328"
+          }
+        },
+        {
+          "client_id": "71736492227-b3bhsgnn145ldljo35qpdjvfg2rpkoa5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCndu5Lzy-nQIp7FKv9B4puTA0cojP-HA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "71736492227-b3bhsgnn145ldljo35qpdjvfg2rpkoa5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
