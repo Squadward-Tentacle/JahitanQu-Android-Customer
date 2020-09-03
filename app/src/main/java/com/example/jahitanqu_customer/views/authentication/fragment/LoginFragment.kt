@@ -31,7 +31,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.android.synthetic.main.fragment_login.*
 import javax.inject.Inject
 
-class LoginFragment : Fragment(),View.OnClickListener,AuthContract {
+class LoginFragment : Fragment(),View.OnClickListener,AuthContract.login {
 
     lateinit var navController: NavController
     @Inject

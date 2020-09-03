@@ -2,6 +2,7 @@ package com.example.jahitanqu_customer.di.module
 
 import com.example.jahitanqu_customer.views.authentication.AuthContract
 import com.example.jahitanqu_customer.views.authentication.fragment.LoginFragment
+import com.example.jahitanqu_customer.views.authentication.fragment.RegisterFragment
 import dagger.Module
 import dagger.Provides
 
@@ -14,6 +15,9 @@ import dagger.Provides
 class ApplicationModule {
 
     @Provides
-    fun provideBaseContract():AuthContract = LoginFragment()
+    fun provideAuthContractLogin():AuthContract.login = LoginFragment()
+
+    @Provides
+    fun provideAuthContractRegister():AuthContract.register = RegisterFragment()
 
 }

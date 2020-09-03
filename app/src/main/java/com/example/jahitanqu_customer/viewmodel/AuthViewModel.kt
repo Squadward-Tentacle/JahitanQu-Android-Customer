@@ -18,4 +18,8 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
     fun getToken(){
         authRepository.getToken()
     }
+
+    fun register(customer: Customer){
+        authRepository.register(customer)
+    }
 }

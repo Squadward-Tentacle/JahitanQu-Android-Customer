@@ -16,12 +16,14 @@ import javax.inject.Inject
  */
 class AuthRepository @Inject constructor(
     private val authApi: AuthApi,
-    private val authContract: AuthContract
+    private val authContractLogin: AuthContract.login,
+    private val authContractRegister:AuthContract.register
 ) {
 
     fun login(customer: Customer) {
         authApi.login(customer).enqueue(object : Callback<Wrapper> {
             override fun onFailure(call: Call<Wrapper>, t: Throwable) {
+                println(t.localizedMessage)
             }
 
             override fun onResponse(call: Call<Wrapper>, response: Response<Wrapper>) {
@@ -33,9 +35,9 @@ class AuthRepository @Inject constructor(
                         gson.toJson(res),
                         Customer::class.java
                     )
-                    authContract.onSuccess()
+                    authContractLogin.onSuccess()
                 } else {
-                    authContract.onFailure()
+                    authContractLogin.onFailure()
                 }
             }
 
@@ -43,9 +45,9 @@ class AuthRepository @Inject constructor(
     }
 
     fun getToken() {
-        authContract.onSuccess()
         authApi.getToken().enqueue(object : Callback<Wrapper> {
             override fun onFailure(call: Call<Wrapper>, t: Throwable) {
+                println(t.localizedMessage)
             }
 
             override fun onResponse(call: Call<Wrapper>, response: Response<Wrapper>) {
@@ -58,9 +60,34 @@ class AuthRepository @Inject constructor(
                         Customer::class.java
                     )
                     prefs.keyToken = customer.token
-                    authContract.onSuccess()
+                    authContractLogin.onSuccess()
                 } else {
-                    authContract.onFailure()
+                    authContractLogin.onFailure()
+                }
+            }
+
+        })
+    }
+
+    fun register(customer: Customer) {
+        authApi.register(customer).enqueue(object : Callback<Wrapper> {
+            override fun onFailure(call: Call<Wrapper>, t: Throwable) {
+                println(t.localizedMessage)
+            }
+
+            override fun onResponse(call: Call<Wrapper>, response: Response<Wrapper>) {
+                if (response.code() == 200) {
+                    val responseCustomer = response.body()
+                    val res = responseCustomer?.payload
+                    val gson = Gson()
+                    val customer = gson.fromJson(
+                        gson.toJson(res),
+                        Customer::class.java
+                    )
+                    prefs.keyToken = customer.token
+                    authContractRegister.onSuccess()
+                } else {
+                    authContractRegister.onFailure()
                 }
             }
 

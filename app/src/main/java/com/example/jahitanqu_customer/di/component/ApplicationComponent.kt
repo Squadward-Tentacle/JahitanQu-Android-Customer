@@ -5,6 +5,7 @@ import com.example.jahitanqu_customer.di.module.FirebaseModule
 import com.example.jahitanqu_customer.di.module.NetworkModule
 import com.example.jahitanqu_customer.views.authentication.AuthActivity
 import com.example.jahitanqu_customer.views.authentication.fragment.LoginFragment
+import com.example.jahitanqu_customer.views.authentication.fragment.RegisterFragment
 import dagger.Component
 
 /**
@@ -15,4 +16,5 @@ import dagger.Component
 interface ApplicationComponent {
     fun inject(authActivity: AuthActivity)
     fun inject(loginFragment: LoginFragment)
+    fun inject(registerFragment: RegisterFragment)
 }

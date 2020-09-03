@@ -2,6 +2,7 @@ package com.example.jahitanqu_customer.data.server
 
 import com.example.jahitanqu_customer.data.server.ApiEndPoint.ENDPOINT_GET_TOKEN
 import com.example.jahitanqu_customer.data.server.ApiEndPoint.ENDPOINT_LOGIN_CUSTOMER
+import com.example.jahitanqu_customer.data.server.ApiEndPoint.ENDPOINT_REGISTER_CUSTOMER
 import com.example.jahitanqu_customer.model.Customer
 import com.example.jahitanqu_customer.model.Wrapper
 import retrofit2.Call
@@ -20,5 +21,8 @@ interface AuthApi {
 
     @GET(ENDPOINT_GET_TOKEN)
     fun getToken():Call<Wrapper>
+
+    @POST(ENDPOINT_REGISTER_CUSTOMER)
+    fun register(@Body customer: Customer):Call<Wrapper>
 
 }

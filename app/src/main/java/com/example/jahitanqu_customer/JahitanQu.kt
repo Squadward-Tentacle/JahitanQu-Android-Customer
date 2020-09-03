@@ -1,6 +1,8 @@
 package com.example.jahitanqu_customer
 
 import android.app.Application
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.example.jahitanqu_customer.common.utils.AccountHelper
 import com.example.jahitanqu_customer.di.component.ApplicationComponent
 import com.example.jahitanqu_customer.di.component.DaggerApplicationComponent
