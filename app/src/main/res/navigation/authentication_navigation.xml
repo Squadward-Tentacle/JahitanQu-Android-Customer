@@ -18,14 +18,23 @@
         app:destination="@id/registerFragment"
         />
 
+    <action android:id="@+id/toHomeActivity"
+        app:destination="@+id/homeActivity"
+        />
+
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.jahitanqu_customer.views.authentication.fragment.LoginFragment"
+        android:name="com.example.jahitanqu_customer.presentation.views.authentication.fragment.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" />
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.example.jahitanqu_customer.views.authentication.fragment.RegisterFragment"
+        android:name="com.example.jahitanqu_customer.presentation.views.authentication.fragment.RegisterFragment"
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" />
+    <activity
+        android:id="@+id/homeActivity"
+        android:name="com.example.jahitanqu_customer.presentation.views.home.HomeActivity"
+        android:label="activity_home"
+        tools:layout="@layout/activity_home" />
 </navigation>

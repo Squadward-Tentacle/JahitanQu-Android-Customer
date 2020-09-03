@@ -1,9 +1,10 @@
-package com.example.jahitanqu_customer.views.authentication
+package com.example.jahitanqu_customer.data.repository
 
 import com.example.jahitanqu_customer.data.server.AuthApi
 import com.example.jahitanqu_customer.model.Customer
 import com.example.jahitanqu_customer.model.Wrapper
 import com.example.jahitanqu_customer.prefs
+import com.example.jahitanqu_customer.presentation.views.authentication.AuthContract
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Response
@@ -17,7 +18,7 @@ import javax.inject.Inject
 class AuthRepository @Inject constructor(
     private val authApi: AuthApi,
     private val authContractLogin: AuthContract.login,
-    private val authContractRegister:AuthContract.register
+    private val authContractRegister: AuthContract.register
 ) {
 
     fun login(customer: Customer) {
@@ -35,6 +36,7 @@ class AuthRepository @Inject constructor(
                         gson.toJson(res),
                         Customer::class.java
                     )
+                    prefs.keyToken = responseCustomer?.token
                     authContractLogin.onSuccess()
                 } else {
                     authContractLogin.onFailure()
@@ -59,7 +61,7 @@ class AuthRepository @Inject constructor(
                         gson.toJson(res),
                         Customer::class.java
                     )
-                    prefs.keyToken = customer.token
+                    prefs.keyToken = responseCustomer?.token
                     authContractLogin.onSuccess()
                 } else {
                     authContractLogin.onFailure()
@@ -84,7 +86,7 @@ class AuthRepository @Inject constructor(
                         gson.toJson(res),
                         Customer::class.java
                     )
-                    prefs.keyToken = customer.token
+                    prefs.keyToken = responseCustomer?.token
                     authContractRegister.onSuccess()
                 } else {
                     authContractRegister.onFailure()

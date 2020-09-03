@@ -7,5 +7,6 @@ package com.example.jahitanqu_customer.model
 class Wrapper (
     val statusCode:Int,
     val message:String,
-    val payload:Any
+    val payload:Any,
+    var token:String
 )

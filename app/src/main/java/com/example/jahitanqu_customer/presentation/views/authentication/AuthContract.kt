@@ -1,4 +1,4 @@
-package com.example.jahitanqu_customer.views.authentication
+package com.example.jahitanqu_customer.presentation.views.authentication
 
 /**
  * Created by Maulana Ibrahim on 03/September/2020

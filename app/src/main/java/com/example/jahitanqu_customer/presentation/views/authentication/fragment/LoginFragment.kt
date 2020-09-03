@@ -1,4 +1,4 @@
-package com.example.jahitanqu_customer.views.authentication.fragment
+package com.example.jahitanqu_customer.presentation.views.authentication.fragment
 
 import android.content.Intent
 import android.os.Bundle
@@ -15,8 +15,8 @@ import com.example.jahitanqu_customer.R
 import com.example.jahitanqu_customer.model.Customer
 import com.example.jahitanqu_customer.prefs
 import com.example.jahitanqu_customer.signInGoogle
-import com.example.jahitanqu_customer.viewmodel.AuthViewModel
-import com.example.jahitanqu_customer.views.authentication.AuthContract
+import com.example.jahitanqu_customer.presentation.viewmodel.AuthViewModel
+import com.example.jahitanqu_customer.presentation.views.authentication.AuthContract
 import com.facebook.AccessToken
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
@@ -161,17 +161,17 @@ class LoginFragment : Fragment(),View.OnClickListener,AuthContract.login {
 
     override fun onResume() {
         super.onResume()
-        if (prefs.keyEmail != "" || prefs.keyEmail != null) {
-            println(prefs.keyEmail)
+        if (prefs.keyToken != "" || prefs.keyToken != null) {
+            navController.navigate(R.id.toHomeActivity)
         }
     }
 
     override fun onSuccess() {
-        println("LOGIN SUCCESS")
+        navController.navigate(R.id.homeActivity)
     }
 
     override fun onFailure() {
-        println("LOGIN SUCCESS")
+        println("LOGIN GAGAL")
     }
 
 }

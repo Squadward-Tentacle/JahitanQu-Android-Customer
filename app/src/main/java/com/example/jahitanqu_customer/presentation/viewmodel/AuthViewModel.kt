@@ -1,8 +1,8 @@
-package com.example.jahitanqu_customer.viewmodel
+package com.example.jahitanqu_customer.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.example.jahitanqu_customer.model.Customer
-import com.example.jahitanqu_customer.views.authentication.AuthRepository
+import com.example.jahitanqu_customer.data.repository.AuthRepository
 import javax.inject.Inject
 
 /**

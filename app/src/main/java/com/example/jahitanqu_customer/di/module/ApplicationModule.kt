@@ -1,8 +1,8 @@
 package com.example.jahitanqu_customer.di.module
 
-import com.example.jahitanqu_customer.views.authentication.AuthContract
-import com.example.jahitanqu_customer.views.authentication.fragment.LoginFragment
-import com.example.jahitanqu_customer.views.authentication.fragment.RegisterFragment
+import com.example.jahitanqu_customer.presentation.views.authentication.AuthContract
+import com.example.jahitanqu_customer.presentation.views.authentication.fragment.LoginFragment
+import com.example.jahitanqu_customer.presentation.views.authentication.fragment.RegisterFragment
 import dagger.Module
 import dagger.Provides
 

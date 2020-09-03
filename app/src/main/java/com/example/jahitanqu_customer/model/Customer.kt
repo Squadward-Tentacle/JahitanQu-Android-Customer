@@ -17,6 +17,5 @@ class Customer(
     var address: Address = Address(),
     var createdAt:Date = Date(),
     var udpatedAt:Date = Date(),
-    var deletedAt:Date = Date(),
-    var token:String = ""
+    var deletedAt:Date = Date()
 )

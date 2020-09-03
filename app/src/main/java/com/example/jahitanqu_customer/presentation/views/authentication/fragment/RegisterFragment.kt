@@ -1,4 +1,4 @@
-package com.example.jahitanqu_customer.views.authentication.fragment
+package com.example.jahitanqu_customer.presentation.views.authentication.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,8 +11,8 @@ import com.example.jahitanqu_customer.JahitanQu
 
 import com.example.jahitanqu_customer.R
 import com.example.jahitanqu_customer.model.Customer
-import com.example.jahitanqu_customer.viewmodel.AuthViewModel
-import com.example.jahitanqu_customer.views.authentication.AuthContract
+import com.example.jahitanqu_customer.presentation.viewmodel.AuthViewModel
+import com.example.jahitanqu_customer.presentation.views.authentication.AuthContract
 import kotlinx.android.synthetic.main.fragment_register.*
 import javax.inject.Inject
 
