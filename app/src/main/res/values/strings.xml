@@ -4,4 +4,25 @@
     <string name="fb_login_protocol_scheme">fb2672248849713023</string>
     <string name="title_activity_maps">Map</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="textUsingSocialMedia">or using your social media account</string>
+    <string name="facebook_connect">Facebook Connect</string>
+    <string name="google_account">Google Account</string>
+    <string name="don_t_have_an_account">Don\'t have an account ?</string>
+    <string name="firstname">Firstname</string>
+    <string name="lastName">Lastname</string>
+    <string name="register">Register</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="have_you_already_had_an_account">Have you already had an account ?</string>
+    <string name="login_now">Login Now</string>
+    <string name="facebook_auth">facebookAuthentication</string>
+    <string name="google_sign_in_filed">Google sign in failed</string>
+    <string name="sign_in_with_credential_filed">signInWithCredential:failure</string>
+    <string name="onCancel">onCancel</string>
+    <string name="onEroor">Error</string>
+
 </resources>
