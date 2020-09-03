@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/authentiaction_navigation"
+    app:startDestination="@id/loginFragment">
+
+
+    <action
+        android:id="@+id/toLoginFragment"
+        app:destination="@id/loginFragment"
+        app:popUpTo="@+id/loginFragment"
+        app:popUpToInclusive="true"
+        />
+
+    <action
+        android:id="@+id/toRegisterFragment"
+        app:destination="@id/registerFragment"
+        />
+
+    <action android:id="@+id/toHomeActivity"
+        app:destination="@+id/homeActivity"
+        />
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.jahitanqu_customer.presentation.views.authentication.fragment.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.jahitanqu_customer.presentation.views.authentication.fragment.RegisterFragment"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register" />
+    <activity
+        android:id="@+id/homeActivity"
+        android:name="com.example.jahitanqu_customer.presentation.views.home.HomeActivity"
+        android:label="activity_home"
+        tools:layout="@layout/activity_home" />
+</navigation>
