@@ -13,7 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar">
-        <activity android:name=".view.authentication.AuthActivity">
+        <activity android:name=".views.authentication.AuthActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,7 +26,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".view.maps.MapsActivity"
+            android:name=".views.maps.MapsActivity"
             android:label="@string/title_activity_maps" />
 
         <meta-data

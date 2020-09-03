@@ -1,4 +1,4 @@
-package com.example.jahitanqu_customer.view.authentication
+package com.example.jahitanqu_customer.views.authentication.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

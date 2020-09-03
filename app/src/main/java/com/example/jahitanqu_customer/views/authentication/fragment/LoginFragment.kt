@@ -1,15 +1,26 @@
-package com.example.jahitanqu_customer.view.authentication
+package com.example.jahitanqu_customer.views.authentication.fragment
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.example.jahitanqu_customer.JahitanQu
+
 import com.example.jahitanqu_customer.R
+import com.example.jahitanqu_customer.model.Customer
 import com.example.jahitanqu_customer.prefs
 import com.example.jahitanqu_customer.signInGoogle
-import com.facebook.*
+import com.example.jahitanqu_customer.viewmodel.AuthViewModel
+import com.example.jahitanqu_customer.views.authentication.AuthContract
+import com.facebook.AccessToken
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -20,28 +31,46 @@ import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.android.synthetic.main.fragment_login.*
 import javax.inject.Inject
 
-class AuthActivity : AppCompatActivity(), View.OnClickListener {
+class LoginFragment : Fragment(),View.OnClickListener,AuthContract {
 
+    lateinit var navController: NavController
     @Inject
     lateinit var callbackManager: CallbackManager
 
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
 
+    @Inject
+    lateinit var authViewModel: AuthViewModel
+
     private val RC_SIGN_IN: Int = 21
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_auth)
-        (applicationContext as JahitanQu).applicationComponent.inject(this)
+        (activity?.applicationContext as JahitanQu).applicationComponent.inject(this)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_login, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        navController = Navigation.findNavController(view)
         init()
     }
 
     private fun init() {
         handleFacebookCallback()
+        btnRegisterNow.setOnClickListener(this)
+        btnLoginFb.setOnClickListener(this)
+        btnLoginGoogle.setOnClickListener(this)
+        btnLogin.setOnClickListener(this)
     }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         callbackManager.onActivityResult(requestCode, resultCode, data)
@@ -81,19 +110,19 @@ class AuthActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun handleGoogleLogin(idToken: String?) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
-        firebaseAuth.signInWithCredential(credential)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    val user = firebaseAuth.currentUser
-                    prefs.keyEmail = user?.email
-                } else {
-                    Log.w(
-                        getString(R.string.facebook_auth),
-                        getString(R.string.sign_in_with_credential_filed),
-                        task.exception
-                    )
-                }
+        firebaseAuth.signInWithCredential(credential).addOnCompleteListener {
+            if (it.isSuccessful){
+                val user = firebaseAuth.currentUser
+                prefs.keyEmail = user?.email
+                authViewModel.getToken()
+            }else{
+                Log.w(
+                    getString(R.string.facebook_auth),
+                    getString(R.string.sign_in_with_credential_filed),
+                    it.exception
+                )
             }
+        }
     }
 
     private fun handleFacebookLogin(accessToken: AccessToken?) {
@@ -102,6 +131,7 @@ class AuthActivity : AppCompatActivity(), View.OnClickListener {
             if (it.isSuccessful) {
                 val user = firebaseAuth.currentUser
                 prefs.keyEmail = user?.email
+                authViewModel.getToken()
             }
         }
     }
@@ -116,6 +146,16 @@ class AuthActivity : AppCompatActivity(), View.OnClickListener {
                 LoginManager.getInstance()
                     .logInWithReadPermissions(this, listOf("email", "public_profile"))
             }
+            btnRegisterNow ->{
+                navController.navigate(R.id.toRegisterFragment)
+            }
+            btnLogin -> {
+                val customer = Customer(
+                    email = etEmail.text.toString(),
+                    password = etPassword.text.toString()
+                )
+                authViewModel.login(customer)
+            }
         }
     }
 
@@ -125,4 +165,13 @@ class AuthActivity : AppCompatActivity(), View.OnClickListener {
             println(prefs.keyEmail)
         }
     }
+
+    override fun onSuccess() {
+        println("LOGIN SUCCESS")
+    }
+
+    override fun onFailure() {
+        println("LOGIN SUCCESS")
+    }
+
 }

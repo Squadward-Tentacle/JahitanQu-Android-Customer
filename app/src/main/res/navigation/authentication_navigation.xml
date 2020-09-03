@@ -16,12 +16,12 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.jahitanqu_customer.view.authentication.LoginFragment"
+        android:name="com.example.jahitanqu_customer.views.authentication.fragment.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" />
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.example.jahitanqu_customer.view.authentication.RegisterFragment"
+        android:name="com.example.jahitanqu_customer.views.authentication.fragment.RegisterFragment"
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" />
 </navigation>
