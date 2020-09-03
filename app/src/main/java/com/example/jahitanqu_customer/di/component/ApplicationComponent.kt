@@ -1,8 +1,8 @@
 package com.example.jahitanqu_customer.di.component
 
-import com.example.jahitanqu_customer.MainActivity
+import com.example.jahitanqu_customer.JahitanQu
 import com.example.jahitanqu_customer.di.module.FirebaseModule
-import com.example.jahitanqu_customer.view.activity.AuthActivity
+import com.example.jahitanqu_customer.view.authentication.AuthActivity
 import dagger.Component
 
 /**
@@ -11,6 +11,5 @@ import dagger.Component
  */
 @Component(modules = [FirebaseModule::class])
 interface ApplicationComponent {
-    fun inject(mainActivity: MainActivity)
     fun inject(authActivity: AuthActivity)
 }

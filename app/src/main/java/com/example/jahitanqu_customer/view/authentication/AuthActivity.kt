@@ -1,18 +1,18 @@
-package com.example.jahitanqu_customer.view.activity
+package com.example.jahitanqu_customer.view.authentication
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import com.example.jahitanqu_customer.JahitanQu
 import com.example.jahitanqu_customer.R
-import com.example.jahitanqu_customer.di.scope.JahitanQuApplication
+import com.example.jahitanqu_customer.prefs
+import com.example.jahitanqu_customer.signInGoogle
 import com.facebook.*
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
@@ -27,7 +27,6 @@ class AuthActivity : AppCompatActivity(), View.OnClickListener {
 
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
-    lateinit var googleSignInClient: GoogleSignInClient
 
     private val RC_SIGN_IN: Int = 21
 
@@ -35,22 +34,12 @@ class AuthActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
-        (applicationContext as JahitanQuApplication).applicationComponent.inject(this)
+        (applicationContext as JahitanQu).applicationComponent.inject(this)
         init()
     }
 
     private fun init() {
-        initSDKGoogle()
-        initSDKFacebook()
-    }
-
-    private fun initSDKGoogle() {
-        val gso =
-            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build()
-        googleSignInClient = GoogleSignIn.getClient(this, gso)
+        handleFacebookCallback()
     }
 
 
@@ -72,8 +61,7 @@ class AuthActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun initSDKFacebook() {
-        FacebookSdk.sdkInitialize(this.applicationContext);
+    private fun handleFacebookCallback() {
         LoginManager.getInstance()
             .registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
                 override fun onSuccess(result: LoginResult?) {
@@ -97,6 +85,7 @@ class AuthActivity : AppCompatActivity(), View.OnClickListener {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val user = firebaseAuth.currentUser
+                    prefs.keyEmail = user?.email
                 } else {
                     Log.w(
                         getString(R.string.facebook_auth),
@@ -112,7 +101,7 @@ class AuthActivity : AppCompatActivity(), View.OnClickListener {
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener {
             if (it.isSuccessful) {
                 val user = firebaseAuth.currentUser
-                println(user?.email)
+                prefs.keyEmail = user?.email
             }
         }
     }
@@ -120,7 +109,7 @@ class AuthActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(p0: View?) {
         when (p0) {
             btnLoginGoogle -> {
-                val signInIntent: Intent = googleSignInClient.signInIntent
+                val signInIntent: Intent = signInGoogle.signInIntent
                 startActivityForResult(signInIntent, RC_SIGN_IN)
             }
             btnLoginFb -> {
@@ -132,5 +121,8 @@ class AuthActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
+        if (prefs.keyEmail != "" || prefs.keyEmail != null) {
+            println(prefs.keyEmail)
+        }
     }
 }

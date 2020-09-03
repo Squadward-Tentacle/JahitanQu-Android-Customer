@@ -1,4 +1,4 @@
-package com.example.jahitanqu_customer.view.activity
+package com.example.jahitanqu_customer.view.maps
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
