@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.jahitanqu_customer.JahitanQu
@@ -16,7 +17,6 @@ import com.example.jahitanqu_customer.model.Customer
 import com.example.jahitanqu_customer.prefs
 import com.example.jahitanqu_customer.signInGoogle
 import com.example.jahitanqu_customer.presentation.viewmodel.AuthViewModel
-import com.example.jahitanqu_customer.presentation.views.authentication.AuthContract
 import com.facebook.AccessToken
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
@@ -31,9 +31,10 @@ import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.android.synthetic.main.fragment_login.*
 import javax.inject.Inject
 
-class LoginFragment : Fragment(),View.OnClickListener,AuthContract.login {
+class LoginFragment : Fragment(), View.OnClickListener {
 
     lateinit var navController: NavController
+
     @Inject
     lateinit var callbackManager: CallbackManager
 
@@ -61,11 +62,18 @@ class LoginFragment : Fragment(),View.OnClickListener,AuthContract.login {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
+        authViewModel.isLogin.observe(viewLifecycleOwner, Observer {
+            if (it) {
+                rlLoading.visibility = View.GONE
+                navController.navigate(R.id.toHomeActivity)
+            } else {
+                rlLoading.visibility = View.GONE
+            }
+        })
         init()
     }
 
     private fun init() {
-        handleFacebookCallback()
         btnRegisterNow.setOnClickListener(this)
         btnLoginFb.setOnClickListener(this)
         btnLoginGoogle.setOnClickListener(this)
@@ -111,11 +119,11 @@ class LoginFragment : Fragment(),View.OnClickListener,AuthContract.login {
     private fun handleGoogleLogin(idToken: String?) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener {
-            if (it.isSuccessful){
+            if (it.isSuccessful) {
                 val user = firebaseAuth.currentUser
                 prefs.keyEmail = user?.email
                 authViewModel.getToken()
-            }else{
+            } else {
                 Log.w(
                     getString(R.string.facebook_auth),
                     getString(R.string.sign_in_with_credential_filed),
@@ -139,14 +147,17 @@ class LoginFragment : Fragment(),View.OnClickListener,AuthContract.login {
     override fun onClick(p0: View?) {
         when (p0) {
             btnLoginGoogle -> {
+                rlLoading.visibility = View.VISIBLE
                 val signInIntent: Intent = signInGoogle.signInIntent
                 startActivityForResult(signInIntent, RC_SIGN_IN)
             }
             btnLoginFb -> {
+                rlLoading.visibility = View.VISIBLE
                 LoginManager.getInstance()
                     .logInWithReadPermissions(this, listOf("email", "public_profile"))
+                handleFacebookCallback()
             }
-            btnRegisterNow ->{
+            btnRegisterNow -> {
                 navController.navigate(R.id.toRegisterFragment)
             }
             btnLogin -> {
@@ -154,24 +165,18 @@ class LoginFragment : Fragment(),View.OnClickListener,AuthContract.login {
                     email = etEmail.text.toString(),
                     password = etPassword.text.toString()
                 )
+                rlLoading.visibility = View.VISIBLE
                 authViewModel.login(customer)
             }
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        if (prefs.keyToken != "" || prefs.keyToken != null) {
+    override fun onStart() {
+        super.onStart()
+        if (prefs.keyToken != "") {
             navController.navigate(R.id.toHomeActivity)
         }
     }
 
-    override fun onSuccess() {
-        navController.navigate(R.id.homeActivity)
-    }
-
-    override fun onFailure() {
-        println("LOGIN GAGAL")
-    }
 
 }

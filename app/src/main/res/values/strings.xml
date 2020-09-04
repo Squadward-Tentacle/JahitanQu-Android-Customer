@@ -24,5 +24,6 @@
     <string name="sign_in_with_credential_filed">signInWithCredential:failure</string>
     <string name="onCancel">onCancel</string>
     <string name="onEroor">Error</string>
+    <string name="register_now">Register Now</string>
 
 </resources>
