@@ -1,4 +1,4 @@
-package com.example.jahitanqu_customer.presentation.views.main.fragment
+package com.example.jahitanqu_customer.presentation.views.main.account
 
 import android.Manifest
 import android.app.Activity
@@ -62,6 +62,7 @@ class AccountFragment : Fragment(), View.OnClickListener {
         btnEdit.setOnClickListener(this)
         btnSave.setOnClickListener(this)
         btnCamera.setOnClickListener(this)
+        btnCamera.isClickable = false
     }
 
     override fun onClick(p0: View?) {

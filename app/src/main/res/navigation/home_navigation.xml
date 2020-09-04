@@ -22,17 +22,17 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.jahitanqu_customer.presentation.views.main.fragment.HomeFragment"
+        android:name="com.example.jahitanqu_customer.presentation.views.main.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/accountFragment"
-        android:name="com.example.jahitanqu_customer.presentation.views.main.fragment.AccountFragment"
+        android:name="com.example.jahitanqu_customer.presentation.views.main.account.AccountFragment"
         android:label="fragment_account"
         tools:layout="@layout/fragment_account" />
     <fragment
         android:id="@+id/myOrderFragment"
-        android:name="com.example.jahitanqu_customer.presentation.views.main.fragment.MyOrderFragment"
+        android:name="com.example.jahitanqu_customer.presentation.views.main.myorder.MyOrderFragment"
         android:label="fragment_my_order"
         tools:layout="@layout/fragment_my_order" />
 </navigation>

@@ -6,7 +6,7 @@ import com.example.jahitanqu_customer.presentation.views.authentication.AuthActi
 import com.example.jahitanqu_customer.presentation.views.authentication.fragment.LoginFragment
 import com.example.jahitanqu_customer.presentation.views.authentication.fragment.RegisterFragment
 import com.example.jahitanqu_customer.presentation.views.main.MainActivity
-import com.example.jahitanqu_customer.presentation.views.main.fragment.HomeFragment
+import com.example.jahitanqu_customer.presentation.views.main.home.HomeFragment
 import dagger.Component
 
 /**

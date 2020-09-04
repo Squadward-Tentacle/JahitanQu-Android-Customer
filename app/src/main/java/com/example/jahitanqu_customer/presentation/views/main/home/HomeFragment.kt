@@ -1,4 +1,4 @@
-package com.example.jahitanqu_customer.presentation.views.main.fragment
+package com.example.jahitanqu_customer.presentation.views.main.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
