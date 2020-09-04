@@ -5,8 +5,8 @@ import com.example.jahitanqu_customer.di.module.NetworkModule
 import com.example.jahitanqu_customer.presentation.views.authentication.AuthActivity
 import com.example.jahitanqu_customer.presentation.views.authentication.fragment.LoginFragment
 import com.example.jahitanqu_customer.presentation.views.authentication.fragment.RegisterFragment
-import com.example.jahitanqu_customer.presentation.views.home.HomeActivity
-import com.example.jahitanqu_customer.presentation.views.home.fragment.HomeFragment
+import com.example.jahitanqu_customer.presentation.views.main.MainActivity
+import com.example.jahitanqu_customer.presentation.views.main.fragment.HomeFragment
 import dagger.Component
 
 /**
@@ -18,6 +18,6 @@ interface ApplicationComponent {
     fun inject(authActivity: AuthActivity)
     fun inject(loginFragment: LoginFragment)
     fun inject(registerFragment: RegisterFragment)
-    fun inject(homeActivity: HomeActivity)
+    fun inject(mainActivity: MainActivity)
     fun inject(homeFragment: HomeFragment)
 }

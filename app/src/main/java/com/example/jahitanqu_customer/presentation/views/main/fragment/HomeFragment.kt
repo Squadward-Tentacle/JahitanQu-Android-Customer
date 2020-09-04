@@ -1,10 +1,12 @@
-package com.example.jahitanqu_customer.presentation.views.home.fragment
+package com.example.jahitanqu_customer.presentation.views.main.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.example.jahitanqu_customer.JahitanQu
 import com.example.jahitanqu_customer.R
 import com.example.jahitanqu_customer.prefs
@@ -13,6 +15,8 @@ import kotlinx.android.synthetic.main.fragment_home.*
 import javax.inject.Inject
 
 class HomeFragment : Fragment(),View.OnClickListener {
+
+    lateinit var navController: NavController
 
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
@@ -32,6 +36,7 @@ class HomeFragment : Fragment(),View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navController = Navigation.findNavController(view)
         btnLogout.setOnClickListener(this)
     }
 
@@ -40,7 +45,7 @@ class HomeFragment : Fragment(),View.OnClickListener {
             btnLogout ->{
                 firebaseAuth.signOut()
                 prefs.keyToken = ""
-                activity?.finish()
+                navController.navigate(R.id.toLoginFragment)
             }
         }
     }

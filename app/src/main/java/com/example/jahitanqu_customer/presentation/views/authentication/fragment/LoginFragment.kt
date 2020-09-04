@@ -106,6 +106,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
                 }
 
                 override fun onCancel() {
+                    rlLoading.visibility = View.GONE
                     Log.d(getString(R.string.facebook_auth), getString(R.string.onCancel))
                 }
 
@@ -171,8 +172,8 @@ class LoginFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
         if (prefs.keyToken != "") {
             navController.navigate(R.id.toHomeActivity)
         }
