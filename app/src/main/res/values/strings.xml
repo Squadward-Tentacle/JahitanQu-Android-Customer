@@ -26,11 +26,13 @@
     <string name="onEroor">Error</string>
     <string name="register_now">Register Now</string>
     <string name="home">Home</string>
-    <string name="my_order">My Order</string>
     <string name="account">Account</string>
     <string name="address">Address</string>
     <string name="phone_number">Phone Number</string>
     <string name="edit">Edit</string>
     <string name="save">Save</string>
+    <string name="history">History</string>
+    <string name="active">Active</string>
+    <string name="my_order">My Order</string>
 
 </resources>
