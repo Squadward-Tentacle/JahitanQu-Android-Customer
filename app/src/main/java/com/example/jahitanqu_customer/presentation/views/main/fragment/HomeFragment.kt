@@ -44,7 +44,7 @@ class HomeFragment : Fragment(),View.OnClickListener {
         when(p0){
             btnLogout ->{
                 firebaseAuth.signOut()
-                prefs.keyToken = ""
+                prefs.clear()
                 navController.navigate(R.id.toLoginFragment)
             }
         }

@@ -38,4 +38,8 @@ class AccountHelper(context: Context) {
     var keyPhoneNumber:String?
         get() = prefs.getString(KEY_PHONE_NUMBER,"")
         set(value) = prefs.edit().putString(KEY_PHONE_NUMBER,value).apply()
+
+    fun clear(){
+        prefs.edit().clear().apply()
+    }
 }
