@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class RetrofitBuilder {
 
     companion object {
-        val BASE_URL = "http://b5dc97cef929.ngrok.io"
+        val BASE_URL = "http://5fd24c7241a6.ngrok.io"
 
         fun createRetrofit(): Retrofit {
             return Retrofit.Builder().baseUrl(BASE_URL)

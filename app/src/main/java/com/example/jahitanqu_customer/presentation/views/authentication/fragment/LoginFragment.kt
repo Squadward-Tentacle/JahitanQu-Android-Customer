@@ -123,6 +123,9 @@ class LoginFragment : Fragment(), View.OnClickListener {
             if (it.isSuccessful) {
                 val user = firebaseAuth.currentUser
                 prefs.keyEmail = user?.email
+                prefs.keyFirstname = user?.displayName
+                prefs.keyPhotoUrl = user?.photoUrl.toString()
+                prefs.keyPhoneNumber = user?.phoneNumber
                 authViewModel.getToken()
             } else {
                 Log.w(

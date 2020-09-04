@@ -28,5 +28,9 @@
     <string name="home">Home</string>
     <string name="my_order">My Order</string>
     <string name="account">Account</string>
+    <string name="address">Address</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="edit">Edit</string>
+    <string name="save">Save</string>
 
 </resources>
