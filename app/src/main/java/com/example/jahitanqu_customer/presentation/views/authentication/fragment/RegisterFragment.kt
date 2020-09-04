@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.jahitanqu_customer.JahitanQu
@@ -12,11 +13,10 @@ import com.example.jahitanqu_customer.JahitanQu
 import com.example.jahitanqu_customer.R
 import com.example.jahitanqu_customer.model.Customer
 import com.example.jahitanqu_customer.presentation.viewmodel.AuthViewModel
-import com.example.jahitanqu_customer.presentation.views.authentication.AuthContract
 import kotlinx.android.synthetic.main.fragment_register.*
 import javax.inject.Inject
 
-class RegisterFragment : Fragment(), View.OnClickListener, AuthContract.register {
+class RegisterFragment : Fragment(), View.OnClickListener {
 
     @Inject
     lateinit var authViewModel: AuthViewModel
@@ -37,6 +37,11 @@ class RegisterFragment : Fragment(), View.OnClickListener, AuthContract.register
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
+        authViewModel.isRegister.observe(viewLifecycleOwner, Observer {
+            if (it) {
+                navController.navigate(R.id.toHomeActivity)
+            }
+        })
         btnRegister.setOnClickListener(this)
         btnLoginNow.setOnClickListener(this)
     }
@@ -58,12 +63,5 @@ class RegisterFragment : Fragment(), View.OnClickListener, AuthContract.register
         }
     }
 
-    override fun onSuccess() {
-
-    }
-
-    override fun onFailure() {
-
-    }
 
 }

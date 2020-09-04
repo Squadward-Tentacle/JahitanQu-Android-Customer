@@ -1,10 +1,10 @@
 package com.example.jahitanqu_customer.data.repository
 
+import androidx.lifecycle.MutableLiveData
 import com.example.jahitanqu_customer.data.server.AuthApi
 import com.example.jahitanqu_customer.model.Customer
 import com.example.jahitanqu_customer.model.Wrapper
 import com.example.jahitanqu_customer.prefs
-import com.example.jahitanqu_customer.presentation.views.authentication.AuthContract
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Response
@@ -16,10 +16,11 @@ import javax.inject.Inject
  * Email maulibrahim19@gmail.com
  */
 class AuthRepository @Inject constructor(
-    private val authApi: AuthApi,
-    private val authContractLogin: AuthContract.login,
-    private val authContractRegister: AuthContract.register
+    private val authApi: AuthApi
 ) {
+
+    val isLogin: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isRegister: MutableLiveData<Boolean> = MutableLiveData(false)
 
     fun login(customer: Customer) {
         authApi.login(customer).enqueue(object : Callback<Wrapper> {
@@ -28,18 +29,18 @@ class AuthRepository @Inject constructor(
             }
 
             override fun onResponse(call: Call<Wrapper>, response: Response<Wrapper>) {
-                if (response.code() == 200) {
-                    val responseCustomer = response.body()
+                val responseCustomer = response.body()
+                if (responseCustomer?.statusCode == 200) {
                     val res = responseCustomer?.payload
                     val gson = Gson()
                     val customer = gson.fromJson(
                         gson.toJson(res),
                         Customer::class.java
                     )
-                    prefs.keyToken = responseCustomer?.token
-                    authContractLogin.onSuccess()
+                    prefs.keyToken = responseCustomer.token
+                    isLogin.value = true
                 } else {
-                    authContractLogin.onFailure()
+                    isLogin.value = false
                 }
             }
 
@@ -53,8 +54,8 @@ class AuthRepository @Inject constructor(
             }
 
             override fun onResponse(call: Call<Wrapper>, response: Response<Wrapper>) {
-                if (response.code() == 200) {
-                    val responseCustomer = response.body()
+                val responseCustomer = response.body()
+                if (responseCustomer?.statusCode == 200) {
                     val res = responseCustomer?.payload
                     val gson = Gson()
                     val customer = gson.fromJson(
@@ -62,9 +63,9 @@ class AuthRepository @Inject constructor(
                         Customer::class.java
                     )
                     prefs.keyToken = responseCustomer?.token
-                    authContractLogin.onSuccess()
+                    isLogin.value = true
                 } else {
-                    authContractLogin.onFailure()
+                    isLogin.value = false
                 }
             }
 
@@ -78,8 +79,8 @@ class AuthRepository @Inject constructor(
             }
 
             override fun onResponse(call: Call<Wrapper>, response: Response<Wrapper>) {
-                if (response.code() == 200) {
-                    val responseCustomer = response.body()
+                val responseCustomer = response.body()
+                if (responseCustomer?.statusCode == 201) {
                     val res = responseCustomer?.payload
                     val gson = Gson()
                     val customer = gson.fromJson(
@@ -87,9 +88,9 @@ class AuthRepository @Inject constructor(
                         Customer::class.java
                     )
                     prefs.keyToken = responseCustomer?.token
-                    authContractRegister.onSuccess()
+                    isRegister.value = true
                 } else {
-                    authContractRegister.onFailure()
+                    isRegister.value = false
                 }
             }
 

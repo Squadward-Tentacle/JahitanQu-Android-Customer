@@ -34,7 +34,7 @@
         tools:layout="@layout/fragment_register" />
     <activity
         android:id="@+id/homeActivity"
-        android:name="com.example.jahitanqu_customer.presentation.views.home.HomeActivity"
+        android:name="com.example.jahitanqu_customer.presentation.views.main.MainActivity"
         android:label="activity_home"
         tools:layout="@layout/activity_home" />
 </navigation>

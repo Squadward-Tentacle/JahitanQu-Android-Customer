@@ -15,7 +15,7 @@ class Customer(
     var avatarImageUrl:String = "",
     var phone:String = "",
     var address: Address = Address(),
-    var createdAt:Date = Date(),
-    var udpatedAt:Date = Date(),
-    var deletedAt:Date = Date()
+    var createdAt:String = "",
+    var udpatedAt:String = "",
+    var deletedAt:String = ""
 )

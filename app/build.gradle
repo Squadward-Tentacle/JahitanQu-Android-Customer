@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.jahitanqu_customer"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -74,6 +74,15 @@ dependencies {
     //dagger
     implementation 'com.google.dagger:dagger:2.28.3'
     kapt 'com.google.dagger:dagger-compiler:2.28.3'
+
+    //lottieAirbnb
+    implementation 'com.airbnb.android:lottie:3.4.0'
+
+    //circle image
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    //glide
+    implementation 'com.squareup.picasso:picasso:2.71828'
 
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
