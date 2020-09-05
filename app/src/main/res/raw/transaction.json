@@ -1,0 +1,56 @@
+[
+  {
+    "idTransaction": "xncdhjshdsjdh",
+    "customer": {},
+    "tailor": {
+      "firstname": "Maulana",
+      "lastname": "ibrahim"
+    },
+    "address": {
+      "addressName": "Jl.Lorem ipsum dolor",
+      "latitude": -6.7891,
+      "longitude": 6.789
+    },
+    "status": 2,
+    "cost": 100000,
+    "imageUrl": "http://lorepipsumdolor",
+    "description": "lorem ipsum dolor sit amet",
+    "transactionDate": "01/09/2020"
+  },
+  {
+    "idTransaction": "xncdhjshdsjdh",
+    "customer": {},
+    "tailor": {
+      "firstname": "Maulana",
+      "lastname": "ibrahim"
+    },
+    "address": {
+      "addressName": "Jl.Lorem ipsum dolor",
+      "latitude": -6.7891,
+      "longitude": 6.789
+    },
+    "status": 4,
+    "cost": 100000,
+    "imageUrl": "http://lorepipsumdolor",
+    "description": "lorem ipsum dolor sit amet",
+    "transactionDate": "01/09/2020"
+  },
+  {
+    "idTransaction": "xncdhjshdsjdh",
+    "customer": {},
+    "tailor": {
+      "firstname": "Maulana",
+      "lastname": "ibrahim"
+    },
+    "address": {
+      "addressName": "Jl.Lorem ipsum dolor",
+      "latitude": -6.7891,
+      "longitude": 6.789
+    },
+    "status": 6,
+    "cost": 100000,
+    "imageUrl": "http://lorepipsumdolor",
+    "description": "lorem ipsum dolor sit amet",
+    "transactionDate": "01/09/2020"
+  }
+]

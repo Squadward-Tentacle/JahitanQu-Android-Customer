@@ -1,4 +1,4 @@
-package com.example.jahitanqu_customer.data.server
+package com.example.jahitanqu_customer.data.server.apiInterface
 
 import com.example.jahitanqu_customer.data.server.ApiEndPoint.ENDPOINT_GET_TOKEN
 import com.example.jahitanqu_customer.data.server.ApiEndPoint.ENDPOINT_LOGIN_CUSTOMER

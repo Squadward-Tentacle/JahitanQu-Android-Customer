@@ -1,7 +1,7 @@
 package com.example.jahitanqu_customer.data.repository
 
 import androidx.lifecycle.MutableLiveData
-import com.example.jahitanqu_customer.data.server.AuthApi
+import com.example.jahitanqu_customer.data.server.apiInterface.AuthApi
 import com.example.jahitanqu_customer.model.Customer
 import com.example.jahitanqu_customer.model.Wrapper
 import com.example.jahitanqu_customer.prefs
