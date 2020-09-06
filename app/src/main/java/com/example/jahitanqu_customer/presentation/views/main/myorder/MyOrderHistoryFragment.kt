@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.jahitanqu_customer.JahitanQu
 
@@ -27,6 +29,7 @@ import javax.inject.Inject
 class MyOrderHistoryFragment : Fragment(),MyOrderClickListener {
 
     lateinit var myOrderRecycleAdapter: MyOrderRecycleAdapter
+    lateinit var navController: NavController
 
     @Inject
     lateinit var transactionViewModel: TransactionViewModel
@@ -47,6 +50,7 @@ class MyOrderHistoryFragment : Fragment(),MyOrderClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navController = Navigation.findNavController(view)
         rvOrderHistory.layoutManager = LinearLayoutManager(context)
         testFakeData()
 //        transactionViewModel.getTransaction()
@@ -58,7 +62,7 @@ class MyOrderHistoryFragment : Fragment(),MyOrderClickListener {
 //        })
     }
 
-    fun testFakeData(){
+    private fun testFakeData(){
         val inputStream: InputStream = resources.openRawResource(R.raw.transaction)
         val reader = BufferedReader(InputStreamReader(inputStream))
         val listOfMyClassObject: Type = object : TypeToken<List<Transaction?>?>() {}.type
@@ -70,7 +74,8 @@ class MyOrderHistoryFragment : Fragment(),MyOrderClickListener {
         rvOrderHistory.adapter = myOrderRecycleAdapter
     }
 
-    override fun onItemClick(position: Int) {
-        println(position)
+    override fun onItemClick(id: String) {
+//        transactionViewModel.getTransactionById(id)
+        navController.navigate(R.id.toMyOrderDetailFragment)
     }
 }

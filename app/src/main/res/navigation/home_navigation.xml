@@ -8,16 +8,27 @@
     <action
         android:id="@+id/toHomeFragment"
         app:destination="@id/homeFragment"
+        app:popUpTo="@+id/toHomeFragment"
+        app:popUpToInclusive="true"
         />
 
     <action
         android:id="@+id/toAccountFragment"
         app:destination="@id/accountFragment"
+        app:popUpTo="@+id/toAccountFragment"
+        app:popUpToInclusive="true"
         />
 
     <action
         android:id="@+id/toMyOrderFragment"
         app:destination="@id/myOrderFragment"
+        app:popUpTo="@+id/toMyOrderFragment"
+        app:popUpToInclusive="true"
+        />
+
+    <action
+        android:id="@+id/toMyOrderDetailFragment"
+        app:destination="@id/myOrderDetailFragment"
         />
 
     <fragment
@@ -35,4 +46,9 @@
         android:name="com.example.jahitanqu_customer.presentation.views.main.myorder.MyOrderFragment"
         android:label="fragment_my_order"
         tools:layout="@layout/fragment_my_order" />
+    <fragment
+        android:id="@+id/myOrderDetailFragment"
+        android:name="com.example.jahitanqu_customer.presentation.views.main.myorder.MyOrderDetailFragment"
+        android:label="fragment_my_order_detail"
+        tools:layout="@layout/fragment_my_order_detail" />
 </navigation>

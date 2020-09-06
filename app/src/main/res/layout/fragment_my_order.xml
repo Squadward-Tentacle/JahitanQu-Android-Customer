@@ -10,21 +10,22 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@android:color/white">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_medium"
-                android:textSize="18sp"
                 android:text="@string/my_order"
-                android:textColor="@color/colorDarkBrown"
-                />
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -32,11 +33,12 @@
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/white"
             app:tabGravity="start"
             app:tabIndicatorColor="@color/colorDarkBrown"
             app:tabMode="scrollable"
-            app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
-            app:tabTextColor="@color/colorLightBlack" />
+            app:tabSelectedTextColor="@color/colorDarkBrown"
+            app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:backgroundTint="@android:color/white"
-    android:elevation="4dp"
+    android:elevation="10dp"
     app:cardCornerRadius="10dp">
 
     <LinearLayout
@@ -19,6 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto_regular"
+            android:textColor="@android:color/black"
             android:text="Lorem Tailor" />
 
         <TextView
@@ -27,6 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:fontFamily="@font/roboto_light"
+            android:textColor="@android:color/black"
             android:text="TR-201001" />
 
         <LinearLayout
@@ -41,6 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/roboto_light"
+                android:textColor="@android:color/black"
                 android:text="2 Sept 2020" />
 
             <TextView

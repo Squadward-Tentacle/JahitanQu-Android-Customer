@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.jahitanqu_customer.JahitanQu
 import com.example.jahitanqu_customer.R
@@ -26,6 +28,7 @@ import javax.inject.Inject
 class MyOrderActiveFragment : Fragment(), MyOrderClickListener {
 
     lateinit var myOrderRecycleAdapter: MyOrderRecycleAdapter
+    lateinit var navController: NavController
 
     @Inject
     lateinit var transactionViewModel: TransactionViewModel
@@ -45,6 +48,7 @@ class MyOrderActiveFragment : Fragment(), MyOrderClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navController = Navigation.findNavController(view)
         rvOrderActive.layoutManager = LinearLayoutManager(context)
         fakeData()
 //        transactionViewModel.getTransaction()
@@ -68,7 +72,8 @@ class MyOrderActiveFragment : Fragment(), MyOrderClickListener {
         rvOrderActive.adapter = myOrderRecycleAdapter
     }
 
-    override fun onItemClick(position: Int) {
-        println(position)
+    override fun onItemClick(id: String) {
+//        transactionViewModel.getTransactionById(id)
+        navController.navigate(R.id.toMyOrderDetailFragment)
     }
 }

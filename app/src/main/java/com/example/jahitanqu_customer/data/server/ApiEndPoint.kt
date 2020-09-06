@@ -9,4 +9,6 @@ object ApiEndPoint {
     const val ENDPOINT_GET_TOKEN = "customer/token"
     const val ENDPOINT_REGISTER_CUSTOMER = "customer/register"
     const val ENDPOINT_GET_TRANSACTION = "transaction/{idCustomer}"
+    const val ENDPOINT_UPDATE_CUSTOMER = "customer/{idCustomer}"
+    const val ENDPOINT_GET_TRANSACTION_BY_ID = "transaction/{idTransaction}"
 }

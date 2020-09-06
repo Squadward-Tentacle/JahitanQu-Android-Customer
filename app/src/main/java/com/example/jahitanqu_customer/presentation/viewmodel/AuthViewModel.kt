@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.example.jahitanqu_customer.model.Customer
 import com.example.jahitanqu_customer.data.repository.AuthRepository
+import java.io.File
 import javax.inject.Inject
 
 /**
@@ -14,10 +15,12 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
 
     val isLogin: LiveData<Boolean>
     val isRegister: LiveData<Boolean>
+    val isUpdated :LiveData<Boolean>
 
     init {
         isLogin = authRepository.isLogin
         isRegister = authRepository.isRegister
+        isUpdated = authRepository.isUpdated
     }
 
     fun login(customer: Customer) {
@@ -30,5 +33,9 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
 
     fun register(customer: Customer) {
         authRepository.register(customer)
+    }
+
+    fun updateCustomer(customer: Customer,avatarImageUrl: File){
+        authRepository.updateCustomer(customer,avatarImageUrl)
     }
 }

@@ -20,7 +20,7 @@
         android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
         android:usesCleartextTraffic="true"
         >
-        <activity android:name=".presentation.views.main.MainActivity"/>
+        <activity android:name=".presentation.views.main.MainActivity" />
         <activity android:name=".presentation.views.authentication.AuthActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

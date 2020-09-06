@@ -13,13 +13,18 @@ import javax.inject.Inject
 class TransactionViewModel @Inject constructor(private val transactionRepository: TransactionRepository):ViewModel() {
 
     val transactionList:LiveData<List<Transaction>>
+    val transaction:LiveData<Transaction>
 
     init {
         transactionList = transactionRepository.transactionList
+        transaction = transactionRepository.transaction
     }
 
     fun getTransaction(){
         transactionRepository.getTransaction()
     }
 
+    fun getTransactionById(idTransaction: String){
+        transactionRepository.getTransactionByID(idTransaction)
+    }
 }

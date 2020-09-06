@@ -1,14 +1,18 @@
 package com.example.jahitanqu_customer.data.repository
 
 import androidx.lifecycle.MutableLiveData
+import com.example.jahitanqu_customer.common.utils.Util
 import com.example.jahitanqu_customer.data.server.apiInterface.AuthApi
 import com.example.jahitanqu_customer.model.Customer
 import com.example.jahitanqu_customer.model.Wrapper
 import com.example.jahitanqu_customer.prefs
 import com.google.gson.Gson
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Callback
+import java.io.File
 import javax.inject.Inject
 
 /**
@@ -21,6 +25,7 @@ class AuthRepository @Inject constructor(
 
     val isLogin: MutableLiveData<Boolean> = MutableLiveData(false)
     val isRegister: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isUpdated: MutableLiveData<Boolean> = MutableLiveData(false)
 
     fun login(customer: Customer) {
         authApi.login(customer).enqueue(object : Callback<Wrapper> {
@@ -37,6 +42,15 @@ class AuthRepository @Inject constructor(
                         gson.toJson(res),
                         Customer::class.java
                     )
+                    prefs.keyIdCustomer = customer.idCustomer
+                    prefs.keyEmail = customer.email
+                    prefs.keyFirstname = customer.firstname
+                    prefs.keyLastName = customer.lastname
+                    prefs.keyAddressName = customer.address.addressName
+                    prefs.keyLatitude = customer.address.latitude
+                    prefs.keyLongitude = customer.address.longitude
+                    prefs.keyPhoneNumber = customer.phone
+                    prefs.keyPhotoUrl = customer.avatarImageUrl
                     prefs.keyToken = responseCustomer.token
                     isLogin.value = true
                 } else {
@@ -56,12 +70,6 @@ class AuthRepository @Inject constructor(
             override fun onResponse(call: Call<Wrapper>, response: Response<Wrapper>) {
                 val responseCustomer = response.body()
                 if (responseCustomer?.statusCode == 200) {
-                    val res = responseCustomer?.payload
-                    val gson = Gson()
-                    val customer = gson.fromJson(
-                        gson.toJson(res),
-                        Customer::class.java
-                    )
                     prefs.keyToken = responseCustomer?.token
                     isLogin.value = true
                 } else {
@@ -87,6 +95,10 @@ class AuthRepository @Inject constructor(
                         gson.toJson(res),
                         Customer::class.java
                     )
+                    prefs.keyIdCustomer = customer.idCustomer
+                    prefs.keyEmail = customer.email
+                    prefs.keyFirstname = customer.firstname
+                    prefs.keyLastName = customer.lastname
                     prefs.keyToken = responseCustomer?.token
                     isRegister.value = true
                 } else {
@@ -95,5 +107,68 @@ class AuthRepository @Inject constructor(
             }
 
         })
+    }
+
+    fun updateCustomer(customer: Customer, image: File) {
+        val token = prefs.keyToken
+        val avatarImageUrl = Util.convertMultipartFile(image, "avatarImageUrl")
+        val email = RequestBody.create("text/plain".toMediaTypeOrNull(), customer.email)
+        val fname = RequestBody.create("text/plain".toMediaTypeOrNull(), customer.firstname)
+        val lname = RequestBody.create("text/plain".toMediaTypeOrNull(), customer.lastname)
+        val addressName =
+            RequestBody.create("text/plain".toMediaTypeOrNull(), customer.address.addressName)
+        val lat = RequestBody.create(
+            "text/plain".toMediaTypeOrNull(),
+            customer.address.latitude.toString()
+        )
+        val lng = RequestBody.create(
+            "text/plain".toMediaTypeOrNull(),
+            customer.address.longitude.toString()
+        )
+        val phone = RequestBody.create("text/plain".toMediaTypeOrNull(), customer.phone)
+        authApi.updateCustomer(
+            token!!,
+            prefs.keyIdCustomer!!,
+            email,
+            fname,
+            lname,
+            addressName,
+            lat,
+            lng,
+            phone,
+            avatarImageUrl
+        ).enqueue(object : Callback<Wrapper> {
+            override fun onFailure(call: Call<Wrapper>, t: Throwable) {
+                println(t.localizedMessage)
+            }
+
+            override fun onResponse(call: Call<Wrapper>, response: Response<Wrapper>) {
+                val responseCustomer = response.body()
+                if (responseCustomer?.statusCode == 200) {
+                    val res = responseCustomer?.payload
+                    prefs.setCustomerPref(res)
+                    val gson = Gson()
+                    val customer = gson.fromJson(
+                        gson.toJson(res),
+                        Customer::class.java
+                    )
+                    prefs.keyIdCustomer = customer.idCustomer
+                    prefs.keyEmail = customer.email
+                    prefs.keyFirstname = customer.firstname
+                    prefs.keyLastName = customer.lastname
+                    prefs.keyAddressName = customer.address.addressName
+                    prefs.keyLatitude = customer.address.latitude
+                    prefs.keyLongitude = customer.address.longitude
+                    prefs.keyPhoneNumber = customer.phone
+                    prefs.keyPhotoUrl = customer.avatarImageUrl
+                    prefs.keyToken = responseCustomer?.token
+                    isUpdated.value = true
+                } else {
+                    isUpdated.value = false
+                }
+            }
+
+        })
+
     }
 }

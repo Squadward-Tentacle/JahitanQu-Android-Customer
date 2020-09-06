@@ -19,6 +19,7 @@ import javax.inject.Inject
 class TransactionRepository @Inject constructor(private val transactionApi: TransactionApi) {
 
     val transactionList:MutableLiveData<List<Transaction>> = MutableLiveData()
+    val transaction:MutableLiveData<Transaction> = MutableLiveData()
 
     fun getTransaction(){
         transactionApi.getTransaction().enqueue(object :Callback<Wrapper>{
@@ -37,5 +38,24 @@ class TransactionRepository @Inject constructor(private val transactionApi: Tran
 
         })
     }
+
+    fun getTransactionByID(idTransaction:String){
+        transactionApi.getTransactionById(idTransaction).enqueue(object : Callback<Wrapper>{
+            override fun onFailure(call: Call<Wrapper>, t: Throwable) {
+                println(t.localizedMessage)
+            }
+
+            override fun onResponse(call: Call<Wrapper>, response: Response<Wrapper>) {
+                val responseTransaction = response.body()
+                val res = responseTransaction?.payload
+                val listOfMyClassObject: Type = object : TypeToken<Transaction?>() {}.type
+                val gson = Gson()
+                val outputList: Transaction = gson.fromJson(gson.toJson(res), listOfMyClassObject)
+                transaction.value = outputList
+            }
+        })
+    }
+
+
 
 }

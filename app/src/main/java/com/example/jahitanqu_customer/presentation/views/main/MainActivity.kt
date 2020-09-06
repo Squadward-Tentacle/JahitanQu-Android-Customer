@@ -1,13 +1,15 @@
 package com.example.jahitanqu_customer.presentation.views.main
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.example.jahitanqu_customer.JahitanQu
 import com.example.jahitanqu_customer.R
 import kotlinx.android.synthetic.main.activity_home.*
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -40,5 +42,13 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(Intent.ACTION_MAIN)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.addCategory(Intent.CATEGORY_HOME)
+        startActivity(intent)
     }
 }

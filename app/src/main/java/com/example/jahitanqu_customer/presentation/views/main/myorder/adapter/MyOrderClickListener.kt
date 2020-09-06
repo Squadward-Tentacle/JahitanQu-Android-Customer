@@ -5,5 +5,5 @@ package com.example.jahitanqu_customer.presentation.views.main.myorder.adapter
  * Email maulibrahim19@gmail.com
  */
 interface MyOrderClickListener {
-    fun onItemClick(position:Int)
+    fun onItemClick(id:String)
 }

@@ -34,5 +34,7 @@
     <string name="history">History</string>
     <string name="active">Active</string>
     <string name="my_order">My Order</string>
+    <string name="description_order">Description Order</string>
+    <string name="detail_order">Detail Order</string>
 
 </resources>

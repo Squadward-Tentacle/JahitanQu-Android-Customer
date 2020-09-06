@@ -6,8 +6,10 @@ import com.example.jahitanqu_customer.presentation.views.authentication.AuthActi
 import com.example.jahitanqu_customer.presentation.views.authentication.fragment.LoginFragment
 import com.example.jahitanqu_customer.presentation.views.authentication.fragment.RegisterFragment
 import com.example.jahitanqu_customer.presentation.views.main.MainActivity
+import com.example.jahitanqu_customer.presentation.views.main.account.AccountFragment
 import com.example.jahitanqu_customer.presentation.views.main.home.HomeFragment
 import com.example.jahitanqu_customer.presentation.views.main.myorder.MyOrderActiveFragment
+import com.example.jahitanqu_customer.presentation.views.main.myorder.MyOrderDetailFragment
 import com.example.jahitanqu_customer.presentation.views.main.myorder.MyOrderHistoryFragment
 import dagger.Component
 
@@ -24,4 +26,6 @@ interface ApplicationComponent {
     fun inject(homeFragment: HomeFragment)
     fun inject(myOrderActiveFragment: MyOrderActiveFragment)
     fun inject(myOrderHistoryFragment: MyOrderHistoryFragment)
+    fun inject(myOrderDetailFragment: MyOrderDetailFragment)
+    fun inject(accountFragment: AccountFragment)
 }

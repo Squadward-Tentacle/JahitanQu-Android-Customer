@@ -14,16 +14,23 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
+import com.example.jahitanqu_customer.JahitanQu
 import com.example.jahitanqu_customer.R
+import com.example.jahitanqu_customer.common.utils.Util
+import com.example.jahitanqu_customer.model.Address
+import com.example.jahitanqu_customer.model.Customer
 import com.example.jahitanqu_customer.prefs
+import com.example.jahitanqu_customer.presentation.viewmodel.AuthViewModel
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_account.*
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
 
 class AccountFragment : Fragment(), View.OnClickListener {
@@ -34,22 +41,41 @@ class AccountFragment : Fragment(), View.OnClickListener {
     lateinit var currentPhotoPath: String
     lateinit var photoFile: File
 
+    @Inject
+    lateinit var authViewModel: AuthViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        (activity?.applicationContext as JahitanQu).applicationComponent.inject(this)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_account, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        authViewModel.isUpdated.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            if (it) {
+                initEditText()
+            }
+        })
+        photoFile = File("")
+        initEditText()
+        btnEdit.setOnClickListener(this)
+        btnSave.setOnClickListener(this)
+        btnCamera.setOnClickListener(this)
+        btnCamera.isClickable = false
+    }
+
+    fun initEditText() {
         etFirstname.setText(prefs.keyFirstname)
+        etLastName.setText(prefs.keyLastName)
         etEmail.setText(prefs.keyEmail)
+        etPlace.setText(prefs.keyAddressName)
         etPhoneNumber.setText(prefs.keyPhoneNumber)
         if (!prefs.keyPhotoUrl.isNullOrEmpty()) {
             Picasso.get()
@@ -58,40 +84,71 @@ class AccountFragment : Fragment(), View.OnClickListener {
                 .error(R.drawable.ic_user_placehoder)
                 .into(profile_image)
         }
-
-        btnEdit.setOnClickListener(this)
-        btnSave.setOnClickListener(this)
-        btnCamera.setOnClickListener(this)
-        btnCamera.isClickable = false
     }
 
     override fun onClick(p0: View?) {
         when (p0) {
             btnEdit -> {
-                btnEdit.visibility = View.GONE
-                btnSave.visibility = View.VISIBLE
-                etFirstname.isEnabled = true
-                etLastName.isEnabled = true
-                etEmail.isEnabled = true
-                etPhoneNumber.isEnabled = true
-                btnCamera.isClickable = true
-                btnPlace.isClickable = true
+                changeStateEditable()
             }
             btnSave -> {
-                btnEdit.visibility = View.VISIBLE
-                btnSave.visibility = View.GONE
-                etFirstname.isEnabled = false
-                etLastName.isEnabled = false
-                etEmail.isEnabled = false
-                etPhoneNumber.isEnabled = false
-                btnCamera.isClickable = false
-                btnPlace.isClickable = false
+                val email = etEmail.text.toString()
+                val fName = etFirstname.text.toString()
+                val lName = etLastName.text.toString()
+                val phone = etPhoneNumber.text.toString()
+                if (Util.validationInput(
+                        email,
+                        fName,
+                        lName,
+                        phone
+                    ) && !prefs.keyIdCustomer.isNullOrEmpty() && !photoFile.toString()
+                        .isNullOrEmpty()
+                ) {
+                    val customer = Customer(
+                        email = email,
+                        firstname = fName,
+                        lastname = lName,
+                        address = Address(
+                            addressName = "Jl.x",
+                            latitude = (-6.90777).toFloat(),
+                            longitude = (-6.90777).toFloat()
+                        ),
+                        phone = phone
+                    )
+                    authViewModel.updateCustomer(customer, photoFile)
+                }else{
+                    println("CANNOT EDIT")
+                }
+                changeStateNotEditable()
             }
             btnCamera -> {
                 selectImage()
             }
         }
     }
+
+    fun changeStateEditable() {
+        btnEdit.visibility = View.GONE
+        btnSave.visibility = View.VISIBLE
+        etFirstname.isEnabled = true
+        etLastName.isEnabled = true
+        etEmail.isEnabled = true
+        etPhoneNumber.isEnabled = true
+        btnCamera.isClickable = true
+        btnPlace.isClickable = true
+    }
+
+    fun changeStateNotEditable() {
+        btnEdit.visibility = View.VISIBLE
+        btnSave.visibility = View.GONE
+        etFirstname.isEnabled = false
+        etLastName.isEnabled = false
+        etEmail.isEnabled = false
+        etPhoneNumber.isEnabled = false
+        btnCamera.isClickable = false
+        btnPlace.isClickable = false
+    }
+
 
     private fun selectImage() {
         val items = arrayOf<CharSequence>(
