@@ -11,4 +11,5 @@ object ApiEndPoint {
     const val ENDPOINT_GET_TRANSACTION = "transaction/{idCustomer}"
     const val ENDPOINT_UPDATE_CUSTOMER = "customer/{idCustomer}"
     const val ENDPOINT_GET_TRANSACTION_BY_ID = "transaction/{idTransaction}"
+    const val ENDPOINT_GET_TOP_RATED_TAILOR = "tailor/{page}"
 }

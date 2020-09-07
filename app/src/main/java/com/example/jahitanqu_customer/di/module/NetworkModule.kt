@@ -2,6 +2,7 @@ package com.example.jahitanqu_customer.di.module
 
 import com.example.jahitanqu_customer.data.server.apiInterface.AuthApi
 import com.example.jahitanqu_customer.data.server.RetrofitBuilder
+import com.example.jahitanqu_customer.data.server.apiInterface.TailorApi
 import com.example.jahitanqu_customer.data.server.apiInterface.TransactionApi
 import dagger.Module
 import dagger.Provides
@@ -21,5 +22,10 @@ class NetworkModule {
     @Provides
     fun provideTransactionApi(): TransactionApi {
         return RetrofitBuilder.createRetrofit().create(TransactionApi::class.java)
+    }
+
+    @Provides
+    fun provideTailorApi(): TailorApi {
+        return RetrofitBuilder.createRetrofit().create(TailorApi::class.java)
     }
 }

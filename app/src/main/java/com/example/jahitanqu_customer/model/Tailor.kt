@@ -12,7 +12,10 @@ class Tailor(
     val phone: String,
     val description:String,
     val avatarImageUrl: String = "",
+    val rating:Int = 0,
     val address: Address = Address(),
+    val portofolio: List<Portofolio>,
+    val comment: List<Comment>,
     val createdAt: String = "",
     val udpatedAt: String = "",
     val deletedAt: String = ""
