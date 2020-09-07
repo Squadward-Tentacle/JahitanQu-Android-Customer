@@ -16,8 +16,12 @@ interface TailorApi {
 
     @GET(ApiEndPoint.ENDPOINT_GET_TOP_RATED_TAILOR)
     fun getTopRatedTailor(
+        @Header(Constant.KEY_AUTHORIZATION) auth:String
+    ): Call<Wrapper>
+
+    @GET(ApiEndPoint.ENDPOINT_GET_TAILOR)
+    fun getTailor(
         @Header(Constant.KEY_AUTHORIZATION) auth:String,
         @Path("page") page:Int
     ): Call<Wrapper>
-
 }

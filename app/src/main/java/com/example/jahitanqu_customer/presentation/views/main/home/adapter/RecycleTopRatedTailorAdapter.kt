@@ -11,30 +11,29 @@ import com.squareup.picasso.Picasso
  * Created by Maulana Ibrahim on 07/September/2020
  * Email maulibrahim19@gmail.com
  */
-class RecycleTailorAdapter(private val tailorList: List<Tailor>) :
-    RecyclerView.Adapter<RecycleTailorViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecycleTailorViewHolder {
+
+class RecycleTopRatedTailorAdapter(private val tailorList:List<Tailor>) : RecyclerView.Adapter<RecycleTopRatedTailorViewHolder>(){
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecycleTopRatedTailorViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_tailor, parent, false)
-        return RecycleTailorViewHolder(view)
+            .inflate(R.layout.item_tailor_top_rated, parent, false)
+        return RecycleTopRatedTailorViewHolder(view)
     }
 
     override fun getItemCount(): Int {
         return tailorList.size
     }
 
-    override fun onBindViewHolder(holder: RecycleTailorViewHolder, position: Int) {
+    override fun onBindViewHolder(holderTopRated: RecycleTopRatedTailorViewHolder, position: Int) {
         var data = tailorList[position]
-        if (!data.avatarImageUrl.isNullOrEmpty()) {
+        if (!data.avatarImageUrl.isNullOrEmpty()){
             Picasso.get()
                 .load(data.avatarImageUrl)
                 .placeholder(R.drawable.ic_photo)
                 .error(R.drawable.ic_photo)
-                .into(holder.imageTailor)
+                .into(holderTopRated.imageTailor)
         }
-        holder.rating.rating = data.rating.toFloat()
-        holder.tailorName.text = "${data.firstname} ${data.lastname}"
-        holder.tailorAddress.text = data.address.addressName
+        holderTopRated.rating.rating = data.rating.toFloat()
+        holderTopRated.tailorName.text = "${data.firstname} ${data.lastname}"
     }
 
 }

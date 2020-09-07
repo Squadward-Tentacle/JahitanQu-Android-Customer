@@ -8,6 +8,7 @@ import com.example.jahitanqu_customer.presentation.views.authentication.fragment
 import com.example.jahitanqu_customer.presentation.views.main.MainActivity
 import com.example.jahitanqu_customer.presentation.views.main.account.AccountFragment
 import com.example.jahitanqu_customer.presentation.views.main.home.HomeFragment
+import com.example.jahitanqu_customer.presentation.views.main.home.TailorListFragment
 import com.example.jahitanqu_customer.presentation.views.main.myorder.MyOrderActiveFragment
 import com.example.jahitanqu_customer.presentation.views.main.myorder.MyOrderDetailFragment
 import com.example.jahitanqu_customer.presentation.views.main.myorder.MyOrderHistoryFragment
@@ -28,4 +29,5 @@ interface ApplicationComponent {
     fun inject(myOrderHistoryFragment: MyOrderHistoryFragment)
     fun inject(myOrderDetailFragment: MyOrderDetailFragment)
     fun inject(accountFragment: AccountFragment)
+    fun inject(tailorListFragment: TailorListFragment)
 }

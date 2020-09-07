@@ -22,7 +22,7 @@
                 android:id="@+id/ivTailor"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/colorDarkBrown"
+                android:background="@color/colorLightBlack"
                 android:scaleType="center" />
 
         </androidx.cardview.widget.CardView>

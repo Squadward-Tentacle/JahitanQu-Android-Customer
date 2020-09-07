@@ -21,9 +21,10 @@ import javax.inject.Inject
 class TailorRepository @Inject constructor(val tailorApi: TailorApi) {
 
     val tailorTopRatedList: MutableLiveData<List<Tailor>> = MutableLiveData()
+    val tailorList: MutableLiveData<List<Tailor>> = MutableLiveData()
 
-    fun getTopRatedTailor(page: Int) {
-        tailorApi.getTopRatedTailor(prefs.keyToken!!, page).enqueue(object : Callback<Wrapper> {
+    fun getTopRatedTailor() {
+        tailorApi.getTopRatedTailor(prefs.keyToken!!).enqueue(object : Callback<Wrapper> {
             override fun onFailure(call: Call<Wrapper>, t: Throwable) {
                 println(t.localizedMessage)
             }
@@ -43,5 +44,25 @@ class TailorRepository @Inject constructor(val tailorApi: TailorApi) {
         })
     }
 
+    fun getTailor(page:Int) {
+        tailorApi.getTailor(prefs.keyToken!!,page).enqueue(object : Callback<Wrapper> {
+            override fun onFailure(call: Call<Wrapper>, t: Throwable) {
+                println(t.localizedMessage)
+            }
+
+            override fun onResponse(call: Call<Wrapper>, response: Response<Wrapper>) {
+                if (response.code() == 200) {
+                    val response = response.body()
+                    val tailor = response?.payload
+                    val listOfMyClassObject: Type = object : TypeToken<List<Tailor?>?>() {}.type
+                    val gson = Gson()
+                    val outputList: List<Tailor> =
+                        gson.fromJson(gson.toJson(tailor), listOfMyClassObject)
+                    tailorList.value = outputList
+                }
+            }
+
+        })
+    }
 
 }

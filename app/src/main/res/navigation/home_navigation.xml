@@ -20,6 +20,13 @@
         />
 
     <action
+        android:id="@+id/toTailorListFragment"
+        app:destination="@id/tailorListFragment"
+        app:popUpTo="@+id/toTailorListFragment"
+        app:popUpToInclusive="true"
+        />
+
+    <action
         android:id="@+id/toMyOrderFragment"
         app:destination="@id/myOrderFragment"
         app:popUpTo="@+id/toMyOrderFragment"
@@ -51,4 +58,9 @@
         android:name="com.example.jahitanqu_customer.presentation.views.main.myorder.MyOrderDetailFragment"
         android:label="fragment_my_order_detail"
         tools:layout="@layout/fragment_my_order_detail" />
+    <fragment
+        android:id="@+id/tailorListFragment"
+        android:name="com.example.jahitanqu_customer.presentation.views.main.home.TailorListFragment"
+        android:label="fragment_tailor_list"
+        tools:layout="@layout/fragment_tailor_list" />
 </navigation>

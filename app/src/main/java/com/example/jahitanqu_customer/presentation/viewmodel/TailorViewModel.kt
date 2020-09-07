@@ -13,8 +13,13 @@ import javax.inject.Inject
 class TailorViewModel @Inject constructor(private val tailorRepository: TailorRepository):ViewModel() {
 
     var tailorTopRatedList:LiveData<List<Tailor>> = tailorRepository.tailorTopRatedList
+    var tailorList:LiveData<List<Tailor>> = tailorRepository.tailorList
 
-    fun getTopRatedTailor(page:Int){
-        tailorRepository.getTopRatedTailor(page)
+    fun getTopRatedTailor(){
+        tailorRepository.getTopRatedTailor()
+    }
+
+    fun getTailor(page:Int){
+        tailorRepository.getTailor(page)
     }
 }

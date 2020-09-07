@@ -13,7 +13,7 @@ import com.example.jahitanqu_customer.JahitanQu
 import com.example.jahitanqu_customer.R
 import com.example.jahitanqu_customer.prefs
 import com.example.jahitanqu_customer.presentation.viewmodel.TailorViewModel
-import com.example.jahitanqu_customer.presentation.views.main.home.adapter.RecycleTailorAdapter
+import com.example.jahitanqu_customer.presentation.views.main.home.adapter.RecycleTopRatedTailorAdapter
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_home.*
 import javax.inject.Inject
@@ -22,7 +22,7 @@ class HomeFragment : Fragment(),View.OnClickListener {
 
     lateinit var navController: NavController
 
-    lateinit var recycleTailorAdapter: RecycleTailorAdapter
+    lateinit var recycleTopRatedTailorAdapter: RecycleTopRatedTailorAdapter
 
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
@@ -46,11 +46,12 @@ class HomeFragment : Fragment(),View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
         btnLogout.setOnClickListener(this)
+        btnViewAll.setOnClickListener(this)
+        tailorViewModel.getTopRatedTailor()
         rvTopTailor.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL, false)
-        tailorViewModel.getTopRatedTailor(1)
         tailorViewModel.tailorTopRatedList.observe(viewLifecycleOwner, Observer { it ->
-            recycleTailorAdapter = RecycleTailorAdapter(it)
-            rvTopTailor.adapter = recycleTailorAdapter
+            recycleTopRatedTailorAdapter = RecycleTopRatedTailorAdapter(it)
+            rvTopTailor.adapter = recycleTopRatedTailorAdapter
         })
     }
 
@@ -59,7 +60,10 @@ class HomeFragment : Fragment(),View.OnClickListener {
             btnLogout ->{
                 firebaseAuth.signOut()
                 prefs.clear()
-                navController.navigate(R.id.toLoginFragment)
+                activity?.finish()
+            }
+            btnViewAll -> {
+                navController.navigate(R.id.toTailorListFragment)
             }
         }
     }
