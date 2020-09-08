@@ -5,10 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.bottomsheets.BottomSheet
+import com.afollestad.materialdialogs.bottomsheets.setPeekHeight
+import com.afollestad.materialdialogs.customview.customView
 import com.example.jahitanqu_customer.JahitanQu
 
 import com.example.jahitanqu_customer.R
@@ -43,6 +49,8 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
 
     lateinit var idTailor: String
 
+    lateinit var address: Address
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity?.applicationContext as JahitanQu).applicationComponent.inject(this)
@@ -57,13 +65,36 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        init()
+        navController = Navigation.findNavController(view)
+        tailorViewModel.getTailorById(idTailor!!)
+        observeTailor()
+        observSuccessPost()
+    }
+
+    private fun init() {
         idTailor = arguments?.getString("idTailor")!!
         pbLoading.visibility = View.VISIBLE
         btnReservation.setOnClickListener(this)
         rvRatingAndReview.layoutManager = LinearLayoutManager(context)
         rvPortofolio.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        tailorViewModel.getTailorById(idTailor!!)
+        address = Address(
+            prefs.keyAddressName!!,
+            prefs.keyLatitude!!,
+            prefs.keyLongitude!!
+        )
+    }
+
+    private fun observSuccessPost() {
+        transactionViewModel.isSuccessPost.observe(viewLifecycleOwner, Observer {
+            if (it) {
+                navController.navigate(R.id.toMyOrderFragment)
+            }
+        })
+    }
+
+    private fun observeTailor() {
         tailorViewModel.tailor.observe(viewLifecycleOwner, Observer {
             pbLoading.visibility = View.GONE
             if (it.imageUrl.isNotEmpty()) {
@@ -83,26 +114,30 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
             rvPortofolio.adapter = recyclePortofolioAdapter
         })
 
-        navController = Navigation.findNavController(view)
-        transactionViewModel.isSuccessPost.observe(viewLifecycleOwner, Observer {
-            if (it){
-                navController.navigate(R.id.toMyOrderFragment)
-            }
-        })
     }
 
     override fun onClick(p0: View?) {
         when (p0) {
             btnReservation -> {
-                val transaction = Transaction(
-                    idCustomer = prefs.keyIdCustomer!!,
-                    idTailor = idTailor,
-                    address = Address(
-                        "Jl.Ayam goreng", (-6.7891).toFloat(), 6.789F, 1
-                    ),
-                    status = 1
-                )
-                transactionViewModel.postTransaction(transaction)
+                val dialog = MaterialDialog(activity?.window!!.context, BottomSheet())
+                    .cornerRadius(16f)
+                    .noAutoDismiss()
+                    .customView(R.layout.reservation_popup)
+                    .setPeekHeight(450)
+                val addressEditText = dialog.findViewById<EditText>(R.id.etAddressBooking)
+                addressEditText.setText(address.addressName)
+                dialog.show()
+                val booking = dialog.findViewById<Button>(R.id.btnBookin)
+                booking.setOnClickListener {
+                    val transaction = Transaction(
+                        idCustomer = prefs.keyIdCustomer!!,
+                        idTailor = idTailor,
+                        address = address,
+                        status = 1
+                    )
+                    transactionViewModel.postTransaction(transaction)
+                    dialog.hide()
+                }
             }
         }
     }
