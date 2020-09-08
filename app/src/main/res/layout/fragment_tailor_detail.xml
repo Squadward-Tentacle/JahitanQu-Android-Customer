@@ -72,7 +72,7 @@
     </RelativeLayout>
 
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -103,8 +103,7 @@
                         android:id="@+id/ivTailor"
                         android:layout_width="match_parent"
                         android:layout_height="100dp"
-                        android:background="@color/colorLightBlack"
-                        app:riv_corner_radius="10dp" />
+                        app:riv_corner_radius="2dp" />
 
                     <RatingBar
                         android:id="@+id/rbRatingTailor"
@@ -204,7 +203,7 @@
 
         </LinearLayout>
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <RelativeLayout
         android:id="@+id/pbLoading"

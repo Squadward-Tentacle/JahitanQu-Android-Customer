@@ -45,8 +45,10 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
         val idTransaction = arguments?.getString("idTransaction")
         transactionViewModel.getTransactionById(idTransaction!!)
-
+        pbDetailOrder.visibility = View.VISIBLE
         transactionViewModel.transaction.observe(viewLifecycleOwner, Observer {
+            pbDetailOrder.visibility = View.GONE
+            changeStateButton(it)
             tvTransactionStatus.text = it.statusName
             tvTransactionNumber.text = it.idTransaction
             tvTailorName.text = it.firstnameTailor
@@ -55,7 +57,7 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener {
             if (!it.imageUrl.isNullOrEmpty()) {
                 Picasso.get()
                     .load(it.imageUrl)
-                    .into(profile_image)
+                    .into(ivTransactionImage)
             }
             tvTransactionCost.text = "Rp. ${it.cost}"
         })
@@ -66,6 +68,21 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener {
     }
 
     private fun changeStateButton(transaction: Transaction){
+        when(transaction.status){
+            2 -> {
+                btnPayment.visibility = View.VISIBLE
+                btnAddFeedback.visibility = View.GONE
+            }
+            8 -> {
+                btnAddFeedback.visibility = View.VISIBLE
+                btnPayment.visibility = View.GONE
+            }
+            else ->{
+                btnPayment.visibility = View.VISIBLE
+                btnPayment.isEnabled = false
+                btnAddFeedback.visibility = View.GONE
+            }
+        }
     }
 
     override fun onClick(p0: View?) {

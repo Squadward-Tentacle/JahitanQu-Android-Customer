@@ -16,7 +16,7 @@ import com.example.jahitanqu_customer.model.Transaction
  * Created by Maulana Ibrahim on 05/September/2020
  * Email maulibrahim19@gmail.com
  */
-class MyOrderRecycleAdapter:PagedListAdapter<Transaction,MyOrderViewHolder>(DIFF_CALLBACK){
+class MyOrderRecycleAdapter : PagedListAdapter<Transaction, MyOrderViewHolder>(DIFF_CALLBACK) {
 
     lateinit var baseContract: BaseContract
 
@@ -37,9 +37,15 @@ class MyOrderRecycleAdapter:PagedListAdapter<Transaction,MyOrderViewHolder>(DIFF
             6 -> holder.transactionStatus.setTextColor(Color.parseColor("#6CA7F6"))
             else -> holder.transactionStatus.setTextColor(Color.parseColor("#105E15"))
         }
-        holder.itemView.setOnClickListener {
-            baseContract.itemClickListener(transaction?.idTransaction!!)
+
+        when(transaction?.status){
+            in 4..8 -> {
+                holder.itemView.setOnClickListener {
+                    baseContract.itemClickListener(transaction?.idTransaction!!)
+                }
+            }
         }
+
     }
 
     companion object {
@@ -47,7 +53,7 @@ class MyOrderRecycleAdapter:PagedListAdapter<Transaction,MyOrderViewHolder>(DIFF
             DiffUtil.ItemCallback<Transaction>() {
 
             override fun areItemsTheSame(oldItem: Transaction, newItem: Transaction): Boolean {
-                return  oldItem.idTransaction == newItem.idTransaction
+                return oldItem.idTransaction == newItem.idTransaction
             }
 
             override fun areContentsTheSame(oldItem: Transaction, newItem: Transaction): Boolean {

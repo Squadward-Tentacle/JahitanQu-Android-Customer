@@ -20,6 +20,7 @@ import com.example.jahitanqu_customer.presentation.views.main.myorder.adapter.My
 import com.example.jahitanqu_customer.presentation.views.main.myorder.adapter.MyOrderRecycleAdapter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.android.synthetic.main.fragment_my_order.*
 import kotlinx.android.synthetic.main.fragment_my_order_active.*
 import java.io.BufferedReader
 import java.io.InputStream
@@ -54,7 +55,9 @@ class MyOrderActiveFragment : Fragment(), BaseContract {
         navController = Navigation.findNavController(view)
         rvOrderActive.layoutManager = LinearLayoutManager(context)
         myOrderRecycleAdapter = MyOrderRecycleAdapter()
+        pbOrderActive.visibility = View.VISIBLE
         transactionViewModel.transactionPagedList.observe(viewLifecycleOwner, Observer { it ->
+            pbOrderActive.visibility = View.GONE
             myOrderRecycleAdapter.submitList(it)
             myOrderRecycleAdapter.baseContract = this
             rvOrderActive.adapter = myOrderRecycleAdapter

@@ -14,18 +14,9 @@ import com.example.jahitanqu_customer.JahitanQu
 
 import com.example.jahitanqu_customer.R
 import com.example.jahitanqu_customer.common.BaseContract
-import com.example.jahitanqu_customer.model.Transaction
 import com.example.jahitanqu_customer.presentation.viewmodel.TransactionViewModel
-import com.example.jahitanqu_customer.presentation.views.main.myorder.adapter.MyOrderClickListener
 import com.example.jahitanqu_customer.presentation.views.main.myorder.adapter.MyOrderRecycleAdapter
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import kotlinx.android.synthetic.main.fragment_my_order_active.*
 import kotlinx.android.synthetic.main.fragment_my_order_history.*
-import java.io.BufferedReader
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.lang.reflect.Type
 import javax.inject.Inject
 
 class MyOrderHistoryFragment : Fragment(), BaseContract {
@@ -54,8 +45,10 @@ class MyOrderHistoryFragment : Fragment(), BaseContract {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
         rvOrderHistory.layoutManager = LinearLayoutManager(context)
+        pbOrderHistory.visibility = View.VISIBLE
         myOrderRecycleAdapter = MyOrderRecycleAdapter()
         transactionViewModel.transactionPagedList.observe(viewLifecycleOwner, Observer { it ->
+            pbOrderHistory.visibility = View.GONE
             myOrderRecycleAdapter.submitList(it)
             myOrderRecycleAdapter.baseContract = this
             rvOrderHistory.adapter = myOrderRecycleAdapter

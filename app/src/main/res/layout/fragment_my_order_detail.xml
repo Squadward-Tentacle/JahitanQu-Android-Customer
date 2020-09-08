@@ -37,6 +37,7 @@
     </androidx.appcompat.widget.Toolbar>
 
     <ScrollView
+        android:id="@+id/scrollView3"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -88,7 +89,7 @@
                     android:layout_marginTop="4dp"
                     android:fontFamily="@font/roboto_light"
                     android:text="TR-201001"
-                    android:textColor="@android:color/black"/>
+                    android:textColor="@android:color/black" />
 
                 <TextView
                     android:id="@+id/tvTailorName"
@@ -97,7 +98,7 @@
                     android:layout_marginTop="4dp"
                     android:fontFamily="@font/roboto_regular"
                     android:text="Tailor Name"
-                    android:textColor="@android:color/black"/>
+                    android:textColor="@android:color/black" />
             </LinearLayout>
 
             <View
@@ -136,7 +137,7 @@
                         android:layout_weight="3"
                         android:fontFamily="@font/roboto_light"
                         android:text="Description"
-                        android:textColor="@android:color/black"/>
+                        android:textColor="@android:color/black" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -145,8 +146,8 @@
                         android:layout_weight="5"
                         android:fontFamily="@font/roboto_regular"
                         android:text=":"
-                        android:textColor="@android:color/black"
-                        android:textAlignment="center" />
+                        android:textAlignment="center"
+                        android:textColor="@android:color/black" />
 
                     <TextView
                         android:id="@+id/tvTransactionDesc"
@@ -156,7 +157,7 @@
                         android:layout_weight="3"
                         android:fontFamily="@font/roboto_light"
                         android:text="Description"
-                        android:textColor="@android:color/black"/>
+                        android:textColor="@android:color/black" />
 
                 </LinearLayout>
 
@@ -174,7 +175,7 @@
                         android:layout_weight="3"
                         android:fontFamily="@font/roboto_light"
                         android:text="Address"
-                        android:textColor="@android:color/black"/>
+                        android:textColor="@android:color/black" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -183,8 +184,8 @@
                         android:layout_weight="5"
                         android:fontFamily="@font/roboto_regular"
                         android:text=":"
-                        android:textColor="@android:color/black"
-                        android:textAlignment="center" />
+                        android:textAlignment="center"
+                        android:textColor="@android:color/black" />
 
                     <TextView
                         android:id="@+id/tvTransactionAddress"
@@ -194,7 +195,7 @@
                         android:layout_weight="3"
                         android:fontFamily="@font/roboto_light"
                         android:text="Address"
-                        android:textColor="@android:color/black"/>
+                        android:textColor="@android:color/black" />
 
                 </LinearLayout>
 
@@ -212,7 +213,7 @@
                         android:layout_weight="3"
                         android:fontFamily="@font/roboto_light"
                         android:text="Estimation Finished"
-                        android:textColor="@android:color/black"/>
+                        android:textColor="@android:color/black" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -221,8 +222,8 @@
                         android:layout_weight="5"
                         android:fontFamily="@font/roboto_regular"
                         android:text=":"
-                        android:textColor="@android:color/black"
-                        android:textAlignment="center" />
+                        android:textAlignment="center"
+                        android:textColor="@android:color/black" />
 
                     <TextView
                         android:id="@+id/tvTransactionEstimation"
@@ -232,13 +233,13 @@
                         android:layout_weight="3"
                         android:fontFamily="@font/roboto_light"
                         android:text="5 Sept 2020"
-                        android:textColor="@android:color/black"/>
+                        android:textColor="@android:color/black" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="150dp"
                     android:layout_marginTop="8dp"
                     android:background="@color/colorSoftBlack">
 
@@ -246,6 +247,7 @@
                         android:id="@+id/ivTransactionImage"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:scaleType="fitXY"
                         android:src="@drawable/ic_photo" />
 
                 </LinearLayout>
@@ -303,4 +305,21 @@
 
     </ScrollView>
 
+    <RelativeLayout
+        android:id="@+id/pbDetailOrder"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:translationZ="5dp"
+        android:background="@android:color/white"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar2">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

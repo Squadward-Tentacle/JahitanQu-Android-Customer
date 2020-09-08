@@ -17,8 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:layout_weight="2"
-            app:riv_corner_radius="20dp"
-            android:background="@color/colorLightBlack"
+            app:riv_corner_radius="2dp"
             android:scaleType="fitXY" />
 
         <LinearLayout
