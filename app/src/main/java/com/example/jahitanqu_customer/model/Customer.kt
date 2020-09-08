@@ -12,7 +12,7 @@ data class Customer(
     var password:String = "",
     var firstname:String = "",
     var lastname:String = "",
-    var avatarImageUrl:String = "",
+    var imageUrl:String = "",
     var phone:String = "",
     var address: Address = Address(),
     var createdAt:String = "",

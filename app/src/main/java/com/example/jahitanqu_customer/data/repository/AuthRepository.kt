@@ -50,7 +50,7 @@ class AuthRepository @Inject constructor(
                     prefs.keyLatitude = customer.address.latitude
                     prefs.keyLongitude = customer.address.longitude
                     prefs.keyPhoneNumber = customer.phone
-                    prefs.keyPhotoUrl = customer.avatarImageUrl
+                    prefs.keyPhotoUrl = customer.imageUrl
                     prefs.keyToken = responseCustomer.token
                     isLogin.value = true
                 } else {
@@ -160,7 +160,7 @@ class AuthRepository @Inject constructor(
                     prefs.keyLatitude = customer.address.latitude
                     prefs.keyLongitude = customer.address.longitude
                     prefs.keyPhoneNumber = customer.phone
-                    prefs.keyPhotoUrl = customer.avatarImageUrl
+                    prefs.keyPhotoUrl = customer.imageUrl
                     prefs.keyToken = responseCustomer?.token
                     isUpdated.value = true
                 } else {

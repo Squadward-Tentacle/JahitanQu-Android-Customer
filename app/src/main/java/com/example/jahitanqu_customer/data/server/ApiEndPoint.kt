@@ -8,10 +8,11 @@ object ApiEndPoint {
     const val ENDPOINT_LOGIN_CUSTOMER = "customer/login"
     const val ENDPOINT_GET_TOKEN = "customer/token"
     const val ENDPOINT_REGISTER_CUSTOMER = "customer/register"
-    const val ENDPOINT_GET_TRANSACTION = "transaction/{idCustomer}"
     const val ENDPOINT_UPDATE_CUSTOMER = "customer/{idCustomer}"
-    const val ENDPOINT_GET_TRANSACTION_BY_ID = "transaction/{idTransaction}"
     const val ENDPOINT_GET_TOP_RATED_TAILOR = "tailor/topRate"
     const val ENDPOINT_GET_TAILOR = "tailor/{page}"
     const val ENDPOINT_GET_TAILOR_BY_ID = "tailor/id/{idTailor}"
+    const val ENDPOINT_GET_TRANSACTION = "transaction/idCustomer/{idCustomer}/{page}"
+    const val ENDPOINT_GET_TRANSACTION_BY_ID = "transaction/id/{idTransaction}"
+    const val ENDPOINT_POST_TRANSACTION = "transaction"
 }

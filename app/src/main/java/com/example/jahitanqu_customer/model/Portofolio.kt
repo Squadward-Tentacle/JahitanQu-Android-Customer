@@ -7,5 +7,5 @@ package com.example.jahitanqu_customer.model
 
 data class Portofolio(
     val idPortofolio:String="",
-    val avatarImageUrl:String = ""
+    val imageUrl:String = ""
 )

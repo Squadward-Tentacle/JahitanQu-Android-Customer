@@ -11,7 +11,7 @@ data class Tailor(
     val lastname: String,
     val phone: String,
     val description:String,
-    val avatarImageUrl: String = "",
+    val imageUrl: String = "",
     val rating:Int = 0,
     val address: Address = Address(),
     val portofolio: List<Portofolio>,

@@ -61,7 +61,9 @@ class TailorDataSource @Inject constructor(private val tailorApi: TailorApi) :
                     val gson = Gson()
                     val outputList: List<Tailor> =
                         gson.fromJson(gson.toJson(tailor), listOfMyClassObject)
-                    callback.onResult(outputList, params.key + 1)
+                    if (params.key <= response?.metaData?.pageCount!!) {
+                        callback.onResult(outputList, params.key + 1)
+                    }
                 }
             }
 
@@ -69,10 +71,6 @@ class TailorDataSource @Inject constructor(private val tailorApi: TailorApi) :
     }
 
     override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Tailor>) {
-        var key: Int = 0
-        if (params.key > 1) {
-            key = params.key - 1
-        }
         tailorApi.getTailor(prefs.keyToken!!, params.key).enqueue(object : Callback<Wrapper> {
             override fun onFailure(call: Call<Wrapper>, t: Throwable) {
                 println(t.localizedMessage)
@@ -86,7 +84,9 @@ class TailorDataSource @Inject constructor(private val tailorApi: TailorApi) :
                     val gson = Gson()
                     val outputList: List<Tailor> =
                         gson.fromJson(gson.toJson(tailor), listOfMyClassObject)
-                    callback.onResult(outputList, key)
+                    if (params.key > 1) {
+                        callback.onResult(outputList, params.key - 1)
+                    }
 
                 }
             }

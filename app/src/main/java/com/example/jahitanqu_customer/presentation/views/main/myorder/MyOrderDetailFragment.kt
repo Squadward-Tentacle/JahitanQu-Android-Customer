@@ -14,6 +14,7 @@ import com.example.jahitanqu_customer.JahitanQu
 
 import com.example.jahitanqu_customer.R
 import com.example.jahitanqu_customer.common.utils.Util
+import com.example.jahitanqu_customer.model.Transaction
 import com.example.jahitanqu_customer.presentation.viewmodel.TransactionViewModel
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_account.*
@@ -42,10 +43,13 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val idTransaction = arguments?.getString("idTransaction")
+        transactionViewModel.getTransactionById(idTransaction!!)
+
         transactionViewModel.transaction.observe(viewLifecycleOwner, Observer {
-            tvTransactionStatus.text = Util.convertStatusToString(it.status)
+            tvTransactionStatus.text = it.statusName
             tvTransactionNumber.text = it.idTransaction
-            tvTailorName.text = "${it.tailor.firstname} ${it.tailor.lastname}"
+            tvTailorName.text = it.firstnameTailor
             tvTransactionDesc.text = it.description
             tvTransactionAddress.text = it.address.addressName
             if (!it.imageUrl.isNullOrEmpty()) {
@@ -59,6 +63,9 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener {
         btnPayment.setOnClickListener(this)
         btnAddFeedback.setOnClickListener(this)
         btnBack.setOnClickListener(this)
+    }
+
+    private fun changeStateButton(transaction: Transaction){
     }
 
     override fun onClick(p0: View?) {

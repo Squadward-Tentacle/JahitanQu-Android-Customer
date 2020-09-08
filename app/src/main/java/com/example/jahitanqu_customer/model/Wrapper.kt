@@ -14,5 +14,7 @@ data class Wrapper (
     @SerializedName("Payload")
     val payload:Any,
     @SerializedName("Token")
-    var token:String
+    var token:String,
+    @SerializedName("MetaData")
+    var metaData:MetaData
 )

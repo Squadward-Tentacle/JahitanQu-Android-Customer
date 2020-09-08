@@ -28,9 +28,9 @@ class RecycleTailorAdapter : PagedListAdapter<Tailor, RecycleTailorViewHolder>(
 
     override fun onBindViewHolder(holder: RecycleTailorViewHolder, position: Int) {
         var data = getItem(position)
-        if (data?.avatarImageUrl?.isNotEmpty()!!) {
+        if (data?.imageUrl?.isNotEmpty()!!) {
             Picasso.get()
-                .load(data.avatarImageUrl)
+                .load(data.imageUrl)
                 .placeholder(R.drawable.ic_photo)
                 .error(R.drawable.ic_photo)
                 .into(holder.imageTailor)

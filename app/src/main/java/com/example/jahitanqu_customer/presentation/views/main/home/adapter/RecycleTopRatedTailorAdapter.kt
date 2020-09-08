@@ -29,9 +29,9 @@ class RecycleTopRatedTailorAdapter(private val tailorList:List<Tailor>) : Recycl
 
     override fun onBindViewHolder(holderTopRated: RecycleTopRatedTailorViewHolder, position: Int) {
         var data = tailorList[position]
-        if (!data.avatarImageUrl.isNullOrEmpty()){
+        if (!data.imageUrl.isNullOrEmpty()){
             Picasso.get()
-                .load(data.avatarImageUrl)
+                .load(data.imageUrl)
                 .placeholder(R.drawable.ic_photo)
                 .error(R.drawable.ic_photo)
                 .into(holderTopRated.imageTailor)

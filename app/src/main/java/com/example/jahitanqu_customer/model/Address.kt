@@ -7,5 +7,6 @@ package com.example.jahitanqu_customer.model
 data class Address(
     var addressName:String="",
     var latitude:Float = 0.0F,
-    var longitude:Float = 0.0F
+    var longitude:Float = 0.0F,
+    var default:Int = 1
 )

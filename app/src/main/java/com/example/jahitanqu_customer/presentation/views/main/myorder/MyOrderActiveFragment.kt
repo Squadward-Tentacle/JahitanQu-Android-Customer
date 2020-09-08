@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.jahitanqu_customer.JahitanQu
 import com.example.jahitanqu_customer.R
@@ -51,30 +53,16 @@ class MyOrderActiveFragment : Fragment(), BaseContract {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
         rvOrderActive.layoutManager = LinearLayoutManager(context)
-        fakeData()
-//        transactionViewModel.getTransaction()
-//        transactionViewModel.transactionList.observe(viewLifecycleOwner, Observer { it ->
-//            val filterData = it.filter { it.status != 6 }
-//            myOrderRecycleAdapter = MyOrderRecycleAdapter(filterData)
-//            myOrderRecycleAdapter.myOrderClickListener = this
-//            rvOrderActive.adapter = myOrderRecycleAdapter
-//        })
-    }
-
-    fun fakeData(){
-        val inputStream: InputStream = resources.openRawResource(R.raw.transaction)
-        val reader = BufferedReader(InputStreamReader(inputStream))
-        val listOfMyClassObject: Type = object : TypeToken<List<Transaction?>?>() {}.type
-        val gson = Gson()
-        val outputList: List<Transaction> = gson.fromJson(reader, listOfMyClassObject)
-        val filterOutput = outputList.filter { it.status != 6 }
-        myOrderRecycleAdapter = MyOrderRecycleAdapter(filterOutput)
-        myOrderRecycleAdapter.baseContract = this
-        rvOrderActive.adapter = myOrderRecycleAdapter
+        myOrderRecycleAdapter = MyOrderRecycleAdapter()
+        transactionViewModel.transactionPagedList.observe(viewLifecycleOwner, Observer { it ->
+            myOrderRecycleAdapter.submitList(it)
+            myOrderRecycleAdapter.baseContract = this
+            rvOrderActive.adapter = myOrderRecycleAdapter
+        })
     }
 
     override fun itemClickListener(id: String) {
-//        transactionViewModel.getTransactionById(id)
-        navController.navigate(R.id.toMyOrderDetailFragment)
+        val bundle = bundleOf("idTransaction" to id)
+        navController.navigate(R.id.toMyOrderDetailFragment,bundle)
     }
 }
