@@ -22,6 +22,12 @@ interface TailorApi {
     @GET(ApiEndPoint.ENDPOINT_GET_TAILOR)
     fun getTailor(
         @Header(Constant.KEY_AUTHORIZATION) auth:String,
-        @Path("page") page:Int
+        @Path(Constant.KEY_PAGE) page:Int
     ): Call<Wrapper>
+
+    @GET(ApiEndPoint.ENDPOINT_GET_TAILOR_BY_ID)
+    fun getTailorById(
+        @Header(Constant.KEY_AUTHORIZATION) auth: String,
+        @Path(Constant.KEY_ID_TAILOR) idTailor:String
+    ):Call<Wrapper>
 }

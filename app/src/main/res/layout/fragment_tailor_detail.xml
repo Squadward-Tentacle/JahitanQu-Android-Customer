@@ -70,7 +70,9 @@
 
     </RelativeLayout>
 
+
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
@@ -97,6 +99,7 @@
                     android:orientation="vertical">
 
                     <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/ivTailor"
                         android:layout_width="match_parent"
                         android:layout_height="100dp"
                         android:background="@color/colorLightBlack"
@@ -107,11 +110,10 @@
                         style="?android:attr/ratingBarStyleSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
                         android:layout_marginTop="8dp"
                         android:max="5"
-                        android:scaleX="1.3"
-                        android:scaleY="1.3"
+                        android:scaleX="1.1"
+                        android:scaleY="1.1"
                         android:transformPivotX="10dp"
                         android:transformPivotY="10dp" />
                 </LinearLayout>
@@ -174,6 +176,7 @@
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/tvTailorDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -201,6 +204,23 @@
         </LinearLayout>
 
     </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/pbLoading"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@android:color/white"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar2">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,7 @@
 package com.example.jahitanqu_customer.presentation.viewmodel
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PageKeyedDataSource
@@ -17,12 +18,10 @@ import javax.inject.Inject
  */
 class TailorViewModel @Inject constructor(
     private val tailorRepository: TailorRepository,
-    private val tailorDataSourceFactory: TailorDataSourceFactory
+    tailorDataSourceFactory: TailorDataSourceFactory
 ) : ViewModel() {
 
-
-    var tailorTopRatedList: LiveData<List<Tailor>> = tailorRepository.tailorTopRatedList
-    var tailorPagedList: LiveData<PagedList<Tailor>>
+    val tailorPagedList: LiveData<PagedList<Tailor>>
     private val  liveDataSource: LiveData<TailorDataSource>
 
     init {
@@ -31,8 +30,16 @@ class TailorViewModel @Inject constructor(
         tailorPagedList = LivePagedListBuilder(tailorDataSourceFactory, config).build()
     }
 
+    val tailor:LiveData<Tailor> = tailorRepository.tailor
+    val tailorTopRatedList: LiveData<List<Tailor>> = tailorRepository.tailorTopRatedList
+
+
     fun getTopRatedTailor() {
         tailorRepository.getTopRatedTailor()
+    }
+
+    fun getTailorById(idTailor:String){
+        tailorRepository.getTailorById(idTailor)
     }
 
 

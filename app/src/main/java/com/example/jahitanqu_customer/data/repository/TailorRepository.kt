@@ -20,6 +20,7 @@ import javax.inject.Inject
 class TailorRepository @Inject constructor(private val tailorApi: TailorApi) {
 
     val tailorTopRatedList: MutableLiveData<List<Tailor>> = MutableLiveData()
+    val tailor: MutableLiveData<Tailor> = MutableLiveData()
 
     fun getTopRatedTailor() {
         tailorApi.getTopRatedTailor(prefs.keyToken!!).enqueue(object : Callback<Wrapper> {
@@ -39,6 +40,24 @@ class TailorRepository @Inject constructor(private val tailorApi: TailorApi) {
                 }
             }
 
+        })
+    }
+
+    fun getTailorById(idTailor: String) {
+        tailorApi.getTailorById(prefs.keyToken!!, idTailor).enqueue(object : Callback<Wrapper> {
+            override fun onFailure(call: Call<Wrapper>, t: Throwable) {
+                println(t.localizedMessage)
+            }
+
+            override fun onResponse(call: Call<Wrapper>, response: Response<Wrapper>) {
+                val response = response.body()
+                val tailorResponse = response?.payload
+                val gson = Gson()
+                tailor.value = gson.fromJson(
+                    gson.toJson(tailorResponse),
+                    Tailor::class.java
+                )
+            }
         })
     }
 

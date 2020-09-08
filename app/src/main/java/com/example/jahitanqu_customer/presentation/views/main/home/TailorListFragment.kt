@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import androidx.core.os.bundleOf
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
@@ -26,8 +27,6 @@ class TailorListFragment : Fragment(),BaseContract {
 
     lateinit var recycleTailorAdapter: RecycleTailorAdapter
     lateinit var navController: NavController
-
-    var page: Int = 1
 
     @Inject
     lateinit var tailorViewModel: TailorViewModel
@@ -57,6 +56,7 @@ class TailorListFragment : Fragment(),BaseContract {
     }
 
     override fun itemClickListener(id: String) {
-        navController.navigate(R.id.toTailorDetailFragment)
+        val bundle = bundleOf("idTailor" to id)
+        navController.navigate(R.id.toTailorDetailFragment,bundle)
     }
 }

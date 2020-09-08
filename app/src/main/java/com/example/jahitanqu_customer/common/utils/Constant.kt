@@ -13,4 +13,6 @@ object Constant {
     const val KEY_LATITUDE = "latitude"
     const val KEY_LONGITUDE = "longitude"
     const val KEY_PHONE = "phone"
+    const val KEY_PAGE = "page"
+    const val KEY_ID_TAILOR ="idTailor"
 }
