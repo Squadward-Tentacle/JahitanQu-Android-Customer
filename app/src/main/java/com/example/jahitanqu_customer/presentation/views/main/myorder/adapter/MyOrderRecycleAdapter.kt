@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.jahitanqu_customer.R
+import com.example.jahitanqu_customer.common.BaseContract
 import com.example.jahitanqu_customer.common.utils.Util
 import com.example.jahitanqu_customer.model.Transaction
 
@@ -16,7 +17,7 @@ import com.example.jahitanqu_customer.model.Transaction
 class MyOrderRecycleAdapter(private val transactionList: List<Transaction>) :
     RecyclerView.Adapter<MyOrderViewHolder>() {
 
-    lateinit var myOrderClickListener: MyOrderClickListener
+    lateinit var baseContract: BaseContract
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyOrderViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -40,7 +41,7 @@ class MyOrderRecycleAdapter(private val transactionList: List<Transaction>) :
             else -> holder.transactionStatus.setTextColor(Color.parseColor("#105E15"))
         }
         holder.itemView.setOnClickListener {
-            myOrderClickListener.onItemClick(transaction.idTransaction)
+            baseContract.itemClickListener(transaction.idTransaction)
         }
     }
 

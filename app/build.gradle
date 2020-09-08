@@ -34,6 +34,7 @@ android {
 dependencies {
     def lifecycle_version = "2.2.0"
     def nav_version = "2.3.0-alpha03"
+    def paging_version = "2.1.2"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -84,9 +85,13 @@ dependencies {
 
     //circle image
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+    implementation 'com.makeramen:roundedimageview:2.3.0'
 
     //glide
     implementation 'com.squareup.picasso:picasso:2.71828'
+
+    //paging
+    implementation "androidx.paging:paging-runtime:$paging_version"
 
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'

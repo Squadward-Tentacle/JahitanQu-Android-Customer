@@ -3,21 +3,24 @@
 
     <item
         android:id="@+id/btnHome"
-        android:icon="@drawable/ic_home"
-        android:enabled="true"
+        android:icon="@drawable/ic_home_black_24dp"
         android:title="@string/home"
+        />
+
+    <item
+        android:id="@+id/btnChat"
+        android:icon="@drawable/ic_chat_black_24dp"
+        android:title="@string/chat"
         />
 
     <item
         android:id="@+id/btnMyOrder"
         android:icon="@drawable/ic_my_order"
-        android:enabled="true"
-        android:title="@string/my_order"
+        android:title="@string/order"
         />
     <item
         android:id="@+id/btnAccount"
-        android:icon="@drawable/ic_user"
-        android:enabled="true"
+        android:icon="@drawable/ic_person_black_24dp"
         android:title="@string/account"
         />
 

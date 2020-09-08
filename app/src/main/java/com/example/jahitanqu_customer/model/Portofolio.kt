@@ -5,7 +5,7 @@ package com.example.jahitanqu_customer.model
  * Email maulibrahim19@gmail.com
  */
 
-class Portofolio(
+data class Portofolio(
     val idPortofolio:String="",
     val avatarImageUrl:String = ""
 )

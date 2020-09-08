@@ -5,11 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
+import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.Observer
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.jahitanqu_customer.JahitanQu
 
 import com.example.jahitanqu_customer.R
+import com.example.jahitanqu_customer.common.BaseContract
 import com.example.jahitanqu_customer.presentation.viewmodel.TailorViewModel
 import com.example.jahitanqu_customer.presentation.views.main.home.adapter.RecycleTailorAdapter
 import com.example.jahitanqu_customer.presentation.views.main.home.adapter.RecycleTopRatedTailorAdapter
@@ -17,9 +22,12 @@ import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_tailor_list.*
 import javax.inject.Inject
 
-class TailorListFragment : Fragment() {
+class TailorListFragment : Fragment(),BaseContract {
 
     lateinit var recycleTailorAdapter: RecycleTailorAdapter
+    lateinit var navController: NavController
+
+    var page: Int = 1
 
     @Inject
     lateinit var tailorViewModel: TailorViewModel
@@ -33,17 +41,22 @@ class TailorListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_tailor_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navController = Navigation.findNavController(view)
         rvListTailor.layoutManager = LinearLayoutManager(context)
-        tailorViewModel.getTailor(1)
-        tailorViewModel.tailorList.observe(viewLifecycleOwner, Observer { it ->
-            recycleTailorAdapter = RecycleTailorAdapter(it)
-            rvListTailor.adapter = recycleTailorAdapter
+        recycleTailorAdapter = RecycleTailorAdapter()
+        recycleTailorAdapter.baseContract = this
+        tailorViewModel.tailorPagedList.observe(viewLifecycleOwner, Observer {
+            recycleTailorAdapter.submitList(it)
         })
+        rvListTailor.adapter = recycleTailorAdapter
+    }
+
+    override fun itemClickListener(id: String) {
+        navController.navigate(R.id.toTailorDetailFragment)
     }
 }

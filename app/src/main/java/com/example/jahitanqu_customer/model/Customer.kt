@@ -6,7 +6,7 @@ import java.util.*
  * Created by Maulana Ibrahim on 03/September/2020
  * Email maulibrahim19@gmail.com
  */
-class Customer(
+data class Customer(
     var idCustomer:String = "",
     var email:String = "",
     var password:String = "",

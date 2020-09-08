@@ -2,6 +2,7 @@ package com.example.jahitanqu_customer.presentation.views.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -21,22 +22,27 @@ class MainActivity : AppCompatActivity() {
         (applicationContext as JahitanQu).applicationComponent.inject(this)
 
         navController = (nav_host_fragment_main as NavHostFragment).navController
-        NavigationUI.setupWithNavController(bottom_navigation,navController)
+        visibilityNavElements(navController)
+        NavigationUI.setupWithNavController(bottom_navigation, navController)
         bottom_navigation.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.btnHome -> {
                     navController.navigate(R.id.toHomeFragment)
                     true
                 }
+                R.id.btnChat ->{
+                    navController.navigate(R.id.toChatFragment)
+                    true
+                }
                 R.id.btnMyOrder -> {
                     navController.navigate(R.id.toMyOrderFragment)
                     true
                 }
-                R.id.btnAccount ->{
+                R.id.btnAccount -> {
                     navController.navigate(R.id.toAccountFragment)
                     true
                 }
-                else ->{
+                else -> {
                     navController.navigate(R.id.toHomeFragment)
                     true
                 }
@@ -44,11 +50,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        val intent = Intent(Intent.ACTION_MAIN)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        intent.addCategory(Intent.CATEGORY_HOME)
-        startActivity(intent)
+    private fun visibilityNavElements(navController: NavController) {
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.homeFragment,
+                R.id.accountFragment,
+                R.id.chatFragment,
+                R.id.myOrderFragment -> bottom_navigation?.visibility = View.VISIBLE
+                else -> bottom_navigation?.visibility = View.GONE
+            }
+        }
     }
 }

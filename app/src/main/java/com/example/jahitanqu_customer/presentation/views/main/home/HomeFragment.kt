@@ -11,6 +11,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.jahitanqu_customer.JahitanQu
 import com.example.jahitanqu_customer.R
+import com.example.jahitanqu_customer.common.BaseContract
 import com.example.jahitanqu_customer.prefs
 import com.example.jahitanqu_customer.presentation.viewmodel.TailorViewModel
 import com.example.jahitanqu_customer.presentation.views.main.home.adapter.RecycleTopRatedTailorAdapter
@@ -18,7 +19,7 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_home.*
 import javax.inject.Inject
 
-class HomeFragment : Fragment(),View.OnClickListener {
+class HomeFragment : Fragment(),View.OnClickListener,BaseContract {
 
     lateinit var navController: NavController
 
@@ -51,6 +52,7 @@ class HomeFragment : Fragment(),View.OnClickListener {
         rvTopTailor.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL, false)
         tailorViewModel.tailorTopRatedList.observe(viewLifecycleOwner, Observer { it ->
             recycleTopRatedTailorAdapter = RecycleTopRatedTailorAdapter(it)
+            recycleTopRatedTailorAdapter.baseContract = this
             rvTopTailor.adapter = recycleTopRatedTailorAdapter
         })
     }
@@ -66,6 +68,10 @@ class HomeFragment : Fragment(),View.OnClickListener {
                 navController.navigate(R.id.toTailorListFragment)
             }
         }
+    }
+
+    override fun itemClickListener(id: String) {
+        navController.navigate(R.id.toTailorDetailFragment)
     }
 
 

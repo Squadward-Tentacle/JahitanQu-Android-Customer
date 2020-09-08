@@ -36,5 +36,10 @@
     <string name="my_order">My Order</string>
     <string name="description_order">Description Order</string>
     <string name="detail_order">Detail Order</string>
+    <string name="order">Order</string>
+    <string name="chat">Chat</string>
+    <string name="contact">Contact</string>
+    <string name="reservation">Reservation</string>
+    <string name="portofolio">Portofolio</string>
 
 </resources>

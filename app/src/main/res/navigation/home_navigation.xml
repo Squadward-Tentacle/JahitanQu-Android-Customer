@@ -34,9 +34,20 @@
         />
 
     <action
+        android:id="@+id/toChatFragment"
+        app:destination="@id/chatFragment"
+        app:popUpTo="@+id/toChatFragment"
+        app:popUpToInclusive="true"
+        />
+
+    <action
         android:id="@+id/toMyOrderDetailFragment"
         app:destination="@id/myOrderDetailFragment"
         />
+
+    <action
+        android:id="@+id/toTailorDetailFragment"
+        app:destination="@id/tailorDetailFragment"/>
 
     <fragment
         android:id="@+id/homeFragment"
@@ -63,4 +74,15 @@
         android:name="com.example.jahitanqu_customer.presentation.views.main.home.TailorListFragment"
         android:label="fragment_tailor_list"
         tools:layout="@layout/fragment_tailor_list" />
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.jahitanqu_customer.presentation.views.main.chat.ChatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" />
+
+    <fragment
+        android:id="@+id/tailorDetailFragment"
+        android:name="com.example.jahitanqu_customer.presentation.views.main.home.TailorDetailFragment"
+        android:label="fragment_tailor_detail"
+        tools:layout="@layout/fragment_tailor_detail" />
 </navigation>

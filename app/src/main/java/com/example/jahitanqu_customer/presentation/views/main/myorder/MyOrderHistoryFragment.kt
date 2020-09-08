@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.jahitanqu_customer.JahitanQu
 
 import com.example.jahitanqu_customer.R
+import com.example.jahitanqu_customer.common.BaseContract
 import com.example.jahitanqu_customer.model.Transaction
 import com.example.jahitanqu_customer.presentation.viewmodel.TransactionViewModel
 import com.example.jahitanqu_customer.presentation.views.main.myorder.adapter.MyOrderClickListener
@@ -26,7 +27,7 @@ import java.io.InputStreamReader
 import java.lang.reflect.Type
 import javax.inject.Inject
 
-class MyOrderHistoryFragment : Fragment(),MyOrderClickListener {
+class MyOrderHistoryFragment : Fragment(),BaseContract {
 
     lateinit var myOrderRecycleAdapter: MyOrderRecycleAdapter
     lateinit var navController: NavController
@@ -70,12 +71,13 @@ class MyOrderHistoryFragment : Fragment(),MyOrderClickListener {
         val outputList: List<Transaction> = gson.fromJson(reader, listOfMyClassObject)
         val filterOutput = outputList.filter { it.status == 6 }
         myOrderRecycleAdapter = MyOrderRecycleAdapter(filterOutput)
-        myOrderRecycleAdapter.myOrderClickListener = this
+        myOrderRecycleAdapter.baseContract = this
         rvOrderHistory.adapter = myOrderRecycleAdapter
     }
 
-    override fun onItemClick(id: String) {
-//        transactionViewModel.getTransactionById(id)
+    override fun itemClickListener(id: String) {
+        //transactionViewModel.getTransactionById(id)
         navController.navigate(R.id.toMyOrderDetailFragment)
+
     }
 }

@@ -71,7 +71,7 @@ class AccountFragment : Fragment(), View.OnClickListener {
         btnCamera.isClickable = false
     }
 
-    fun initEditText() {
+    private fun initEditText() {
         etFirstname.setText(prefs.keyFirstname)
         etLastName.setText(prefs.keyLastName)
         etEmail.setText(prefs.keyEmail)
@@ -101,8 +101,7 @@ class AccountFragment : Fragment(), View.OnClickListener {
                         fName,
                         lName,
                         phone
-                    ) && !prefs.keyIdCustomer.isNullOrEmpty() && !photoFile.toString()
-                        .isNullOrEmpty()
+                    )
                 ) {
                     val customer = Customer(
                         email = email,
@@ -116,7 +115,7 @@ class AccountFragment : Fragment(), View.OnClickListener {
                         phone = phone
                     )
                     authViewModel.updateCustomer(customer, photoFile)
-                }else{
+                } else {
                     println("CANNOT EDIT")
                 }
                 changeStateNotEditable()

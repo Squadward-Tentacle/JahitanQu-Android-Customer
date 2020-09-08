@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.jahitanqu_customer.R
+import com.example.jahitanqu_customer.common.BaseContract
 import com.example.jahitanqu_customer.model.Tailor
 import com.squareup.picasso.Picasso
 
@@ -13,6 +14,9 @@ import com.squareup.picasso.Picasso
  */
 
 class RecycleTopRatedTailorAdapter(private val tailorList:List<Tailor>) : RecyclerView.Adapter<RecycleTopRatedTailorViewHolder>(){
+
+    lateinit var baseContract: BaseContract
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecycleTopRatedTailorViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_tailor_top_rated, parent, false)
@@ -34,6 +38,9 @@ class RecycleTopRatedTailorAdapter(private val tailorList:List<Tailor>) : Recycl
         }
         holderTopRated.rating.rating = data.rating.toFloat()
         holderTopRated.tailorName.text = "${data.firstname} ${data.lastname}"
+        holderTopRated.itemView.setOnClickListener {
+            baseContract.itemClickListener(data.idTailor)
+        }
     }
 
 }
