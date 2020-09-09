@@ -1,12 +1,16 @@
 package com.example.jahitanqu_customer.presentation.viewmodel
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.example.jahitanqu_customer.data.factory.TransactionDataSource
 import com.example.jahitanqu_customer.data.factory.TransactionDataSourceFactory
+import com.example.jahitanqu_customer.data.factory.TransactionDataSourceHistory
+import com.example.jahitanqu_customer.data.factory.TransactionDataSourceHistoryFactory
 import com.example.jahitanqu_customer.data.repository.TransactionRepository
+import com.example.jahitanqu_customer.model.Address
 import com.example.jahitanqu_customer.model.Transaction
 import javax.inject.Inject
 
@@ -16,19 +20,32 @@ import javax.inject.Inject
  */
 class TransactionViewModel @Inject constructor(
     private val transactionRepository: TransactionRepository,
-    transactionDataSourceFactory: TransactionDataSourceFactory
+    transactionDataSourceFactory: TransactionDataSourceFactory,
+    transactionDataSourceHistoryFactory: TransactionDataSourceHistoryFactory
 ) : ViewModel() {
 
     val transaction: LiveData<Transaction>
     val isSuccessPost:LiveData<Boolean>
 
+    val liveDataAddress:MutableLiveData<Address> = MutableLiveData()
+
+    //transaction Active
     val transactionPagedList: LiveData<PagedList<Transaction>>
     private val liveDataSource: LiveData<TransactionDataSource>
 
+    //transaction History
+    val transactionHistoryPagedList: LiveData<PagedList<Transaction>>
+    private val liveDataSourceHistory: LiveData<TransactionDataSourceHistory>
+
     init {
+        val config = PagedList.Config.Builder().setEnablePlaceholders(false).setPageSize(10).build()
+
         liveDataSource = transactionDataSourceFactory.transactionLiveDataSource
-        val config = PagedList.Config.Builder().setEnablePlaceholders(false).setPageSize(6).build()
         transactionPagedList = LivePagedListBuilder(transactionDataSourceFactory, config).build()
+
+        liveDataSourceHistory = transactionDataSourceHistoryFactory.transactionHistoryLiveDataSource
+        transactionHistoryPagedList = LivePagedListBuilder(transactionDataSourceHistoryFactory, config).build()
+
         transaction = transactionRepository.transaction
         isSuccessPost = transactionRepository.isSuccessPost
     }
@@ -39,5 +56,9 @@ class TransactionViewModel @Inject constructor(
 
     fun postTransaction(transaction: Transaction) {
         transactionRepository.postTransaction(transaction)
+    }
+
+    fun setAddress(address: Address){
+        liveDataAddress.value = address
     }
 }

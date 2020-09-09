@@ -34,12 +34,12 @@ class MyOrderRecycleAdapter : PagedListAdapter<Transaction, MyOrderViewHolder>(D
         holder.transactionStatus.text = transaction?.statusName
         when (transaction?.status) {
             1 -> holder.transactionStatus.setTextColor(Color.parseColor("#EA0037"))
-            6 -> holder.transactionStatus.setTextColor(Color.parseColor("#6CA7F6"))
+            8 -> holder.transactionStatus.setTextColor(Color.parseColor("#6CA7F6"))
             else -> holder.transactionStatus.setTextColor(Color.parseColor("#105E15"))
         }
 
         when(transaction?.status){
-            in 4..8 -> {
+            in 3..8 -> {
                 holder.itemView.setOnClickListener {
                     baseContract.itemClickListener(transaction?.idTransaction!!)
                 }

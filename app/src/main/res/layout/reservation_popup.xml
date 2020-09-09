@@ -26,14 +26,16 @@
             android:hint="Address"
             android:padding="8dp"
             android:textSize="14sp"
+            android:singleLine="true"
+            android:ellipsize="end"
             android:fontFamily="@font/roboto_light"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/button2"
+            app:layout_constraintEnd_toStartOf="@+id/btnSetPlace"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/btnSetPlace"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorDarkBrown"

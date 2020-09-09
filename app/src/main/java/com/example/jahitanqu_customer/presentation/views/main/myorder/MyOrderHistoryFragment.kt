@@ -47,7 +47,7 @@ class MyOrderHistoryFragment : Fragment(), BaseContract {
         rvOrderHistory.layoutManager = LinearLayoutManager(context)
         pbOrderHistory.visibility = View.VISIBLE
         myOrderRecycleAdapter = MyOrderRecycleAdapter()
-        transactionViewModel.transactionPagedList.observe(viewLifecycleOwner, Observer { it ->
+        transactionViewModel.transactionHistoryPagedList.observe(viewLifecycleOwner, Observer { it ->
             pbOrderHistory.visibility = View.GONE
             myOrderRecycleAdapter.submitList(it)
             myOrderRecycleAdapter.baseContract = this

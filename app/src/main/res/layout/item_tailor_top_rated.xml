@@ -12,20 +12,11 @@
         android:orientation="vertical"
         android:padding="8dp">
 
-        <androidx.cardview.widget.CardView
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/ivTailor"
             android:layout_width="match_parent"
             android:layout_height="78dp"
-            android:elevation="0dp"
-            app:cardCornerRadius="10dp">
-
-            <ImageView
-                android:id="@+id/ivTailor"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorLightBlack"
-                android:scaleType="center" />
-
-        </androidx.cardview.widget.CardView>
+            android:scaleType="fitXY" />
 
         <RatingBar
             android:id="@+id/rbRatingTailor"

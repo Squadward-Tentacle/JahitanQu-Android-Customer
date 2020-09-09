@@ -20,7 +20,7 @@ import javax.inject.Inject
  * Created by Maulana Ibrahim on 08/September/2020
  * Email maulibrahim19@gmail.com
  */
-class TransactionDataSource @Inject constructor(private val transactionApi: TransactionApi) :
+class TransactionDataSourceHistory @Inject constructor(private val transactionApi: TransactionApi) :
     PageKeyedDataSource<Int, Transaction>() {
     private val FIRST_PAGE = 1
 
@@ -28,7 +28,7 @@ class TransactionDataSource @Inject constructor(private val transactionApi: Tran
         params: LoadInitialParams<Int>,
         callback: LoadInitialCallback<Int, Transaction>
     ) {
-        transactionApi.getTransactionActive(prefs.keyToken!!, prefs.keyIdCustomer!!, FIRST_PAGE)
+        transactionApi.getTransactionHistory(prefs.keyToken!!, prefs.keyIdCustomer!!, FIRST_PAGE)
             .enqueue(object : Callback<Wrapper> {
                 override fun onFailure(call: Call<Wrapper>, t: Throwable) {
                     println(t.localizedMessage)
@@ -49,7 +49,7 @@ class TransactionDataSource @Inject constructor(private val transactionApi: Tran
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Transaction>) {
-        transactionApi.getTransactionActive(prefs.keyToken!!, prefs.keyIdCustomer!!, params.key)
+        transactionApi.getTransactionHistory(prefs.keyToken!!, prefs.keyIdCustomer!!, params.key)
             .enqueue(object : Callback<Wrapper> {
                 override fun onFailure(call: Call<Wrapper>, t: Throwable) {
                     println(t.localizedMessage)
@@ -72,7 +72,7 @@ class TransactionDataSource @Inject constructor(private val transactionApi: Tran
 
     override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Transaction>) {
 
-        transactionApi.getTransactionActive(prefs.keyToken!!, prefs.keyIdCustomer!!, params.key)
+        transactionApi.getTransactionHistory(prefs.keyToken!!, prefs.keyIdCustomer!!, params.key)
             .enqueue(object : Callback<Wrapper> {
                 override fun onFailure(call: Call<Wrapper>, t: Throwable) {
                     println(t.localizedMessage)

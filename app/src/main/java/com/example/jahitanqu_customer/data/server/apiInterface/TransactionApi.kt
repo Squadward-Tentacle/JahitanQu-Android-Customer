@@ -14,8 +14,15 @@ import retrofit2.http.*
  */
 interface TransactionApi {
 
-    @GET(ApiEndPoint.ENDPOINT_GET_TRANSACTION)
-    fun getTransaction(
+    @GET(ApiEndPoint.ENDPOINT_GET_TRANSACTION_ACTIVE)
+    fun getTransactionActive(
+        @Header(Constant.KEY_AUTHORIZATION) token: String,
+        @Path(Constant.KEY_ID_CUSTOMER) idCustomer: String,
+        @Path(Constant.KEY_PAGE) page: Int
+    ): Call<Wrapper>
+
+    @GET(ApiEndPoint.ENDPOINT_GET_TRANSACTION_HISTORY)
+    fun getTransactionHistory(
         @Header(Constant.KEY_AUTHORIZATION) token: String,
         @Path(Constant.KEY_ID_CUSTOMER) idCustomer: String,
         @Path(Constant.KEY_PAGE) page: Int

@@ -12,7 +12,8 @@ object ApiEndPoint {
     const val ENDPOINT_GET_TOP_RATED_TAILOR = "tailor/topRate"
     const val ENDPOINT_GET_TAILOR = "tailor/{page}"
     const val ENDPOINT_GET_TAILOR_BY_ID = "tailor/id/{idTailor}"
-    const val ENDPOINT_GET_TRANSACTION = "transaction/idCustomer/{idCustomer}/{page}"
+    const val ENDPOINT_GET_TRANSACTION_ACTIVE = "transaction/idCustomer/{idCustomer}/{page}"
+    const val ENDPOINT_GET_TRANSACTION_HISTORY = "transaction/history/idCustomer/{idCustomer}/{page}"
     const val ENDPOINT_GET_TRANSACTION_BY_ID = "transaction/id/{idTransaction}"
     const val ENDPOINT_POST_TRANSACTION = "transaction"
 }
