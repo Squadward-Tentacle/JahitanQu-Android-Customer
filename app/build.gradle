@@ -29,6 +29,22 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
+    flavorDimensions "mode"
+    productFlavors {
+        sandbox {
+            applicationId "com.example.jahitanqu_customer"
+            buildConfigField "String", "MERCHANT_BASE_URL", "\"https://jahitanqu.herokuapp.com/index.php/\""
+            buildConfigField "String", "MERCHANT_CLIENT_KEY", "\"SB-Mid-client-rLMxxYtOaOItOhOX\""
+        }
+
+//        production {
+//            applicationId "com.example.jahitanqu_customer"
+//            resValue("String","app_name","JahitanQu Sandbox")
+//            buildConfigField "String", "MERCHANT_BASE_URL", "\"https://jahitanqu.herokuapp.com/index.php\""
+//            buildConfigField "String", "MERCHANT_CLIENT_KEY", "\"SB-Mid-client-rLMxxYtOaOItOhOX\""
+//        }
+    }
+
 }
 
 dependencies {
@@ -99,6 +115,10 @@ dependencies {
     implementation 'com.google.android.libraries.places:places:2.3.0'
 
     implementation 'com.github.mancj:MaterialSearchBar:0.8.5'
+
+    //Midtrans
+    implementation 'com.midtrans:uikit:1.24.0-SANDBOX'
+//    implementation 'com.midtrans:uikit:1.21.2'
 
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'

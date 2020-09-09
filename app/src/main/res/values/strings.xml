@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">JahitanQu_Customer</string>
+    <string name="app_name">JahitanQu</string>
     <string name="facebook_app_id">2672248849713023</string>
     <string name="fb_login_protocol_scheme">fb2672248849713023</string>
     <string name="title_activity_maps">Map</string>

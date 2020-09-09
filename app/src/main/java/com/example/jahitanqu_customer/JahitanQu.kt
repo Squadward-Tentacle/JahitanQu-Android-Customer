@@ -8,6 +8,9 @@ import com.facebook.FacebookSdk
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.midtrans.sdk.corekit.core.themes.CustomColorTheme
+import com.midtrans.sdk.uikit.SdkUIFlowBuilder
+
 
 val prefs: AccountHelper by lazy {
     JahitanQu.prefs!!
@@ -25,6 +28,7 @@ class JahitanQu : Application() {
         prefs = AccountHelper(applicationContext)
         initSDKGoogle()
         initSDKFacebook()
+        initSDKMidtrans()
         super.onCreate()
     }
 
@@ -39,6 +43,24 @@ class JahitanQu : Application() {
 
     private fun initSDKFacebook(){
         FacebookSdk.sdkInitialize(this.applicationContext);
+    }
+
+    private fun initSDKMidtrans(){
+        SdkUIFlowBuilder.init()
+            .setClientKey(BuildConfig.MERCHANT_CLIENT_KEY) // client_key is mandatory
+            .setContext(this.applicationContext)
+            .setTransactionFinishedCallback {
+            }
+            .setMerchantBaseUrl(BuildConfig.MERCHANT_BASE_URL)
+            .enableLog(true)
+            .setColorTheme(
+                CustomColorTheme(
+                    "#FFE51255",
+                    "#B61548",
+                    "#FFE51255"
+                )
+            )
+            .buildSDK()
     }
 
     companion object {

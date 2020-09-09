@@ -15,10 +15,19 @@ import com.example.jahitanqu_customer.JahitanQu
 import com.example.jahitanqu_customer.R
 import com.example.jahitanqu_customer.common.utils.Util
 import com.example.jahitanqu_customer.model.Transaction
+import com.example.jahitanqu_customer.prefs
 import com.example.jahitanqu_customer.presentation.viewmodel.TransactionViewModel
+import com.midtrans.sdk.corekit.core.MidtransSDK
+import com.midtrans.sdk.corekit.core.TransactionRequest
+import com.midtrans.sdk.corekit.models.BankType
+import com.midtrans.sdk.corekit.models.CustomerDetails
+import com.midtrans.sdk.corekit.models.ItemDetails
+import com.midtrans.sdk.corekit.models.snap.Authentication
+import com.midtrans.sdk.corekit.models.snap.CreditCard
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_account.*
 import kotlinx.android.synthetic.main.fragment_my_order_detail.*
+import java.util.ArrayList
 import javax.inject.Inject
 
 class MyOrderDetailFragment : Fragment(), View.OnClickListener {
@@ -26,7 +35,13 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener {
     @Inject
     lateinit var transactionViewModel: TransactionViewModel
 
+    @Inject lateinit var midtransSDK: MidtransSDK
+
     lateinit var navController: NavController
+
+    var idTransaction:String = ""
+    var price:Int = 0
+    var name:String=""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +58,7 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val idTransaction = arguments?.getString("idTransaction")
+        idTransaction = arguments?.getString("idTransaction")!!
         transactionViewModel.getTransactionById(idTransaction!!)
         pbDetailOrder.visibility = View.VISIBLE
         transactionViewModel.transaction.observe(viewLifecycleOwner, Observer {
@@ -60,6 +75,8 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener {
                     .into(ivTransactionImage)
             }
             tvTransactionCost.text = "Rp. ${it.cost}"
+            idTransaction = it.idTransaction
+            price = it.cost
         })
         navController = Navigation.findNavController(view)
         btnPayment.setOnClickListener(this)
@@ -79,7 +96,6 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener {
             }
             else ->{
                 btnPayment.visibility = View.VISIBLE
-                btnPayment.isEnabled = false
                 btnAddFeedback.visibility = View.GONE
             }
         }
@@ -88,7 +104,13 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener {
     override fun onClick(p0: View?) {
         when (p0) {
             btnPayment -> {
-
+                midtransSDK.transactionRequest = transactionRequest(
+                    idTransaction,
+                    price,
+                    1,
+                    "Service"
+                )
+                midtransSDK.startPaymentUiFlow(this.context)
             }
             btnAddFeedback -> {
                 val dialog = MaterialDialog(activity?.window!!.context)
@@ -101,4 +123,30 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener {
             }
         }
     }
+
+    private fun customerDetail():CustomerDetails{
+        val customerDetail = CustomerDetails()
+        customerDetail.firstName = prefs.keyFirstname
+        customerDetail.phone = prefs.keyPhoneNumber
+        customerDetail.email = prefs.keyEmail
+        return customerDetail
+    }
+
+    private fun transactionRequest(id:String, price:Int, qty:Int, name:String):TransactionRequest{
+        val request = TransactionRequest("${System.currentTimeMillis()} ", price.toDouble())
+        request.customerDetails= customerDetail()
+        val detail = ItemDetails(id, price.toDouble(),qty,name)
+        val itemDetails = mutableListOf<ItemDetails>()
+        itemDetails.add(detail)
+        request.itemDetails = itemDetails as ArrayList<ItemDetails>?
+
+        val creditCard = CreditCard()
+        creditCard.isSaveCard = false
+        creditCard.authentication = Authentication.AUTH_RBA
+        creditCard.bank = BankType.MANDIRI
+        request.creditCard = creditCard
+        return request
+    }
+
+
 }

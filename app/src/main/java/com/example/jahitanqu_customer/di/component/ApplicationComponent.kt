@@ -1,6 +1,7 @@
 package com.example.jahitanqu_customer.di.component
 
 import com.example.jahitanqu_customer.di.module.FirebaseModule
+import com.example.jahitanqu_customer.di.module.MidtransModule
 import com.example.jahitanqu_customer.di.module.NetworkModule
 import com.example.jahitanqu_customer.presentation.views.authentication.AuthActivity
 import com.example.jahitanqu_customer.presentation.views.authentication.fragment.LoginFragment
@@ -19,7 +20,7 @@ import dagger.Component
  * Created by Maulana Ibrahim on 03/September/2020
  * Email maulibrahim19@gmail.com
  */
-@Component(modules = [FirebaseModule::class, NetworkModule::class])
+@Component(modules = [FirebaseModule::class, NetworkModule::class,MidtransModule::class])
 interface ApplicationComponent {
     fun inject(authActivity: AuthActivity)
     fun inject(loginFragment: LoginFragment)
