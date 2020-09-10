@@ -1,10 +1,12 @@
 package com.example.jahitanqu_customer.data.server.apiInterface
 
 import com.example.jahitanqu_customer.common.utils.Constant
+import com.example.jahitanqu_customer.data.server.ApiEndPoint.ENDPOINT_COMMENT_CUSTOMER
 import com.example.jahitanqu_customer.data.server.ApiEndPoint.ENDPOINT_GET_TOKEN
 import com.example.jahitanqu_customer.data.server.ApiEndPoint.ENDPOINT_LOGIN_CUSTOMER
 import com.example.jahitanqu_customer.data.server.ApiEndPoint.ENDPOINT_REGISTER_CUSTOMER
 import com.example.jahitanqu_customer.data.server.ApiEndPoint.ENDPOINT_UPDATE_CUSTOMER
+import com.example.jahitanqu_customer.model.Comment
 import com.example.jahitanqu_customer.model.Customer
 import com.example.jahitanqu_customer.model.Wrapper
 import okhttp3.MultipartBody
@@ -42,4 +44,9 @@ interface AuthApi {
         @Part avatarImageUrl:MultipartBody.Part
     ):Call<Wrapper>
 
+    @POST(ENDPOINT_COMMENT_CUSTOMER)
+    fun comment(
+        @Header(Constant.KEY_AUTHORIZATION) auth: String,
+        @Body comment: Comment
+    ):Call<Wrapper>
 }

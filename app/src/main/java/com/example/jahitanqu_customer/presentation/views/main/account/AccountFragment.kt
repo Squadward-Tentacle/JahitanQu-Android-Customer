@@ -24,6 +24,7 @@ import com.example.jahitanqu_customer.model.Address
 import com.example.jahitanqu_customer.model.Customer
 import com.example.jahitanqu_customer.prefs
 import com.example.jahitanqu_customer.presentation.viewmodel.AuthViewModel
+import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_account.*
 import java.io.File
@@ -43,6 +44,8 @@ class AccountFragment : Fragment(), View.OnClickListener {
 
     @Inject
     lateinit var authViewModel: AuthViewModel
+
+    @Inject lateinit var firebaseAuth:FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,6 +71,7 @@ class AccountFragment : Fragment(), View.OnClickListener {
         btnEdit.setOnClickListener(this)
         btnSave.setOnClickListener(this)
         btnCamera.setOnClickListener(this)
+        btnLogout.setOnClickListener(this)
         btnCamera.isClickable = false
     }
 
@@ -88,6 +92,11 @@ class AccountFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(p0: View?) {
         when (p0) {
+            btnLogout ->{
+                firebaseAuth.signOut()
+                prefs.clear()
+                activity?.finish()
+            }
             btnEdit -> {
                 changeStateEditable()
             }

@@ -3,6 +3,7 @@ package com.example.jahitanqu_customer.data.repository
 import androidx.lifecycle.MutableLiveData
 import com.example.jahitanqu_customer.common.utils.Util
 import com.example.jahitanqu_customer.data.server.apiInterface.AuthApi
+import com.example.jahitanqu_customer.model.Comment
 import com.example.jahitanqu_customer.model.Customer
 import com.example.jahitanqu_customer.model.Wrapper
 import com.example.jahitanqu_customer.prefs
@@ -26,6 +27,8 @@ class AuthRepository @Inject constructor(
     val isLogin: MutableLiveData<Boolean> = MutableLiveData(false)
     val isRegister: MutableLiveData<Boolean> = MutableLiveData(false)
     val isUpdated: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isComment: MutableLiveData<Boolean> = MutableLiveData(false)
+
 
     fun login(customer: Customer) {
         authApi.login(customer).enqueue(object : Callback<Wrapper> {
@@ -170,5 +173,18 @@ class AuthRepository @Inject constructor(
 
         })
 
+    }
+
+    fun comment(comment: Comment){
+        authApi.comment(prefs.keyToken!!,comment).enqueue(object:Callback<Wrapper>{
+            override fun onFailure(call: Call<Wrapper>, t: Throwable) {
+                println(t.localizedMessage)
+            }
+
+            override fun onResponse(call: Call<Wrapper>, response: Response<Wrapper>) {
+                isComment.value = response.code() == 200
+            }
+
+        })
     }
 }

@@ -5,6 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.RatingBar
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -14,8 +18,10 @@ import com.example.jahitanqu_customer.JahitanQu
 
 import com.example.jahitanqu_customer.R
 import com.example.jahitanqu_customer.common.utils.Util
+import com.example.jahitanqu_customer.model.Comment
 import com.example.jahitanqu_customer.model.Transaction
 import com.example.jahitanqu_customer.prefs
+import com.example.jahitanqu_customer.presentation.viewmodel.AuthViewModel
 import com.example.jahitanqu_customer.presentation.viewmodel.TransactionViewModel
 import com.midtrans.sdk.corekit.core.MidtransSDK
 import com.midtrans.sdk.corekit.core.TransactionRequest
@@ -35,13 +41,19 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener {
     @Inject
     lateinit var transactionViewModel: TransactionViewModel
 
+    @Inject
+    lateinit var authViewModel: AuthViewModel
+
     @Inject lateinit var midtransSDK: MidtransSDK
 
     lateinit var navController: NavController
 
+    lateinit var idTailor: String
+
     var idTransaction:String = ""
     var price:Int = 0
     var name:String=""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,6 +89,13 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener {
             tvTransactionCost.text = "Rp. ${it.cost}"
             idTransaction = it.idTransaction
             price = it.cost
+            idTailor = it.idTailor
+        })
+
+        authViewModel.isComment.observe(viewLifecycleOwner, Observer {
+            if (it){
+                Toast.makeText(activity,"Success", Toast.LENGTH_LONG).show()
+            }
         })
         navController = Navigation.findNavController(view)
         btnPayment.setOnClickListener(this)
@@ -116,7 +135,20 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener {
                 val dialog = MaterialDialog(activity?.window!!.context)
                     .noAutoDismiss()
                     .customView(R.layout.feedback_popup)
+                val commentRating = dialog.findViewById<RatingBar>(R.id.rbComment)
+                val commentEditText = dialog.findViewById<Button>(R.id.etComment)
+                val btnSend = dialog.findViewById<Button>(R.id.btnSendComment)
                 dialog.show()
+                val comment = Comment(
+                    idCustomer = prefs.keyIdCustomer!!,
+                    idTailor = idTailor,
+                    rating = commentRating.numStars,
+                    comment = commentEditText.text.toString()
+                )
+                btnSend.setOnClickListener {
+                    authViewModel.comment(comment)
+                    dialog.hide()
+                }
             }
             btnBack -> {
                 navController.navigate(R.id.toMyOrderFragment)

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
@@ -91,6 +92,8 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
     private fun observSuccessPost() {
         transactionViewModel.isSuccessPost.observe(viewLifecycleOwner, Observer {
             if (it) {
+                Toast.makeText(activity,"Success", Toast.LENGTH_LONG).show()
+
                 navController.navigate(R.id.toMyOrderFragment)
             }
         })
