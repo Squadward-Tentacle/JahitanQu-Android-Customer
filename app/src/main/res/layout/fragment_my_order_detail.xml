@@ -290,6 +290,15 @@
                     android:visibility="gone" />
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnFinishedTransaction"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:backgroundTint="@color/colorDarkBrown"
+                    android:text="Finish Transaction"
+                    android:visibility="visible" />
+
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnAddFeedback"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
