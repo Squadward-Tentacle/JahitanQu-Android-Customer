@@ -124,7 +124,7 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener, TransactionFinis
 
     private fun changeStateButton(transaction: Transaction) {
         when (transaction.status) {
-            2 -> {
+            4 -> {
                 btnPayment.visibility = View.VISIBLE
                 btnAddFeedback.visibility = View.GONE
                 btnFinishedTransaction.visibility = View.GONE
@@ -163,22 +163,22 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener, TransactionFinis
                     .noAutoDismiss()
                     .customView(R.layout.feedback_popup)
                 val commentRating = dialog.findViewById<RatingBar>(R.id.rbComment)
-                val commentEditText = dialog.findViewById<Button>(R.id.etComment)
+                val commentEditText = dialog.findViewById<EditText>(R.id.etComment)
                 val btnSend = dialog.findViewById<Button>(R.id.btnSendComment)
                 dialog.show()
-                val comment = Comment(
-                    idCustomer = prefs.keyIdCustomer!!,
-                    idTailor = idTailor,
-                    rating = commentRating.numStars,
-                    comment = commentEditText.text.toString()
-                )
                 btnSend.setOnClickListener {
+                    val comment = Comment(
+                        idCustomer = prefs.keyIdCustomer!!,
+                        idTailor = idTailor,
+                        rating = commentRating.rating.toInt(),
+                        comment = commentEditText.text.toString()
+                    )
                     authViewModel.comment(comment)
                     dialog.hide()
                 }
             }
             btnFinishedTransaction -> {
-                transactionViewModel.putTransaction("9", idTransaction)
+                transactionViewModel.putTransaction(idTransaction,"9")
             }
 
             btnBack -> {
