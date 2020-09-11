@@ -17,12 +17,14 @@ import com.afollestad.materialdialogs.customview.customView
 import com.example.jahitanqu_customer.JahitanQu
 
 import com.example.jahitanqu_customer.R
+import com.example.jahitanqu_customer.common.utils.Constant
 import com.example.jahitanqu_customer.common.utils.Util
 import com.example.jahitanqu_customer.model.Comment
 import com.example.jahitanqu_customer.model.Transaction
 import com.example.jahitanqu_customer.prefs
 import com.example.jahitanqu_customer.presentation.viewmodel.AuthViewModel
 import com.example.jahitanqu_customer.presentation.viewmodel.TransactionViewModel
+import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback
 import com.midtrans.sdk.corekit.core.MidtransSDK
 import com.midtrans.sdk.corekit.core.TransactionRequest
 import com.midtrans.sdk.corekit.models.BankType
@@ -30,13 +32,14 @@ import com.midtrans.sdk.corekit.models.CustomerDetails
 import com.midtrans.sdk.corekit.models.ItemDetails
 import com.midtrans.sdk.corekit.models.snap.Authentication
 import com.midtrans.sdk.corekit.models.snap.CreditCard
+import com.midtrans.sdk.corekit.models.snap.TransactionResult
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_account.*
 import kotlinx.android.synthetic.main.fragment_my_order_detail.*
 import java.util.ArrayList
 import javax.inject.Inject
 
-class MyOrderDetailFragment : Fragment(), View.OnClickListener {
+class MyOrderDetailFragment : Fragment(), View.OnClickListener,TransactionFinishedCallback {
 
     @Inject
     lateinit var transactionViewModel: TransactionViewModel
@@ -50,9 +53,11 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener {
 
     lateinit var idTailor: String
 
-    var idTransaction:String = ""
+    private lateinit var idTransaction:String
+
     var price:Int = 0
-    var name:String=""
+
+    lateinit var name: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,7 +75,9 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        idTransaction = arguments?.getString("idTransaction")!!
+        init()
+        navController = Navigation.findNavController(view)
+        idTransaction = arguments?.getString(Constant.KEY_ID_TRANSACTION)!!
         transactionViewModel.getTransactionById(idTransaction!!)
         pbDetailOrder.visibility = View.VISIBLE
         transactionViewModel.transaction.observe(viewLifecycleOwner, Observer {
@@ -92,12 +99,22 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener {
             idTailor = it.idTailor
         })
 
+        transactionViewModel.isUpdate.observe(viewLifecycleOwner, Observer {
+            if (it){
+                navController.navigate(R.id.toMyOrderFragment)
+            }
+        })
+
         authViewModel.isComment.observe(viewLifecycleOwner, Observer {
             if (it){
                 Toast.makeText(activity,"Success", Toast.LENGTH_LONG).show()
             }
         })
-        navController = Navigation.findNavController(view)
+
+    }
+
+    private fun init(){
+        midtransSDK.setTransactionFinishedCallback(this)
         btnPayment.setOnClickListener(this)
         btnAddFeedback.setOnClickListener(this)
         btnBack.setOnClickListener(this)
@@ -178,6 +195,32 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener {
         creditCard.bank = BankType.MANDIRI
         request.creditCard = creditCard
         return request
+    }
+
+    override fun onTransactionFinished(p0: TransactionResult?) {
+        if (p0?.response != null){
+            when(p0.status){
+                TransactionResult.STATUS_SUCCESS->{
+                    Toast.makeText(this.context,"Transaction Finished:${p0.response.transactionId}",Toast.LENGTH_SHORT).show()
+                }
+                TransactionResult.STATUS_PENDING ->{
+                    Toast.makeText(this.context,"Transaction Pending: ${p0.response.transactionId}",Toast.LENGTH_SHORT).show()
+                }
+                TransactionResult.STATUS_FAILED ->{
+                    Toast.makeText(this.context,"Transaction Pending: ${p0.response.transactionId}",Toast.LENGTH_SHORT).show()
+                }
+            }
+            p0.response.validationMessages
+
+        }else if (p0?.isTransactionCanceled!!){
+            Toast.makeText(this.context,"Transaction Canceled: ${p0.response.transactionId}",Toast.LENGTH_SHORT).show()
+        }else{
+            if (p0.status == TransactionResult.STATUS_INVALID){
+                Toast.makeText(this.context,"Transaction Invalid",Toast.LENGTH_SHORT).show()
+            }else{
+                Toast.makeText(this.context,"Transaction Finished with failure",Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
 

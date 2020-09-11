@@ -1,6 +1,7 @@
 package com.example.jahitanqu_customer.data.repository
 
 import androidx.lifecycle.MutableLiveData
+import com.example.jahitanqu_customer.common.utils.Util
 import com.example.jahitanqu_customer.data.server.apiInterface.TransactionApi
 import com.example.jahitanqu_customer.model.Transaction
 import com.example.jahitanqu_customer.model.Wrapper
@@ -21,6 +22,7 @@ class TransactionRepository @Inject constructor(private val transactionApi: Tran
 
     val transaction: MutableLiveData<Transaction> = MutableLiveData()
     val isSuccessPost: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isUpdate:MutableLiveData<Boolean> = MutableLiveData(false)
 
     fun getTransactionByID(idTransaction: String) {
         transactionApi.getTransactionById(prefs.keyToken!!, idTransaction)
@@ -55,6 +57,22 @@ class TransactionRepository @Inject constructor(private val transactionApi: Tran
                 }
 
             })
+    }
+
+    fun putTransaction(idTransaction: String,status:String){
+        val status = Util.convertRequestBody(status)
+        transactionApi.putTransaction(prefs.keyToken!!,idTransaction,status).enqueue(object : Callback<Wrapper>{
+            override fun onFailure(call: Call<Wrapper>, t: Throwable) {
+                println(t.localizedMessage)
+            }
+
+            override fun onResponse(call: Call<Wrapper>, response: Response<Wrapper>) {
+                val responseTransaction = response.body()
+                val res = responseTransaction?.statusCode
+                isUpdate.value = res == 200
+            }
+
+        })
     }
 
 }

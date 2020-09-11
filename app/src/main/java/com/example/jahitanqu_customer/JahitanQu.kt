@@ -68,5 +68,4 @@ class JahitanQu : Application() {
         var googleSignInClient: GoogleSignInClient? = null
     }
 
-
 }

@@ -31,6 +31,10 @@ object Util {
         )
     }
 
+    fun convertRequestBody(value:String):RequestBody{
+        return RequestBody.create("text/plain".toMediaTypeOrNull(),value)
+    }
+
     fun validationInput(vararg inputs:String):Boolean{
         for (input in inputs){
             if (input.isNullOrEmpty()){

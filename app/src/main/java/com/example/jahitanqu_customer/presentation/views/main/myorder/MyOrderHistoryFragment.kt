@@ -14,6 +14,7 @@ import com.example.jahitanqu_customer.JahitanQu
 
 import com.example.jahitanqu_customer.R
 import com.example.jahitanqu_customer.common.BaseContract
+import com.example.jahitanqu_customer.common.utils.Constant
 import com.example.jahitanqu_customer.presentation.viewmodel.TransactionViewModel
 import com.example.jahitanqu_customer.presentation.views.main.myorder.adapter.MyOrderRecycleAdapter
 import kotlinx.android.synthetic.main.fragment_my_order_history.*
@@ -56,7 +57,7 @@ class MyOrderHistoryFragment : Fragment(), BaseContract {
     }
 
     override fun itemClickListener(id: String) {
-        val bundle = bundleOf("idTransaction" to id)
+        val bundle = bundleOf(Constant.KEY_ID_TRANSACTION to id)
         navController.navigate(R.id.toMyOrderDetailFragment,bundle)
 
     }

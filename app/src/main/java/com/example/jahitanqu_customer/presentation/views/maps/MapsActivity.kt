@@ -18,6 +18,7 @@ import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.jahitanqu_customer.R
+import com.example.jahitanqu_customer.common.utils.Constant
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
@@ -172,9 +173,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             val currentMarkerLocation = mMap.cameraPosition.target
             val address = getAddress(currentMarkerLocation.latitude,currentMarkerLocation.longitude)
             val intent = Intent()
-            intent.putExtra("LATITUDE", currentMarkerLocation.latitude)
-            intent.putExtra("LONGITUDE", currentMarkerLocation.longitude)
-            intent.putExtra("ADDRESS",address)
+            intent.putExtra(Constant.KEY_LATITUDE, currentMarkerLocation.latitude)
+            intent.putExtra(Constant.KEY_LONGITUDE, currentMarkerLocation.longitude)
+            intent.putExtra(Constant.KEY_ADDRESS,address)
             setResult(101, intent)
             finish()
         }

@@ -5,6 +5,7 @@ import com.example.jahitanqu_customer.data.server.ApiEndPoint
 import com.example.jahitanqu_customer.model.Customer
 import com.example.jahitanqu_customer.model.Transaction
 import com.example.jahitanqu_customer.model.Wrapper
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -38,6 +39,14 @@ interface TransactionApi {
     fun postTransaction(
         @Header(Constant.KEY_AUTHORIZATION) token:String,
         @Body transaction: Transaction
+    ):Call<Wrapper>
+
+    @Multipart
+    @PUT(ApiEndPoint.ENDPOINT_PUT_TRANSACTION)
+    fun putTransaction(
+        @Header (Constant.KEY_AUTHORIZATION) token: String,
+        @Path(Constant.KEY_ID_TRANSACTION) idTransaction: String,
+        @Part(Constant.KEY_STATUS) status:RequestBody
     ):Call<Wrapper>
 
 }

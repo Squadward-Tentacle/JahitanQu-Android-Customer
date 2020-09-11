@@ -115,20 +115,13 @@ class AuthRepository @Inject constructor(
     fun updateCustomer(customer: Customer, image: File) {
         val token = prefs.keyToken
         val avatarImageUrl = Util.convertMultipartFile(image, "avatarImageUrl")
-        val email = RequestBody.create("text/plain".toMediaTypeOrNull(), customer.email)
-        val fname = RequestBody.create("text/plain".toMediaTypeOrNull(), customer.firstname)
-        val lname = RequestBody.create("text/plain".toMediaTypeOrNull(), customer.lastname)
-        val addressName =
-            RequestBody.create("text/plain".toMediaTypeOrNull(), customer.address.addressName)
-        val lat = RequestBody.create(
-            "text/plain".toMediaTypeOrNull(),
-            customer.address.latitude.toString()
-        )
-        val lng = RequestBody.create(
-            "text/plain".toMediaTypeOrNull(),
-            customer.address.longitude.toString()
-        )
-        val phone = RequestBody.create("text/plain".toMediaTypeOrNull(), customer.phone)
+        val email = Util.convertRequestBody(customer.email)
+        val fname = Util.convertRequestBody(customer.firstname)
+        val lname = Util.convertRequestBody(customer.lastname)
+        val addressName =Util.convertRequestBody(customer.address.addressName)
+        val lat = Util.convertRequestBody(customer.address.latitude.toString())
+        val lng = Util.convertRequestBody(customer.address.longitude.toString())
+        val phone = Util.convertRequestBody(customer.phone)
         authApi.updateCustomer(
             token!!,
             prefs.keyIdCustomer!!,

@@ -17,4 +17,5 @@ object ApiEndPoint {
     const val ENDPOINT_GET_TRANSACTION_HISTORY = "transaction/history/idCustomer/{idCustomer}/{page}"
     const val ENDPOINT_GET_TRANSACTION_BY_ID = "transaction/id/{idTransaction}"
     const val ENDPOINT_POST_TRANSACTION = "transaction"
+    const val ENDPOINT_PUT_TRANSACTION = "transaction/status/{idTransaction}"
 }

@@ -17,4 +17,6 @@ object Constant {
     const val KEY_ID_TAILOR ="idTailor"
     const val KEY_ID_CUSTOMER="idCustomer"
     const val KEY_ID_TRANSACTION ="idTransaction"
+    const val KEY_STATUS = "status"
+    const val KEY_ADDRESS = "address"
 }

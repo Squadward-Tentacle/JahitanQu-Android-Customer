@@ -64,6 +64,8 @@ class AccountFragment : Fragment(), View.OnClickListener {
         authViewModel.isUpdated.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             if (it) {
                 initEditText()
+            }else{
+                Toast.makeText(this.context,"Failure",Toast.LENGTH_SHORT).show()
             }
         })
         photoFile = File("")
@@ -111,6 +113,7 @@ class AccountFragment : Fragment(), View.OnClickListener {
                         lName,
                         phone
                     )
+                    && !photoFile.absolutePath.isNullOrEmpty()
                 ) {
                     val customer = Customer(
                         email = email,
@@ -125,7 +128,7 @@ class AccountFragment : Fragment(), View.OnClickListener {
                     )
                     authViewModel.updateCustomer(customer, photoFile)
                 } else {
-                    println("CANNOT EDIT")
+                    Toast.makeText(this.context,"Please Fill all Field",Toast.LENGTH_SHORT).show()
                 }
                 changeStateNotEditable()
             }
@@ -135,7 +138,7 @@ class AccountFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    fun changeStateEditable() {
+    private fun changeStateEditable() {
         btnEdit.visibility = View.GONE
         btnSave.visibility = View.VISIBLE
         etFirstname.isEnabled = true
@@ -146,7 +149,7 @@ class AccountFragment : Fragment(), View.OnClickListener {
         btnPlace.isClickable = true
     }
 
-    fun changeStateNotEditable() {
+    private fun changeStateNotEditable() {
         btnEdit.visibility = View.VISIBLE
         btnSave.visibility = View.GONE
         etFirstname.isEnabled = false

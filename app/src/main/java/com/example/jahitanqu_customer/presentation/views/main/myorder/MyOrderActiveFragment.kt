@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.jahitanqu_customer.JahitanQu
 import com.example.jahitanqu_customer.R
 import com.example.jahitanqu_customer.common.BaseContract
+import com.example.jahitanqu_customer.common.utils.Constant
 import com.example.jahitanqu_customer.model.Transaction
 import com.example.jahitanqu_customer.presentation.viewmodel.TransactionViewModel
 import com.example.jahitanqu_customer.presentation.views.main.myorder.adapter.MyOrderClickListener
@@ -65,7 +66,7 @@ class MyOrderActiveFragment : Fragment(), BaseContract {
     }
 
     override fun itemClickListener(id: String) {
-        val bundle = bundleOf("idTransaction" to id)
+        val bundle = bundleOf(Constant.KEY_ID_TRANSACTION to id)
         navController.navigate(R.id.toMyOrderDetailFragment,bundle)
     }
 }

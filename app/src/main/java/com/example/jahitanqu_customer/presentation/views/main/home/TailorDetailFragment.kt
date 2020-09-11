@@ -19,6 +19,7 @@ import com.afollestad.materialdialogs.bottomsheets.setPeekHeight
 import com.afollestad.materialdialogs.customview.customView
 import com.example.jahitanqu_customer.JahitanQu
 import com.example.jahitanqu_customer.R
+import com.example.jahitanqu_customer.common.utils.Constant
 import com.example.jahitanqu_customer.model.Address
 import com.example.jahitanqu_customer.model.Transaction
 import com.example.jahitanqu_customer.prefs
@@ -27,6 +28,8 @@ import com.example.jahitanqu_customer.presentation.viewmodel.TransactionViewMode
 import com.example.jahitanqu_customer.presentation.views.main.home.adapter.RecycleCommentAdapter
 import com.example.jahitanqu_customer.presentation.views.main.home.adapter.RecyclePortofolioAdapter
 import com.example.jahitanqu_customer.presentation.views.maps.MapsActivity
+import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback
+import com.midtrans.sdk.corekit.models.snap.TransactionResult
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_tailor_detail.*
 import javax.inject.Inject
@@ -70,7 +73,7 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
         navController = Navigation.findNavController(view)
         tailorViewModel.getTailorById(idTailor!!)
         observeTailor()
-        observSuccessPost()
+        observeSuccessPost()
     }
 
     private fun init() {
@@ -89,7 +92,7 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
 
     }
 
-    private fun observSuccessPost() {
+    private fun observeSuccessPost() {
         transactionViewModel.isSuccessPost.observe(viewLifecycleOwner, Observer {
             if (it) {
                 Toast.makeText(activity,"Success", Toast.LENGTH_LONG).show()
@@ -160,9 +163,9 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_MAPS) {
-            val latitude = data!!.getDoubleExtra("LATITUDE",0.0)
-            val longitude = data.getDoubleExtra("LONGITUDE",0.0)
-            val addresses = data.getStringExtra("ADDRESS")
+            val latitude = data!!.getDoubleExtra(Constant.KEY_LATITUDE,0.0)
+            val longitude = data.getDoubleExtra(Constant.KEY_LONGITUDE,0.0)
+            val addresses = data.getStringExtra(Constant.KEY_ADDRESS)
             address = Address(
                 addresses,
                 latitude.toFloat(),
@@ -172,4 +175,5 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
             transactionViewModel.setAddress(address)
         }
     }
+
 }

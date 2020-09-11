@@ -26,6 +26,7 @@ class TransactionViewModel @Inject constructor(
 
     val transaction: LiveData<Transaction>
     val isSuccessPost:LiveData<Boolean>
+    val isUpdate:LiveData<Boolean>
 
     val liveDataAddress:MutableLiveData<Address> = MutableLiveData()
 
@@ -48,6 +49,7 @@ class TransactionViewModel @Inject constructor(
 
         transaction = transactionRepository.transaction
         isSuccessPost = transactionRepository.isSuccessPost
+        isUpdate = transactionRepository.isUpdate
     }
 
     fun getTransactionById(idTransaction: String) {
@@ -56,6 +58,10 @@ class TransactionViewModel @Inject constructor(
 
     fun postTransaction(transaction: Transaction) {
         transactionRepository.postTransaction(transaction)
+    }
+
+    fun putTransaction(idTransaction: String,status:String){
+        transactionRepository.putTransaction(idTransaction,status)
     }
 
     fun setAddress(address: Address){
