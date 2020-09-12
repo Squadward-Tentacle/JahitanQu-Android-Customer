@@ -125,6 +125,8 @@ dependencies {
     implementation 'com.midtrans:uikit:1.24.0-SANDBOX'
 //    implementation 'com.midtrans:uikit:1.21.2'
 
+    //socket.io
+    implementation 'com.github.nkzawa:socket.io-client:0.3.0'
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'

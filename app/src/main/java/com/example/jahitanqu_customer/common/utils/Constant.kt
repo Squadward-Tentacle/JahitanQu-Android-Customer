@@ -19,4 +19,5 @@ object Constant {
     const val KEY_ID_TRANSACTION ="idTransaction"
     const val KEY_STATUS = "status"
     const val KEY_ADDRESS = "address"
+    const val CHAT_SERVER_URL ="http://2b4c8f773233.ngrok.io"
 }

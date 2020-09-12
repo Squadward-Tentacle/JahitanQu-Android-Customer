@@ -10,5 +10,6 @@ import com.example.jahitanqu_customer.R
  * Email maulibrahim19@gmail.com
  */
 class RecycleChatViewHolder(view: View):RecyclerView.ViewHolder(view) {
-    val chatText:TextView = view.findViewById(R.id.tvChat)
+    val chatText:TextView = view.findViewById(R.id.message_body)
+    val chatUser:TextView = view.findViewById(R.id.name)
 }

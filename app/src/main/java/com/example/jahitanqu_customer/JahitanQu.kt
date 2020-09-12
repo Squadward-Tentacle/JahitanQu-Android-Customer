@@ -2,14 +2,18 @@ package com.example.jahitanqu_customer
 
 import android.app.Application
 import com.example.jahitanqu_customer.common.utils.AccountHelper
+import com.example.jahitanqu_customer.common.utils.Constant
 import com.example.jahitanqu_customer.di.component.ApplicationComponent
 import com.example.jahitanqu_customer.di.component.DaggerApplicationComponent
 import com.facebook.FacebookSdk
+import com.github.nkzawa.socketio.client.IO
+import com.github.nkzawa.socketio.client.Socket
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.midtrans.sdk.corekit.core.themes.CustomColorTheme
 import com.midtrans.sdk.uikit.SdkUIFlowBuilder
+import java.net.URISyntaxException
 
 
 val prefs: AccountHelper by lazy {
@@ -18,6 +22,10 @@ val prefs: AccountHelper by lazy {
 
 val signInGoogle:GoogleSignInClient by lazy {
     JahitanQu.googleSignInClient!!
+}
+
+val socket:Socket by lazy {
+    JahitanQu.socket!!
 }
 
 class JahitanQu : Application() {
@@ -29,6 +37,7 @@ class JahitanQu : Application() {
         initSDKGoogle()
         initSDKFacebook()
         initSDKMidtrans()
+        initSocket()
         super.onCreate()
     }
 
@@ -63,9 +72,18 @@ class JahitanQu : Application() {
             .buildSDK()
     }
 
+    private fun initSocket(){
+        try {
+            socket = IO.socket(Constant.CHAT_SERVER_URL)
+        }catch (e: URISyntaxException){
+            e.printStackTrace()
+        }
+    }
+
     companion object {
         var prefs: AccountHelper? = null
         var googleSignInClient: GoogleSignInClient? = null
+        var socket: Socket? = null
     }
 
 }
