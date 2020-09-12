@@ -22,7 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
         android:usesCleartextTraffic="true"
-        tools:replace="android:usesCleartextTraffic,android:allowBackup">
+        tools:replace="android:usesCleartextTraffic,android:allowBackup,android:icon">
         <activity android:name=".presentation.views.main.MainActivity" />
         <activity android:name=".presentation.views.maps.MapsActivity" />
         <activity android:name=".presentation.views.authentication.AuthActivity">

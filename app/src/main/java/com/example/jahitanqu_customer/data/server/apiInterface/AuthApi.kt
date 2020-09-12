@@ -40,7 +40,7 @@ interface AuthApi {
         @Part(Constant.KEY_ADDRESSNAME) addressName:RequestBody,
         @Part(Constant.KEY_LATITUDE) latitude:RequestBody,
         @Part(Constant.KEY_LONGITUDE) longitude:RequestBody,
-        @Part(Constant.KEY_LONGITUDE) phone:RequestBody,
+        @Part(Constant.KEY_PHONE) phone:RequestBody,
         @Part avatarImageUrl:MultipartBody.Part
     ):Call<Wrapper>
 

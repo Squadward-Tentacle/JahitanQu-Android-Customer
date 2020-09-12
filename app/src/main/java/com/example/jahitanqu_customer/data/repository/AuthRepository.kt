@@ -114,7 +114,7 @@ class AuthRepository @Inject constructor(
 
     fun updateCustomer(customer: Customer, image: File) {
         val token = prefs.keyToken
-        val avatarImageUrl = Util.convertMultipartFile(image, "avatarImageUrl")
+        val avatarImageUrl = Util.convertMultipartFile(image, "imageUrl")
         val email = Util.convertRequestBody(customer.email)
         val fname = Util.convertRequestBody(customer.firstname)
         val lname = Util.convertRequestBody(customer.lastname)
@@ -157,7 +157,6 @@ class AuthRepository @Inject constructor(
                     prefs.keyLongitude = customer.address.longitude
                     prefs.keyPhoneNumber = customer.phone
                     prefs.keyPhotoUrl = customer.imageUrl
-                    prefs.keyToken = responseCustomer?.token
                     isUpdated.value = true
                 } else {
                     isUpdated.value = false

@@ -40,18 +40,18 @@
 
         </LinearLayout>
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/ic_custom_edittext"
-            android:drawableLeft="@drawable/ic_search_black_24dp"
-            android:drawablePadding="10dp"
-            android:drawableTint="@color/colorSoftBlack"
-            android:fontFamily="@font/roboto_light"
-            android:hint="Search"
-            android:padding="8dp"
-            android:textSize="14sp" />
+<!--        <EditText-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="16dp"-->
+<!--            android:background="@drawable/ic_custom_edittext"-->
+<!--            android:drawableLeft="@drawable/ic_search_black_24dp"-->
+<!--            android:drawablePadding="10dp"-->
+<!--            android:drawableTint="@color/colorSoftBlack"-->
+<!--            android:fontFamily="@font/roboto_light"-->
+<!--            android:hint="Search"-->
+<!--            android:padding="8dp"-->
+<!--            android:textSize="14sp" />-->
 
 
     </LinearLayout>

@@ -19,11 +19,13 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import com.example.jahitanqu_customer.JahitanQu
 import com.example.jahitanqu_customer.R
+import com.example.jahitanqu_customer.common.utils.Constant
 import com.example.jahitanqu_customer.common.utils.Util
 import com.example.jahitanqu_customer.model.Address
 import com.example.jahitanqu_customer.model.Customer
 import com.example.jahitanqu_customer.prefs
 import com.example.jahitanqu_customer.presentation.viewmodel.AuthViewModel
+import com.example.jahitanqu_customer.presentation.views.maps.MapsActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_account.*
@@ -39,13 +41,19 @@ class AccountFragment : Fragment(), View.OnClickListener {
     private val OPEN_CAMERA_REQUEST_CODE = 77
     private val SELECT_FILE_FROM_STORAGE = 88
     private val REQUEST_READ_STORAGE_PERMISSION = 99
+    private val REQUEST_READ_CAMERA_PERMISSION = 98
+    private val REQUEST_READ_FINE_LOCATION_PERMISSION = 97
+    private val REQUEST_CODE_MAPS = 101
     lateinit var currentPhotoPath: String
     lateinit var photoFile: File
 
     @Inject
     lateinit var authViewModel: AuthViewModel
 
-    @Inject lateinit var firebaseAuth:FirebaseAuth
+    @Inject
+    lateinit var firebaseAuth: FirebaseAuth
+
+    lateinit var address: Address
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,20 +72,34 @@ class AccountFragment : Fragment(), View.OnClickListener {
         authViewModel.isUpdated.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             if (it) {
                 initEditText()
-            }else{
-                Toast.makeText(this.context,"Failure",Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
             }
         })
         photoFile = File("")
         initEditText()
+        address = Address(
+            prefs.keyAddressName!!,
+            prefs.keyLatitude!!,
+            prefs.keyLongitude!!,
+            1
+        )
         btnEdit.setOnClickListener(this)
         btnSave.setOnClickListener(this)
         btnCamera.setOnClickListener(this)
         btnLogout.setOnClickListener(this)
         btnCamera.isClickable = false
+        btnPlace.isClickable =false
+        btnPlace.isEnabled = false
+        btnPlace.setOnClickListener(this)
+        btnCancel.setOnClickListener(this)
     }
 
     private fun initEditText() {
+        if (prefs.keyIdCustomer.isNullOrEmpty()) {
+            btnEdit.visibility = View.GONE
+        } else {
+            btnEdit.visibility = View.VISIBLE
+        }
         etFirstname.setText(prefs.keyFirstname)
         etLastName.setText(prefs.keyLastName)
         etEmail.setText(prefs.keyEmail)
@@ -94,7 +116,7 @@ class AccountFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(p0: View?) {
         when (p0) {
-            btnLogout ->{
+            btnLogout -> {
                 firebaseAuth.signOut()
                 prefs.clear()
                 activity?.finish()
@@ -113,51 +135,70 @@ class AccountFragment : Fragment(), View.OnClickListener {
                         lName,
                         phone
                     )
-                    && !photoFile.absolutePath.isNullOrEmpty()
                 ) {
-                    val customer = Customer(
-                        email = email,
-                        firstname = fName,
-                        lastname = lName,
-                        address = Address(
-                            addressName = "Jl.x",
-                            latitude = (-6.90777).toFloat(),
-                            longitude = (-6.90777).toFloat()
-                        ),
-                        phone = phone
-                    )
-                    authViewModel.updateCustomer(customer, photoFile)
+                    if (photoFile.length() > 0) {
+                        val customer = Customer(
+                            email = email,
+                            firstname = fName,
+                            lastname = lName,
+                            address = address,
+                            phone = phone
+                        )
+                        authViewModel.updateCustomer(customer, photoFile)
+                    } else {
+                        Toast.makeText(
+                            this.context,
+                            "For now you must to change your foto before edit",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 } else {
-                    Toast.makeText(this.context,"Please Fill all Field",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this.context, "Please Fill all Field", Toast.LENGTH_SHORT).show()
                 }
                 changeStateNotEditable()
             }
             btnCamera -> {
                 selectImage()
             }
+            btnPlace -> {
+                if (activity?.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    startActivityForResult(
+                        Intent(this.context, MapsActivity::class.java),
+                        REQUEST_CODE_MAPS
+                    )
+                } else {
+                    checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                }
+            }
+            btnCancel -> {
+                changeStateNotEditable()
+                initEditText()
+            }
         }
     }
 
     private fun changeStateEditable() {
         btnEdit.visibility = View.GONE
-        btnSave.visibility = View.VISIBLE
+        layoutAccountEditable.visibility = View.VISIBLE
         etFirstname.isEnabled = true
         etLastName.isEnabled = true
         etEmail.isEnabled = true
         etPhoneNumber.isEnabled = true
         btnCamera.isClickable = true
         btnPlace.isClickable = true
+        btnPlace.isEnabled = true
     }
 
     private fun changeStateNotEditable() {
         btnEdit.visibility = View.VISIBLE
-        btnSave.visibility = View.GONE
+        layoutAccountEditable.visibility = View.GONE
         etFirstname.isEnabled = false
         etLastName.isEnabled = false
         etEmail.isEnabled = false
         etPhoneNumber.isEnabled = false
         btnCamera.isClickable = false
         btnPlace.isClickable = false
+        btnPlace.isEnabled = false
     }
 
 
@@ -170,11 +211,18 @@ class AccountFragment : Fragment(), View.OnClickListener {
         builder.setItems(items) { dialog, item ->
             when {
                 items[item] == "Take Photo" -> {
-                    openCamera()
+                    if (activity?.checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                        openCamera()
+                    } else {
+                        checkPermission(Manifest.permission.CAMERA)
+                    }
                 }
                 items[item] == "Choose from Library" -> {
-                    checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                    browseFile()
+                    if (activity?.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                        browseFile()
+                    } else {
+                        checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    }
                 }
                 items[item] == "Cancel" -> {
                     dialog.dismiss()
@@ -213,6 +261,18 @@ class AccountFragment : Fragment(), View.OnClickListener {
             photoFile = imageFile
             val imageBitmap = BitmapFactory.decodeFile(imageFile.absolutePath)
             profile_image.setImageBitmap(imageBitmap)
+        }
+        if (requestCode == REQUEST_CODE_MAPS) {
+            val latitude = data!!.getDoubleExtra(Constant.KEY_LATITUDE, 0.0)
+            val longitude = data.getDoubleExtra(Constant.KEY_LONGITUDE, 0.0)
+            val addresses = data.getStringExtra(Constant.KEY_ADDRESS)
+            address = Address(
+                addresses,
+                latitude.toFloat(),
+                longitude.toFloat(),
+                2
+            )
+            etPlace.setText(addresses)
         }
     }
 
@@ -265,7 +325,59 @@ class AccountFragment : Fragment(), View.OnClickListener {
                     )
                 }
             }
+            Manifest.permission.CAMERA -> {
+                if (activity?.checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(
+                        arrayOf(
+                            Manifest.permission.CAMERA
+                        ),
+                        REQUEST_READ_CAMERA_PERMISSION
+                    )
+                }
+            }
+            Manifest.permission.ACCESS_FINE_LOCATION -> {
+                if (activity?.checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(
+                        arrayOf(
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        ),
+                        REQUEST_READ_FINE_LOCATION_PERMISSION
+                    )
+                }
+            }
         }
 
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_READ_CAMERA_PERMISSION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openCamera()
+            } else {
+                Toast.makeText(context, "camera permission denied", Toast.LENGTH_LONG).show();
+            }
+        }
+        if (requestCode == REQUEST_READ_STORAGE_PERMISSION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                browseFile()
+            } else {
+                Toast.makeText(context, "storage permission denied", Toast.LENGTH_LONG).show();
+            }
+        }
+        if (requestCode == REQUEST_READ_FINE_LOCATION_PERMISSION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startActivityForResult(
+                    Intent(this.context, MapsActivity::class.java),
+                    REQUEST_CODE_MAPS
+                )
+            } else {
+                Toast.makeText(context, "location permission denied", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

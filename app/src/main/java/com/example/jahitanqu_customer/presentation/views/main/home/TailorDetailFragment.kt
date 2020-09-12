@@ -1,6 +1,8 @@
 package com.example.jahitanqu_customer.presentation.views.main.home
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +15,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.bottomsheets.setPeekHeight
@@ -28,8 +31,6 @@ import com.example.jahitanqu_customer.presentation.viewmodel.TransactionViewMode
 import com.example.jahitanqu_customer.presentation.views.main.home.adapter.RecycleCommentAdapter
 import com.example.jahitanqu_customer.presentation.views.main.home.adapter.RecyclePortofolioAdapter
 import com.example.jahitanqu_customer.presentation.views.maps.MapsActivity
-import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback
-import com.midtrans.sdk.corekit.models.snap.TransactionResult
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_tailor_detail.*
 import javax.inject.Inject
@@ -53,7 +54,9 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
 
     lateinit var address: Address
 
-    val REQUEST_CODE_MAPS = 101
+    private val REQUEST_CODE_MAPS = 101
+    private val REQUEST_READ_FINE_LOCATION_PERMISSION = 97
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,8 +98,9 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
     private fun observeSuccessPost() {
         transactionViewModel.isSuccessPost.observe(viewLifecycleOwner, Observer {
             if (it) {
-                Toast.makeText(activity,"Success", Toast.LENGTH_LONG).show()
-
+                SweetAlertDialog(context, SweetAlertDialog.SUCCESS_TYPE)
+                    .setTitleText("Success")
+                    .show()
                 navController.navigate(R.id.toMyOrderFragment)
             }
         })
@@ -127,44 +131,60 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
     override fun onClick(p0: View?) {
         when (p0) {
             btnReservation -> {
-                val dialog = MaterialDialog(activity?.window!!.context, BottomSheet())
-                    .cornerRadius(16f)
-                    .noAutoDismiss()
-                    .customView(R.layout.reservation_popup)
-                    .setPeekHeight(450)
-                val addressEditText = dialog.findViewById<EditText>(R.id.etAddressBooking)
-                val booking = dialog.findViewById<Button>(R.id.btnBookin)
-                val btnSetPlace = dialog.findViewById<Button>(R.id.btnSetPlace)
+                if (prefs.keyIdCustomer.isNullOrEmpty()) {
+                    Toast.makeText(
+                        context,
+                        "Please Register your account in jahitanQu before you want to reservation",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    val dialog = MaterialDialog(activity?.window!!.context, BottomSheet())
+                        .cornerRadius(16f)
+                        .noAutoDismiss()
+                        .customView(R.layout.reservation_popup)
+                        .setPeekHeight(450)
+                    val addressEditText = dialog.findViewById<EditText>(R.id.etAddressBooking)
+                    val booking = dialog.findViewById<Button>(R.id.btnBookin)
+                    val btnSetPlace = dialog.findViewById<Button>(R.id.btnSetPlace)
 
-                transactionViewModel.liveDataAddress.observe(viewLifecycleOwner, Observer {
-                    addressEditText.setText(it.addressName)
-                })
+                    transactionViewModel.liveDataAddress.observe(viewLifecycleOwner, Observer {
+                        addressEditText.setText(it.addressName)
+                    })
 
-                dialog.show()
+                    dialog.show()
 
-                booking.setOnClickListener {
-                    val transaction = Transaction(
-                        idCustomer = prefs.keyIdCustomer!!,
-                        idTailor = idTailor,
-                        address = address,
-                        status = 1
-                    )
-                    transactionViewModel.postTransaction(transaction)
-                    dialog.hide()
-                }
+                    booking.setOnClickListener {
+                        val transaction = Transaction(
+                            idCustomer = prefs.keyIdCustomer!!,
+                            idTailor = idTailor,
+                            address = address,
+                            status = 1
+                        )
+                        transactionViewModel.postTransaction(transaction)
+                        dialog.hide()
+                    }
 
-                btnSetPlace.setOnClickListener {
-                    startActivityForResult(Intent(this.context, MapsActivity::class.java) ,REQUEST_CODE_MAPS)
+                    btnSetPlace.setOnClickListener {
+                        if (activity?.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                            startActivityForResult(
+                                Intent(this.context, MapsActivity::class.java),
+                                REQUEST_CODE_MAPS
+                            )
+                        } else {
+                            checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                        }
+                    }
                 }
             }
+
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_MAPS) {
-            val latitude = data!!.getDoubleExtra(Constant.KEY_LATITUDE,0.0)
-            val longitude = data.getDoubleExtra(Constant.KEY_LONGITUDE,0.0)
+            val latitude = data!!.getDoubleExtra(Constant.KEY_LATITUDE, 0.0)
+            val longitude = data.getDoubleExtra(Constant.KEY_LONGITUDE, 0.0)
             val addresses = data.getStringExtra(Constant.KEY_ADDRESS)
             address = Address(
                 addresses,
@@ -175,5 +195,39 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
             transactionViewModel.setAddress(address)
         }
     }
+
+    private fun checkPermission(permission: String) {
+        when (permission) {
+            Manifest.permission.ACCESS_FINE_LOCATION -> {
+                if (activity?.checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(
+                        arrayOf(
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        ),
+                        REQUEST_READ_FINE_LOCATION_PERMISSION
+                    )
+                }
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_READ_FINE_LOCATION_PERMISSION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startActivityForResult(
+                    Intent(this.context, MapsActivity::class.java),
+                    REQUEST_CODE_MAPS
+                )
+            } else {
+                Toast.makeText(context, "location permission denied", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
 
 }
