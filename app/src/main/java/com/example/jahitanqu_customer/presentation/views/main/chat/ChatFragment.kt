@@ -62,10 +62,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        rvChat.layoutManager = LinearLayoutManager(context)
-        recycleChatAdapter = RecycleChatAdapter(chatList)
-        rvChat.adapter = recycleChatAdapter
-        btnSendChat.setOnClickListener(this)
+
         uniqueId = UUID.randomUUID().toString()
 
         if (savedInstanceState != null) {
@@ -73,6 +70,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
         }
 
         if (hasConnection) {
+
         } else {
             socket.connect()
             socket.on("connect user", onNewUser)
@@ -86,6 +84,13 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 e.printStackTrace()
             }
         }
+
+        hasConnection = true
+
+        rvChat.layoutManager = LinearLayoutManager(context)
+        recycleChatAdapter = RecycleChatAdapter(chatList)
+        rvChat.adapter = recycleChatAdapter
+        btnSendChat.setOnClickListener(this)
 
         onTypeButtonEnable()
     }
@@ -118,6 +123,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 }
                 btnSendChat.isEnabled = charSequence.toString().trim { it <= ' ' }.isNotEmpty()
             }
+
             override fun afterTextChanged(editable: Editable) {}
         })
     }
@@ -149,7 +155,6 @@ class ChatFragment : Fragment(), View.OnClickListener {
     var onNewMessage = Emitter.Listener { args ->
         activity?.runOnUiThread(Runnable {
             Log.i(TAG, "run: ")
-            Log.i(TAG, "run: " + args.size)
             val data = args[0] as JSONObject
             val username: String
             val message: String
@@ -161,13 +166,14 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 Log.i(TAG, "run: $username$message$id")
                 chatList.add(
                     com.example.jahitanqu_customer.model.Message(
-                        uniqueId = id,
-                        username = username,
-                        message = message
+                        id,
+                        username,
+                        message
                     )
                 )
                 recycleChatAdapter = RecycleChatAdapter(chatList)
                 recycleChatAdapter.notifyDataSetChanged()
+                rvChat.scrollToPosition(chatList.size - 1 )
                 Log.i(TAG, "run:5 ")
             } catch (e: Exception) {
                 return@Runnable
@@ -261,6 +267,22 @@ class ChatFragment : Fragment(), View.OnClickListener {
         socket.off("connect user", onNewUser)
         socket.off("on typing", onTyping)
 
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.i(TAG, "onDestroy: ")
+        val userId = JSONObject()
+        try {
+            userId.put("username", prefs.keyFirstname + " DisConnected")
+            socket.emit("connect user", userId)
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
+        socket.disconnect()
+        socket.off("chat message", onNewMessage)
+        socket.off("connect user", onNewUser)
+        socket.off("on typing", onTyping)
     }
 
 

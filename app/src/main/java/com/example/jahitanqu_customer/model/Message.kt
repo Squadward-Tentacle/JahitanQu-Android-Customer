@@ -6,7 +6,7 @@ package com.example.jahitanqu_customer.model
  */
 
 data class Message(
-    val uniqueId: String = "",
-    val username: String = "",
-    val message: String = ""
+    var userID: String = "",
+    var username: String = "",
+    var message: String = ""
 )
