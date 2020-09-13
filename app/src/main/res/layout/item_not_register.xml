@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="400dp"
+        android:layout_height="400dp"
         android:src="@drawable/ic_subscription"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,8 +20,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:fontFamily="@font/roboto_bold"
-        android:text="OOPS YOU MUST REGISTERED"
+        android:fontFamily="@font/roboto_medium"
+        android:text="Oops you must register"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="@+id/imageView2"
         app:layout_constraintStart_toStartOf="@+id/imageView2"
@@ -30,7 +30,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/roboto_regular"
+        android:fontFamily="@font/roboto_light"
         android:text="Before you access it"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@+id/textView2"

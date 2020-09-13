@@ -8,6 +8,7 @@ data class Comment(
     val idCustomer:String="",
     val idTailor:String="",
     val firstname:String = "",
+    val imageUrl:String = "",
     val lastname:String="",
     val comment:String="",
     val rating:Int = 0,

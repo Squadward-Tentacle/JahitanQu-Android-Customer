@@ -88,24 +88,20 @@ class HomeFragment : Fragment(), View.OnClickListener, BaseContract {
         navController.navigate(R.id.toTailorDetailFragment, bundle)
     }
 
-    fun createImageSlider() {
+    private fun createImageSlider() {
         var listImage = mutableListOf(
-            SliderItem("https://www.lampost.co/upload/tukang-jahit-kebanjiran-pemesanan-masker.jpeg"),
+            SliderItem("https://firebasestorage.googleapis.com/v0/b/jahitanqu-customer.appspot.com/o/banner.png?alt=media&token=e310c61e-e895-424c-9801-9cd7c33a930c"),
             SliderItem("https://cdn2.tstatic.net/manado/foto/bank/images/tukang-jahit_20150716_174612.jpg"),
             SliderItem("https://sukabumiupdate.com/uploads/news/images/770x413/-_200414181151-600.jpg"),
             SliderItem("https://rembun.desa.id/foto_berita/images/jahit_rembun(3)_compress.jpg")
         )
         viewPagerImageSlider.adapter = SliderAdapter(listImage, viewPagerImageSlider)
         viewPagerImageSlider.clipToPadding = false
-        viewPagerImageSlider.offscreenPageLimit = 3
+        viewPagerImageSlider.offscreenPageLimit = 1
         viewPagerImageSlider.getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
 
         val compositePageTransform = CompositePageTransformer()
         compositePageTransform.addTransformer(MarginPageTransformer(40))
-        compositePageTransform.addTransformer { page, position ->
-            val r = 1 - abs(position)
-            page.scaleY = 0.85f + r + 0.15f
-        }
         viewPagerImageSlider.setPageTransformer(compositePageTransform)
         viewPagerImageSlider.registerOnPageChangeCallback(object :
             ViewPager2.OnPageChangeCallback() {
