@@ -1,5 +1,6 @@
 package com.example.jahitanqu_customer.data.factory
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import com.example.jahitanqu_customer.model.Transaction
@@ -12,6 +13,7 @@ import javax.inject.Inject
 class TransactionDataSourceHistoryFactory @Inject constructor(private val transactionDataSourceHistory: TransactionDataSourceHistory):DataSource.Factory<Int,Transaction>() {
 
     val transactionHistoryLiveDataSource =  MutableLiveData<TransactionDataSourceHistory>()
+    val showShimmer:LiveData<Boolean> = transactionDataSourceHistory.showShimmer
 
     override fun create(): DataSource<Int, Transaction> {
         transactionHistoryLiveDataSource.postValue(transactionDataSourceHistory)

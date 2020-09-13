@@ -1,5 +1,6 @@
 package com.example.jahitanqu_customer.data.factory
 
+import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import com.example.jahitanqu_customer.data.repository.TailorRepository
 import com.example.jahitanqu_customer.data.server.apiInterface.TailorApi
@@ -21,6 +22,7 @@ import javax.inject.Inject
 class TailorDataSource @Inject constructor(private val tailorApi: TailorApi) :
     PageKeyedDataSource<Int, Tailor>() {
 
+    val showShimmer = MutableLiveData(true)
     private val FIRST_PAGE = 1
 
     override fun loadInitial(
@@ -41,6 +43,7 @@ class TailorDataSource @Inject constructor(private val tailorApi: TailorApi) :
                     val outputList: List<Tailor> =
                         gson.fromJson(gson.toJson(tailor), listOfMyClassObject)
                     callback.onResult(outputList, null, FIRST_PAGE + 1)
+                    showShimmer.value = false
                 }
             }
 
@@ -87,7 +90,6 @@ class TailorDataSource @Inject constructor(private val tailorApi: TailorApi) :
                     if (params.key > 1) {
                         callback.onResult(outputList, params.key - 1)
                     }
-
                 }
             }
 

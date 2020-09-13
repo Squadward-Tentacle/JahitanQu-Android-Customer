@@ -18,6 +18,7 @@ class RecycleTailorAdapter : PagedListAdapter<Tailor, RecycleTailorViewHolder>(
     DIFF_CALLBACK
 ) {
 
+    var showShimmer = true
     lateinit var baseContract: BaseContract
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecycleTailorViewHolder {
@@ -41,6 +42,7 @@ class RecycleTailorAdapter : PagedListAdapter<Tailor, RecycleTailorViewHolder>(
         holder.itemView.setOnClickListener {
             baseContract.itemClickListener(data.idTailor)
         }
+
     }
 
     companion object {

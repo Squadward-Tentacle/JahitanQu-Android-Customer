@@ -1,5 +1,6 @@
 package com.example.jahitanqu_customer.data.factory
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import androidx.paging.PageKeyedDataSource
@@ -13,6 +14,7 @@ import javax.inject.Inject
 class TailorDataSourceFactory @Inject constructor(private val tailorDataSource: TailorDataSource) : DataSource.Factory<Int, Tailor>() {
 
     val tailorLiveDataSource =  MutableLiveData<TailorDataSource>()
+    val showShimmer:LiveData<Boolean> = tailorDataSource.showShimmer
 
     override fun create(): DataSource<Int, Tailor> {
         tailorLiveDataSource.postValue(tailorDataSource)

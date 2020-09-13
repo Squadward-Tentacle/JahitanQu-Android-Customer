@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -62,11 +63,13 @@ class HomeFragment : Fragment(), View.OnClickListener, BaseContract {
         handler = Handler()
         btnViewAll.setOnClickListener(this)
         tailorViewModel.getTopRatedTailor()
-        rvTopTailor.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        rvTopTailor.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        recycleTopRatedTailorAdapter = RecycleTopRatedTailorAdapter(listOf())
+        rvTopTailor.adapter = recycleTopRatedTailorAdapter
         tailorViewModel.tailorTopRatedList.observe(viewLifecycleOwner, Observer { it ->
             recycleTopRatedTailorAdapter = RecycleTopRatedTailorAdapter(it)
             recycleTopRatedTailorAdapter.baseContract = this
+            recycleTopRatedTailorAdapter.showShimmer =false
             rvTopTailor.adapter = recycleTopRatedTailorAdapter
         })
         createImageSlider()

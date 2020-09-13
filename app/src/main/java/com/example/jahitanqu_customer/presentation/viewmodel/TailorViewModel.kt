@@ -23,11 +23,13 @@ class TailorViewModel @Inject constructor(
 
     val tailorPagedList: LiveData<PagedList<Tailor>>
     private val  liveDataSource: LiveData<TailorDataSource>
+    val showShimmer:LiveData<Boolean>
 
     init {
         liveDataSource = tailorDataSourceFactory.tailorLiveDataSource
         val config = PagedList.Config.Builder().setEnablePlaceholders(false).setPageSize(6).build()
         tailorPagedList = LivePagedListBuilder(tailorDataSourceFactory, config).build()
+        showShimmer = tailorDataSourceFactory.showShimmer
     }
 
     val tailor:LiveData<Tailor> = tailorRepository.tailor

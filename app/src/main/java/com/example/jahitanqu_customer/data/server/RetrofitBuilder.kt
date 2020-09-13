@@ -1,5 +1,6 @@
 package com.example.jahitanqu_customer.data.server
 
+import com.example.jahitanqu_customer.common.utils.Constant
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -11,10 +12,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 class RetrofitBuilder {
 
     companion object {
-        val BASE_URL = "http://2255b4e5549a.ngrok.io"
-
         fun createRetrofit(): Retrofit {
-            return Retrofit.Builder().baseUrl(BASE_URL)
+            return Retrofit.Builder().baseUrl(Constant.BACKEND_SERVER_URL)
                 .addConverterFactory(GsonConverterFactory.create()).build()
         }
     }

@@ -56,12 +56,22 @@ class MyOrderActiveFragment : Fragment(), BaseContract {
         navController = Navigation.findNavController(view)
         rvOrderActive.layoutManager = LinearLayoutManager(context)
         myOrderRecycleAdapter = MyOrderRecycleAdapter()
-        pbOrderActive.visibility = View.VISIBLE
         transactionViewModel.transactionPagedList.observe(viewLifecycleOwner, Observer { it ->
-            pbOrderActive.visibility = View.GONE
             myOrderRecycleAdapter.submitList(it)
             myOrderRecycleAdapter.baseContract = this
             rvOrderActive.adapter = myOrderRecycleAdapter
+        })
+
+        transactionViewModel.showShimmerTransactionActive.observe(viewLifecycleOwner, Observer {
+            if (it){
+                rvOrderActive.visibility = View.GONE
+                shimmerFrameLayout.visibility = View.VISIBLE
+                shimmerFrameLayout.startShimmer()
+            }else{
+                rvOrderActive.visibility = View.VISIBLE
+                shimmerFrameLayout.visibility = View.GONE
+                shimmerFrameLayout.stopShimmer()
+            }
         })
     }
 

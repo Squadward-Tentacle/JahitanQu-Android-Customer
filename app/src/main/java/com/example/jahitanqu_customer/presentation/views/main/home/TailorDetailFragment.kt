@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
@@ -50,6 +50,8 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
 
     lateinit var navController: NavController
 
+    lateinit var sweetAlertDialog: SweetAlertDialog
+
     lateinit var idTailor: String
 
     lateinit var address: Address
@@ -80,7 +82,7 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
     }
 
     private fun init() {
-        idTailor = arguments?.getString("idTailor")!!
+        idTailor = arguments?.getString(Constant.KEY_ID_TAILOR)!!
         pbLoading.visibility = View.VISIBLE
         btnReservation.setOnClickListener(this)
         rvRatingAndReview.layoutManager = LinearLayoutManager(context)
@@ -98,9 +100,12 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
     private fun observeSuccessPost() {
         transactionViewModel.isSuccessPost.observe(viewLifecycleOwner, Observer {
             if (it) {
-                SweetAlertDialog(context, SweetAlertDialog.SUCCESS_TYPE)
-                    .setTitleText("Success")
-                    .show()
+                sweetAlertDialog.hide()
+                val alertDialog = SweetAlertDialog(context, SweetAlertDialog.SUCCESS_TYPE)
+                alertDialog.titleText = getString(R.string.transaction_success)
+                alertDialog.show()
+                val btn = alertDialog.findViewById<View>(R.id.confirm_button) as Button
+                btn.setBackgroundColor(resources.getColor(R.color.colorDarkBrown))
                 navController.navigate(R.id.toMyOrderFragment)
             }
         })
@@ -132,11 +137,9 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
         when (p0) {
             btnReservation -> {
                 if (prefs.keyIdCustomer.isNullOrEmpty()) {
-                    Toast.makeText(
-                        context,
-                        "Please Register your account in jahitanQu before you want to reservation",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText(getString(R.string.not_found_id_customer))
+                        .show()
                 } else {
                     val dialog = MaterialDialog(activity?.window!!.context, BottomSheet())
                         .cornerRadius(16f)
@@ -154,6 +157,7 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
                     dialog.show()
 
                     booking.setOnClickListener {
+                        showProgressDialog()
                         val transaction = Transaction(
                             idCustomer = prefs.keyIdCustomer!!,
                             idTailor = idTailor,
@@ -224,10 +228,20 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
                     REQUEST_CODE_MAPS
                 )
             } else {
-                Toast.makeText(context, "location permission denied", Toast.LENGTH_LONG).show();
+                SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText(getString(R.string.location_denied))
+                    .show()
             }
         }
     }
 
+
+    private fun showProgressDialog(){
+        sweetAlertDialog = SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE)
+        sweetAlertDialog.progressHelper.barColor = resources.getColor(R.color.colorDarkBrown);
+        sweetAlertDialog.titleText = getString(R.string.progressbar_loading)
+        sweetAlertDialog.setCancelable(false)
+        sweetAlertDialog.show()
+    }
 
 }

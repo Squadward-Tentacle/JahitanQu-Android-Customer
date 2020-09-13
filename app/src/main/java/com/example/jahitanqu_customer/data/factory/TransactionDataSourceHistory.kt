@@ -1,5 +1,6 @@
 package com.example.jahitanqu_customer.data.factory
 
+import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import com.example.jahitanqu_customer.data.repository.TransactionRepository
 import com.example.jahitanqu_customer.data.server.apiInterface.TransactionApi
@@ -24,6 +25,8 @@ class TransactionDataSourceHistory @Inject constructor(private val transactionAp
     PageKeyedDataSource<Int, Transaction>() {
     private val FIRST_PAGE = 1
 
+    val showShimmer = MutableLiveData(true)
+
     override fun loadInitial(
         params: LoadInitialParams<Int>,
         callback: LoadInitialCallback<Int, Transaction>
@@ -43,6 +46,7 @@ class TransactionDataSourceHistory @Inject constructor(private val transactionAp
                     val outputList: List<Transaction> =
                         gson.fromJson(gson.toJson(res), listOfMyClassObject)
                     callback.onResult(outputList, null, FIRST_PAGE + 1)
+                    showShimmer.value = false
                 }
 
             })

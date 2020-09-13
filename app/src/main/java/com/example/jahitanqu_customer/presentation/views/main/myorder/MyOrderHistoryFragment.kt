@@ -46,19 +46,32 @@ class MyOrderHistoryFragment : Fragment(), BaseContract {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
         rvOrderHistory.layoutManager = LinearLayoutManager(context)
-        pbOrderHistory.visibility = View.VISIBLE
         myOrderRecycleAdapter = MyOrderRecycleAdapter()
-        transactionViewModel.transactionHistoryPagedList.observe(viewLifecycleOwner, Observer { it ->
-            pbOrderHistory.visibility = View.GONE
-            myOrderRecycleAdapter.submitList(it)
-            myOrderRecycleAdapter.baseContract = this
-            rvOrderHistory.adapter = myOrderRecycleAdapter
+        transactionViewModel.transactionHistoryPagedList.observe(
+            viewLifecycleOwner,
+            Observer { it ->
+                myOrderRecycleAdapter.submitList(it)
+                myOrderRecycleAdapter.baseContract = this
+                rvOrderHistory.adapter = myOrderRecycleAdapter
+            })
+
+        transactionViewModel.showShimmerTransactionHistory.observe(viewLifecycleOwner, Observer {
+            if (it) {
+                rvOrderHistory.visibility = View.GONE
+                shimmerFrameLayout.visibility = View.VISIBLE
+                shimmerFrameLayout.startShimmer()
+            } else {
+
+                rvOrderHistory.visibility = View.VISIBLE
+                shimmerFrameLayout.visibility = View.GONE
+                shimmerFrameLayout.stopShimmer()
+            }
         })
     }
 
     override fun itemClickListener(id: String) {
         val bundle = bundleOf(Constant.KEY_ID_TRANSACTION to id)
-        navController.navigate(R.id.toMyOrderDetailFragment,bundle)
+        navController.navigate(R.id.toMyOrderDetailFragment, bundle)
 
     }
 }

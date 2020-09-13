@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
 import com.example.jahitanqu_customer.JahitanQu
@@ -51,6 +52,8 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener, TransactionFinis
     lateinit var midtransSDK: MidtransSDK
 
     lateinit var navController: NavController
+
+    lateinit var sweetAlertDialog: SweetAlertDialog
 
     lateinit var idTailor: String
 
@@ -108,7 +111,12 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener, TransactionFinis
 
         authViewModel.isComment.observe(viewLifecycleOwner, Observer {
             if (it) {
-                Toast.makeText(activity, "Success", Toast.LENGTH_LONG).show()
+                sweetAlertDialog.hide()
+                val alertDialog = SweetAlertDialog(context, SweetAlertDialog.SUCCESS_TYPE)
+                alertDialog.titleText = getString(R.string.Success)
+                alertDialog.show()
+                val btn = alertDialog.findViewById<View>(R.id.confirm_button) as Button
+                btn.setBackgroundColor(resources.getColor(R.color.colorDarkBrown))
             }
         })
 
@@ -175,6 +183,7 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener, TransactionFinis
                     )
                     authViewModel.comment(comment)
                     dialog.hide()
+                    showProgressDialog()
                 }
             }
             btnFinishedTransaction -> {
@@ -265,4 +274,11 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener, TransactionFinis
     }
 
 
+    private fun showProgressDialog(){
+        sweetAlertDialog = SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE)
+        sweetAlertDialog.progressHelper.barColor = resources.getColor(R.color.colorDarkBrown);
+        sweetAlertDialog.titleText = getString(R.string.progressbar_loading)
+        sweetAlertDialog.setCancelable(false)
+        sweetAlertDialog.show()
+    }
 }

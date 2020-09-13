@@ -16,11 +16,13 @@ import com.example.jahitanqu_customer.JahitanQu
 
 import com.example.jahitanqu_customer.R
 import com.example.jahitanqu_customer.common.BaseContract
+import com.example.jahitanqu_customer.common.utils.Constant
 import com.example.jahitanqu_customer.presentation.viewmodel.TailorViewModel
 import com.example.jahitanqu_customer.presentation.views.main.home.adapter.RecycleTailorAdapter
 import com.example.jahitanqu_customer.presentation.views.main.home.adapter.RecycleTopRatedTailorAdapter
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_tailor_list.*
+import kotlinx.android.synthetic.main.item_tailor_shimmer.*
 import javax.inject.Inject
 
 class TailorListFragment : Fragment(),BaseContract {
@@ -50,13 +52,36 @@ class TailorListFragment : Fragment(),BaseContract {
         recycleTailorAdapter = RecycleTailorAdapter()
         recycleTailorAdapter.baseContract = this
         tailorViewModel.tailorPagedList.observe(viewLifecycleOwner, Observer {
-            recycleTailorAdapter.submitList(it)
+                recycleTailorAdapter.submitList(it)
+                rvListTailor.adapter = recycleTailorAdapter
         })
-        rvListTailor.adapter = recycleTailorAdapter
+
+        tailorViewModel.showShimmer.observe(viewLifecycleOwner, Observer {
+            if (it){
+                shimmerFrameLayout.visibility = View.VISIBLE
+                rvListTailor.visibility = View.GONE
+                shimmerFrameLayout.startShimmer()
+            }else{
+                shimmerFrameLayout.visibility = View.GONE
+                rvListTailor.visibility = View.VISIBLE
+                shimmerFrameLayout.stopShimmer()
+            }
+        })
+
     }
 
     override fun itemClickListener(id: String) {
-        val bundle = bundleOf("idTailor" to id)
+        val bundle = bundleOf(Constant.KEY_ID_TAILOR to id)
         navController.navigate(R.id.toTailorDetailFragment,bundle)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        shimmerFrameLayout.startShimmer()
+    }
+
+    override fun onPause() {
+        shimmerFrameLayout.stopShimmer()
+        super.onPause()
     }
 }

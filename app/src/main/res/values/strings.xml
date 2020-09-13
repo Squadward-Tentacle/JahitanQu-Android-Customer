@@ -41,5 +41,11 @@
     <string name="contact">Contact</string>
     <string name="reservation">Reservation</string>
     <string name="portofolio">Portofolio</string>
+    <string name="progressbar_loading">Loading</string>
+    <string name="transaction_success">Transaction Success</string>
+    <string name="not_found_id_customer">Please Register your account in jahitanQu before you want to reservation</string>
+    <string name="location_denied">Location permission denied</string>
+    <string name="Success">Success</string>
+    <string name="edit_account">Success Edit Account</string>
 
 </resources>

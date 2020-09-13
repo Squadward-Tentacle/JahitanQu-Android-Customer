@@ -128,7 +128,11 @@ dependencies {
     //socket.io
     implementation 'com.github.nkzawa:socket.io-client:0.3.0'
 
-    implementation 'com.github.f0ris.sweetalert:library:1.5.1'
+    //sweet alert
+    implementation 'com.github.f0ris.sweetalert:library:1.5.6'
+
+    //shimmer progress bar
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'

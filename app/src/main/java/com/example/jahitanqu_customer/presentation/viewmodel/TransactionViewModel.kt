@@ -27,6 +27,8 @@ class TransactionViewModel @Inject constructor(
     val transaction: LiveData<Transaction>
     val isSuccessPost:LiveData<Boolean>
     val isUpdate:LiveData<Boolean>
+    val showShimmerTransactionActive:LiveData<Boolean>
+    val showShimmerTransactionHistory:LiveData<Boolean>
 
     val liveDataAddress:MutableLiveData<Address> = MutableLiveData()
 
@@ -43,9 +45,11 @@ class TransactionViewModel @Inject constructor(
 
         liveDataSource = transactionDataSourceFactory.transactionLiveDataSource
         transactionPagedList = LivePagedListBuilder(transactionDataSourceFactory, config).build()
+        showShimmerTransactionActive = transactionDataSourceFactory.showShimmer
 
         liveDataSourceHistory = transactionDataSourceHistoryFactory.transactionHistoryLiveDataSource
         transactionHistoryPagedList = LivePagedListBuilder(transactionDataSourceHistoryFactory, config).build()
+        showShimmerTransactionHistory = transactionDataSourceHistoryFactory.showShimmer
 
         transaction = transactionRepository.transaction
         isSuccessPost = transactionRepository.isSuccessPost

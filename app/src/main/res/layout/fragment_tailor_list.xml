@@ -40,26 +40,43 @@
 
         </LinearLayout>
 
-<!--        <EditText-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="16dp"-->
-<!--            android:background="@drawable/ic_custom_edittext"-->
-<!--            android:drawableLeft="@drawable/ic_search_black_24dp"-->
-<!--            android:drawablePadding="10dp"-->
-<!--            android:drawableTint="@color/colorSoftBlack"-->
-<!--            android:fontFamily="@font/roboto_light"-->
-<!--            android:hint="Search"-->
-<!--            android:padding="8dp"-->
-<!--            android:textSize="14sp" />-->
-
-
     </LinearLayout>
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerFrameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/item_tailor_shimmer" />
+
+            <include layout="@layout/item_tailor_shimmer" />
+
+            <include layout="@layout/item_tailor_shimmer" />
+
+            <include layout="@layout/item_tailor_shimmer" />
+
+            <include layout="@layout/item_tailor_shimmer" />
+
+            <include layout="@layout/item_tailor_shimmer" />
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvListTailor"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

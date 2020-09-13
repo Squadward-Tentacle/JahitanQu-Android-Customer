@@ -14,9 +14,11 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.example.jahitanqu_customer.JahitanQu
 import com.example.jahitanqu_customer.R
 import com.example.jahitanqu_customer.common.utils.Constant
@@ -53,6 +55,8 @@ class AccountFragment : Fragment(), View.OnClickListener {
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
 
+    lateinit var sweetAlertDialog: SweetAlertDialog
+
     lateinit var address: Address
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,7 +76,12 @@ class AccountFragment : Fragment(), View.OnClickListener {
         authViewModel.isUpdated.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             if (it) {
                 initEditText()
-                Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
+                sweetAlertDialog.hide()
+                val alertDialog = SweetAlertDialog(context, SweetAlertDialog.SUCCESS_TYPE)
+                alertDialog.titleText = getString(R.string.edit_account)
+                alertDialog.show()
+                val btn = alertDialog.findViewById<View>(R.id.confirm_button) as Button
+                btn.setBackgroundColor(resources.getColor(R.color.colorDarkBrown))
             }
         })
         photoFile = File("")
@@ -144,6 +153,7 @@ class AccountFragment : Fragment(), View.OnClickListener {
                             address = address,
                             phone = phone
                         )
+                        showProgressDialog()
                         authViewModel.updateCustomer(customer, photoFile)
                     } else {
                         Toast.makeText(
@@ -379,5 +389,13 @@ class AccountFragment : Fragment(), View.OnClickListener {
                 Toast.makeText(context, "location permission denied", Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    private fun showProgressDialog(){
+        sweetAlertDialog = SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE)
+        sweetAlertDialog.progressHelper.barColor = resources.getColor(R.color.colorDarkBrown);
+        sweetAlertDialog.titleText = getString(R.string.progressbar_loading)
+        sweetAlertDialog.setCancelable(false)
+        sweetAlertDialog.show()
     }
 }

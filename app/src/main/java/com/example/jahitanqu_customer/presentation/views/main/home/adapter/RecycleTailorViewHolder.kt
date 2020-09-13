@@ -6,6 +6,7 @@ import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.jahitanqu_customer.R
+import com.facebook.shimmer.ShimmerFrameLayout
 
 /**
  * Created by Maulana Ibrahim on 07/September/2020
