@@ -4,10 +4,13 @@ import com.example.jahitanqu_customer.common.utils.Constant
 import com.example.jahitanqu_customer.data.server.ApiEndPoint.ENDPOINT_COMMENT_CUSTOMER
 import com.example.jahitanqu_customer.data.server.ApiEndPoint.ENDPOINT_GET_TOKEN
 import com.example.jahitanqu_customer.data.server.ApiEndPoint.ENDPOINT_LOGIN_CUSTOMER
+import com.example.jahitanqu_customer.data.server.ApiEndPoint.ENDPOINT_POST_FCM
+import com.example.jahitanqu_customer.data.server.ApiEndPoint.ENDPOINT_POST_FCM_NOTIFICATION
 import com.example.jahitanqu_customer.data.server.ApiEndPoint.ENDPOINT_REGISTER_CUSTOMER
 import com.example.jahitanqu_customer.data.server.ApiEndPoint.ENDPOINT_UPDATE_CUSTOMER
 import com.example.jahitanqu_customer.model.Comment
 import com.example.jahitanqu_customer.model.Customer
+import com.example.jahitanqu_customer.model.FcmToken
 import com.example.jahitanqu_customer.model.Wrapper
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -48,5 +51,17 @@ interface AuthApi {
     fun comment(
         @Header(Constant.KEY_AUTHORIZATION) auth: String,
         @Body comment: Comment
+    ):Call<Wrapper>
+
+    @POST(ENDPOINT_POST_FCM)
+    fun postFcm(
+        @Body fcmToken: FcmToken
+    ):Call<Wrapper>
+
+    @POST(ENDPOINT_POST_FCM_NOTIFICATION)
+    fun postNotification(
+        @Header(Constant.KEY_AUTHORIZATION) auth: String,
+        @Path("id") id:String,
+        @Body fcmToken: FcmToken
     ):Call<Wrapper>
 }

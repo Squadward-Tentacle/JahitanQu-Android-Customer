@@ -22,6 +22,7 @@ class AccountHelper(context: Context) {
     val KEY_LATITUDE = "pref.KeyLatitude"
     val KEY_LONGITUDE = "pref.KeyLongitude"
     val KEY_CUSTOMER = "pref.KeyCustomer"
+    val KEY_CUSTOMER_FCM = "pref.keyCustomerFcm"
 
 
     val prefs: SharedPreferences = context.getSharedPreferences("myPref", 0)
@@ -66,16 +67,20 @@ class AccountHelper(context: Context) {
         get() = prefs.getFloat(KEY_LONGITUDE, 0.0F)
         set(value) = prefs.edit().putFloat(KEY_LONGITUDE, value!!).apply()
 
+    var keyCustomerFcm: String?
+        get() = prefs.getString(KEY_CUSTOMER_FCM, "")
+        set(value) = prefs.edit().putString(KEY_CUSTOMER_FCM, value!!).apply()
+
     fun clear() {
         prefs.edit().clear().apply()
     }
 
-    fun setCustomerPref(customer: Any){
+    fun setCustomerPref(customer: Any) {
         val gson = Gson()
         val json = gson.toJson(customer)
         prefs.edit().putString(KEY_CUSTOMER, json).apply()
     }
 
-    val keyCustomer:String?
-        get() = prefs.getString(KEY_CUSTOMER,"")
+    val keyCustomer: String?
+        get() = prefs.getString(KEY_CUSTOMER, "")
 }

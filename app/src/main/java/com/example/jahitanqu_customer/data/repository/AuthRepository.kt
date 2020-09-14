@@ -5,6 +5,7 @@ import com.example.jahitanqu_customer.common.utils.Util
 import com.example.jahitanqu_customer.data.server.apiInterface.AuthApi
 import com.example.jahitanqu_customer.model.Comment
 import com.example.jahitanqu_customer.model.Customer
+import com.example.jahitanqu_customer.model.FcmToken
 import com.example.jahitanqu_customer.model.Wrapper
 import com.example.jahitanqu_customer.prefs
 import com.google.gson.Gson
@@ -118,7 +119,7 @@ class AuthRepository @Inject constructor(
         val email = Util.convertRequestBody(customer.email)
         val fname = Util.convertRequestBody(customer.firstname)
         val lname = Util.convertRequestBody(customer.lastname)
-        val addressName =Util.convertRequestBody(customer.address.addressName)
+        val addressName = Util.convertRequestBody(customer.address.addressName)
         val lat = Util.convertRequestBody(customer.address.latitude.toString())
         val lng = Util.convertRequestBody(customer.address.longitude.toString())
         val phone = Util.convertRequestBody(customer.phone)
@@ -167,8 +168,8 @@ class AuthRepository @Inject constructor(
 
     }
 
-    fun comment(comment: Comment){
-        authApi.comment(prefs.keyToken!!,comment).enqueue(object:Callback<Wrapper>{
+    fun comment(comment: Comment) {
+        authApi.comment(prefs.keyToken!!, comment).enqueue(object : Callback<Wrapper> {
             override fun onFailure(call: Call<Wrapper>, t: Throwable) {
                 println(t.localizedMessage)
             }
@@ -178,5 +179,30 @@ class AuthRepository @Inject constructor(
             }
 
         })
+    }
+
+    fun postFcm(fcmToken: FcmToken) {
+        authApi.postFcm(fcmToken).enqueue(object : Callback<Wrapper> {
+            override fun onFailure(call: Call<Wrapper>, t: Throwable) {
+                println(t.localizedMessage)
+            }
+
+            override fun onResponse(call: Call<Wrapper>, response: Response<Wrapper>) {
+                println(response.toString())
+            }
+        })
+    }
+
+    fun pushNotification(id: String, fcmToken: FcmToken) {
+        authApi.postNotification(prefs.keyToken!!, id, fcmToken)
+            .enqueue(object : Callback<Wrapper> {
+                override fun onFailure(call: Call<Wrapper>, t: Throwable) {
+                    println(t.localizedMessage)
+                }
+
+                override fun onResponse(call: Call<Wrapper>, response: Response<Wrapper>) {
+                    println(response)
+                }
+            })
     }
 }

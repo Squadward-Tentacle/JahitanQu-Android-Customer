@@ -14,6 +14,7 @@ import com.example.jahitanqu_customer.JahitanQu
 
 import com.example.jahitanqu_customer.R
 import com.example.jahitanqu_customer.model.Customer
+import com.example.jahitanqu_customer.model.FcmToken
 import com.example.jahitanqu_customer.prefs
 import com.example.jahitanqu_customer.signInGoogle
 import com.example.jahitanqu_customer.presentation.viewmodel.AuthViewModel
@@ -65,6 +66,13 @@ class LoginFragment : Fragment(), View.OnClickListener {
         authViewModel.isLogin.observe(viewLifecycleOwner, Observer {
             if (it) {
                 rlLoading.visibility = View.GONE
+                if (!prefs.keyCustomerFcm.isNullOrEmpty()){
+                    val fcmToken = FcmToken(
+                        tokenId = prefs.keyIdCustomer!!,
+                        token = prefs.keyCustomerFcm!!
+                    )
+                    authViewModel.postFcm(fcmToken)
+                }
                 navController.navigate(R.id.toHomeActivity)
             } else {
                 rlLoading.visibility = View.GONE

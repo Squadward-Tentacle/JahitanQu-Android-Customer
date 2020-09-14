@@ -12,6 +12,8 @@ import com.example.jahitanqu_customer.JahitanQu
 
 import com.example.jahitanqu_customer.R
 import com.example.jahitanqu_customer.model.Customer
+import com.example.jahitanqu_customer.model.FcmToken
+import com.example.jahitanqu_customer.prefs
 import com.example.jahitanqu_customer.presentation.viewmodel.AuthViewModel
 import kotlinx.android.synthetic.main.fragment_register.*
 import javax.inject.Inject
@@ -39,6 +41,13 @@ class RegisterFragment : Fragment(), View.OnClickListener {
         navController = Navigation.findNavController(view)
         authViewModel.isRegister.observe(viewLifecycleOwner, Observer {
             if (it) {
+                if (!prefs.keyCustomerFcm.isNullOrEmpty()){
+                    val fcmToken = FcmToken(
+                        tokenId = prefs.keyIdCustomer!!,
+                        token = prefs.keyCustomerFcm!!
+                    )
+                    authViewModel.postFcm(fcmToken)
+                }
                 navController.navigate(R.id.toHomeActivity)
             }
         })

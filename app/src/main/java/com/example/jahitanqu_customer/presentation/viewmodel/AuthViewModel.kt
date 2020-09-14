@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.example.jahitanqu_customer.model.Customer
 import com.example.jahitanqu_customer.data.repository.AuthRepository
 import com.example.jahitanqu_customer.model.Comment
+import com.example.jahitanqu_customer.model.FcmToken
 import java.io.File
 import javax.inject.Inject
 
@@ -44,5 +45,13 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
 
     fun comment(comment: Comment){
         authRepository.comment(comment)
+    }
+
+    fun postFcm(fcmToken: FcmToken){
+        authRepository.postFcm(fcmToken)
+    }
+
+    fun pushNotification(id:String,fcmToken: FcmToken){
+        authRepository.pushNotification(id,fcmToken)
     }
 }

@@ -19,7 +19,9 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.jahitanqu_customer.JahitanQu
 import com.example.jahitanqu_customer.R
 import com.example.jahitanqu_customer.common.BaseContract
+import com.example.jahitanqu_customer.model.FcmToken
 import com.example.jahitanqu_customer.prefs
+import com.example.jahitanqu_customer.presentation.viewmodel.AuthViewModel
 import com.example.jahitanqu_customer.presentation.viewmodel.TailorViewModel
 import com.example.jahitanqu_customer.presentation.views.main.home.adapter.RecycleTopRatedTailorAdapter
 import com.example.jahitanqu_customer.presentation.views.main.home.slider.SliderAdapter
