@@ -24,8 +24,10 @@ import com.example.jahitanqu_customer.JahitanQu
 import com.example.jahitanqu_customer.R
 import com.example.jahitanqu_customer.common.utils.Constant
 import com.example.jahitanqu_customer.model.Address
+import com.example.jahitanqu_customer.model.FcmToken
 import com.example.jahitanqu_customer.model.Transaction
 import com.example.jahitanqu_customer.prefs
+import com.example.jahitanqu_customer.presentation.viewmodel.AuthViewModel
 import com.example.jahitanqu_customer.presentation.viewmodel.TailorViewModel
 import com.example.jahitanqu_customer.presentation.viewmodel.TransactionViewModel
 import com.example.jahitanqu_customer.presentation.views.main.home.adapter.RecycleCommentAdapter
@@ -40,6 +42,9 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
 
     @Inject
     lateinit var tailorViewModel: TailorViewModel
+
+    @Inject
+    lateinit var authViewModel: AuthViewModel
 
     @Inject
     lateinit var transactionViewModel: TransactionViewModel
@@ -106,6 +111,7 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
                 alertDialog.show()
                 val btn = alertDialog.findViewById<View>(R.id.confirm_button) as Button
                 btn.setBackgroundColor(resources.getColor(R.color.colorDarkBrown))
+                authViewModel.pushNotification(idTailor, FcmToken(message = "Waiting Confirmation"))
                 navController.navigate(R.id.toMyOrderFragment)
             }
         })

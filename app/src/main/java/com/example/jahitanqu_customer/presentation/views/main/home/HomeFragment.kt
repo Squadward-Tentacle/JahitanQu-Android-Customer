@@ -93,9 +93,9 @@ class HomeFragment : Fragment(), View.OnClickListener, BaseContract {
     private fun createImageSlider() {
         var listImage = mutableListOf(
             SliderItem("https://firebasestorage.googleapis.com/v0/b/jahitanqu-customer.appspot.com/o/banner.png?alt=media&token=e310c61e-e895-424c-9801-9cd7c33a930c"),
-            SliderItem("https://cdn2.tstatic.net/manado/foto/bank/images/tukang-jahit_20150716_174612.jpg"),
-            SliderItem("https://sukabumiupdate.com/uploads/news/images/770x413/-_200414181151-600.jpg"),
-            SliderItem("https://rembun.desa.id/foto_berita/images/jahit_rembun(3)_compress.jpg")
+            SliderItem("https://firebasestorage.googleapis.com/v0/b/jahitanqu-customer.appspot.com/o/banner1.png?alt=media&token=5f25198b-a4d7-40a8-9664-c660959c4148"),
+            SliderItem("https://firebasestorage.googleapis.com/v0/b/jahitanqu-customer.appspot.com/o/banner2.png?alt=media&token=32a758b3-9942-48db-84ff-4a9ca03a634b"),
+            SliderItem("https://firebasestorage.googleapis.com/v0/b/jahitanqu-customer.appspot.com/o/banner3.png?alt=media&token=55153f82-fd54-44e5-90f6-577252525dbb")
         )
         viewPagerImageSlider.adapter = SliderAdapter(listImage, viewPagerImageSlider)
         viewPagerImageSlider.clipToPadding = false

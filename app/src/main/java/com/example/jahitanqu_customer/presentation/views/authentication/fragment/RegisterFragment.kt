@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.example.jahitanqu_customer.JahitanQu
 
 import com.example.jahitanqu_customer.R
@@ -15,7 +16,10 @@ import com.example.jahitanqu_customer.model.Customer
 import com.example.jahitanqu_customer.model.FcmToken
 import com.example.jahitanqu_customer.prefs
 import com.example.jahitanqu_customer.presentation.viewmodel.AuthViewModel
+import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_register.*
+import kotlinx.android.synthetic.main.fragment_register.etEmail
+import kotlinx.android.synthetic.main.fragment_register.etPassword
 import javax.inject.Inject
 
 class RegisterFragment : Fragment(), View.OnClickListener {
@@ -23,6 +27,7 @@ class RegisterFragment : Fragment(), View.OnClickListener {
     @Inject
     lateinit var authViewModel: AuthViewModel
     lateinit var navController: NavController
+    lateinit var sweetAlertDialog: SweetAlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,14 +46,21 @@ class RegisterFragment : Fragment(), View.OnClickListener {
         navController = Navigation.findNavController(view)
         authViewModel.isRegister.observe(viewLifecycleOwner, Observer {
             if (it) {
-                if (!prefs.keyCustomerFcm.isNullOrEmpty()){
+                if (!prefs.keyCustomerFcm.isNullOrEmpty()) {
                     val fcmToken = FcmToken(
                         tokenId = prefs.keyIdCustomer!!,
                         token = prefs.keyCustomerFcm!!
                     )
                     authViewModel.postFcm(fcmToken)
                 }
+                sweetAlertDialog.hide()
                 navController.navigate(R.id.toHomeActivity)
+            } else {
+                sweetAlertDialog.hide()
+                SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText(getString(R.string.opps))
+                    .setContentText(getString(R.string.registration_failed))
+                    .show()
             }
         })
         btnRegister.setOnClickListener(this)
@@ -64,12 +76,21 @@ class RegisterFragment : Fragment(), View.OnClickListener {
                     firstname = etFirstName.text.toString(),
                     lastname = etLastName.text.toString()
                 )
+                showProgressDialog()
                 authViewModel.register(customer)
             }
             btnLoginNow -> {
                 navController.navigate(R.id.toLoginFragment)
             }
         }
+    }
+
+    private fun showProgressDialog() {
+        sweetAlertDialog = SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE)
+        sweetAlertDialog.progressHelper.barColor = resources.getColor(R.color.colorDarkBrown);
+        sweetAlertDialog.titleText = getString(R.string.progressbar_loading)
+        sweetAlertDialog.setCancelable(false)
+        sweetAlertDialog.show()
     }
 
 

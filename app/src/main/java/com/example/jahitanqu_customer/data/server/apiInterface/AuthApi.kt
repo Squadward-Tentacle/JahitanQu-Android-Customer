@@ -60,7 +60,6 @@ interface AuthApi {
 
     @POST(ENDPOINT_POST_FCM_NOTIFICATION)
     fun postNotification(
-        @Header(Constant.KEY_AUTHORIZATION) auth: String,
         @Path("id") id:String,
         @Body fcmToken: FcmToken
     ):Call<Wrapper>

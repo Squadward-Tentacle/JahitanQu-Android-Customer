@@ -21,6 +21,7 @@ import com.example.jahitanqu_customer.R
 import com.example.jahitanqu_customer.common.utils.Constant
 import com.example.jahitanqu_customer.common.utils.Util
 import com.example.jahitanqu_customer.model.Comment
+import com.example.jahitanqu_customer.model.FcmToken
 import com.example.jahitanqu_customer.model.Transaction
 import com.example.jahitanqu_customer.prefs
 import com.example.jahitanqu_customer.presentation.viewmodel.AuthViewModel
@@ -188,6 +189,7 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener, TransactionFinis
             }
             btnFinishedTransaction -> {
                 transactionViewModel.putTransaction(idTransaction,"9")
+                authViewModel.pushNotification(idTailor, FcmToken(message = "Transaction Finished"))
             }
 
             btnBack -> {

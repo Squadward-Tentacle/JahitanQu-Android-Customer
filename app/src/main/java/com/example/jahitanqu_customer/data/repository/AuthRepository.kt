@@ -25,8 +25,8 @@ class AuthRepository @Inject constructor(
     private val authApi: AuthApi
 ) {
 
-    val isLogin: MutableLiveData<Boolean> = MutableLiveData(false)
-    val isRegister: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isLogin: MutableLiveData<Boolean> = MutableLiveData()
+    val isRegister: MutableLiveData<Boolean> = MutableLiveData()
     val isUpdated: MutableLiveData<Boolean> = MutableLiveData(false)
     val isComment: MutableLiveData<Boolean> = MutableLiveData(false)
 
@@ -194,7 +194,7 @@ class AuthRepository @Inject constructor(
     }
 
     fun pushNotification(id: String, fcmToken: FcmToken) {
-        authApi.postNotification(prefs.keyToken!!, id, fcmToken)
+        authApi.postNotification(id, fcmToken)
             .enqueue(object : Callback<Wrapper> {
                 override fun onFailure(call: Call<Wrapper>, t: Throwable) {
                     println(t.localizedMessage)

@@ -47,5 +47,9 @@
     <string name="location_denied">Location permission denied</string>
     <string name="Success">Success</string>
     <string name="edit_account">Success Edit Account</string>
+    <string name="opps">Oops...</string>
+    <string name="email_password_incorrect">Email or password is incorrect!</string>
+    <string name="please_fill_in_all_fields">please fill in all fields</string>
+    <string name="registration_failed">Registration Failed</string>
 
 </resources>

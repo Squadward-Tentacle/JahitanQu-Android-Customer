@@ -3,21 +3,22 @@ package com.example.jahitanqu_customer.presentation.views.authentication.fragmen
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.example.jahitanqu_customer.JahitanQu
-
 import com.example.jahitanqu_customer.R
+import com.example.jahitanqu_customer.common.utils.Util
 import com.example.jahitanqu_customer.model.Customer
 import com.example.jahitanqu_customer.model.FcmToken
 import com.example.jahitanqu_customer.prefs
-import com.example.jahitanqu_customer.signInGoogle
 import com.example.jahitanqu_customer.presentation.viewmodel.AuthViewModel
+import com.example.jahitanqu_customer.signInGoogle
 import com.facebook.AccessToken
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
@@ -66,16 +67,22 @@ class LoginFragment : Fragment(), View.OnClickListener {
         authViewModel.isLogin.observe(viewLifecycleOwner, Observer {
             if (it) {
                 rlLoading.visibility = View.GONE
-                if (!prefs.keyCustomerFcm.isNullOrEmpty()){
+                if (!prefs.keyCustomerFcm.isNullOrEmpty()) {
                     val fcmToken = FcmToken(
                         tokenId = prefs.keyIdCustomer!!,
                         token = prefs.keyCustomerFcm!!
                     )
                     authViewModel.postFcm(fcmToken)
                 }
+                etEmail.setText("")
+                etPassword.setText("")
                 navController.navigate(R.id.toHomeActivity)
             } else {
                 rlLoading.visibility = View.GONE
+                SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText(getString(R.string.opps))
+                    .setContentText(getString(R.string.email_password_incorrect))
+                    .show()
             }
         })
         init()
@@ -173,12 +180,22 @@ class LoginFragment : Fragment(), View.OnClickListener {
                 navController.navigate(R.id.toRegisterFragment)
             }
             btnLogin -> {
-                val customer = Customer(
-                    email = etEmail.text.toString(),
-                    password = etPassword.text.toString()
-                )
-                rlLoading.visibility = View.VISIBLE
-                authViewModel.login(customer)
+
+                val email = etEmail.text.toString()
+                val password = etPassword.text.toString()
+                if (Util.validationInput(email, password)) {
+                    val customer = Customer(
+                        email = email,
+                        password = password
+                    )
+                    rlLoading.visibility = View.VISIBLE
+                    authViewModel.login(customer)
+                } else {
+                    SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText(getString(R.string.opps))
+                        .setContentText(getString(R.string.please_fill_in_all_fields))
+                        .show()
+                }
             }
         }
     }

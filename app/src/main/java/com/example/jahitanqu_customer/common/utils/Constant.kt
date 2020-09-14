@@ -19,6 +19,6 @@ object Constant {
     const val KEY_ID_TRANSACTION ="idTransaction"
     const val KEY_STATUS = "status"
     const val KEY_ADDRESS = "address"
-    const val BACKEND_SERVER_URL = "http://1cf7aed35ad0.ngrok.io"
+    const val BACKEND_SERVER_URL = "http://be74309b378a.ngrok.io"
     const val CHAT_SERVER_URL ="https://jahitanqu-chat-server.herokuapp.com/"
 }
