@@ -12,6 +12,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog
 import com.example.jahitanqu_customer.JahitanQu
 
 import com.example.jahitanqu_customer.R
+import com.example.jahitanqu_customer.common.utils.Util
 import com.example.jahitanqu_customer.model.Customer
 import com.example.jahitanqu_customer.model.FcmToken
 import com.example.jahitanqu_customer.prefs
@@ -70,14 +71,26 @@ class RegisterFragment : Fragment(), View.OnClickListener {
     override fun onClick(p0: View?) {
         when (p0) {
             btnRegister -> {
-                val customer = Customer(
-                    email = etEmail.text.toString(),
-                    password = etPassword.text.toString(),
-                    firstname = etFirstName.text.toString(),
-                    lastname = etLastName.text.toString()
-                )
-                showProgressDialog()
-                authViewModel.register(customer)
+                val email = etEmail.text.toString()
+                val password = etPassword.text.toString()
+                val firstname = etFirstName.text.toString()
+                val lastname = etLastName.text.toString()
+                val confirmPassword = etConfirmPassword.text.toString()
+                if (Util.validationInput(email, firstname, password, lastname, confirmPassword)) {
+                    val customer = Customer(
+                        email = email,
+                        password = password,
+                        firstname = firstname,
+                        lastname = lastname
+                    )
+                    showProgressDialog()
+                    authViewModel.register(customer)
+                } else {
+                    SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText(getString(R.string.opps))
+                        .setContentText(getString(R.string.please_fill_in_all_fields))
+                        .show()
+                }
             }
             btnLoginNow -> {
                 navController.navigate(R.id.toLoginFragment)
