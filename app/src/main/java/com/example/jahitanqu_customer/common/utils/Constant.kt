@@ -20,5 +20,5 @@ object Constant {
     const val KEY_STATUS = "status"
     const val KEY_ADDRESS = "address"
     const val BACKEND_SERVER_URL = "http://34.101.198.49:8087"
-    const val CHAT_SERVER_URL ="https://jahitanqu-chat-server.herokuapp.com/"
+    const val CHAT_SERVER_URL ="http://5e13a80917f6.ngrok.io/socket.io/"
 }

@@ -30,10 +30,6 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(R.id.toHomeFragment)
                     true
                 }
-                R.id.btnChat ->{
-                    navController.navigate(R.id.toChatFragment)
-                    true
-                }
                 R.id.btnMyOrder -> {
                     navController.navigate(R.id.toMyOrderFragment)
                     true
@@ -55,7 +51,6 @@ class MainActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.homeFragment,
                 R.id.accountFragment,
-                R.id.chatFragment,
                 R.id.myOrderFragment -> bottom_navigation?.visibility = View.VISIBLE
                 else -> bottom_navigation?.visibility = View.GONE
             }

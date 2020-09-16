@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
@@ -90,6 +91,7 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
         idTailor = arguments?.getString(Constant.KEY_ID_TAILOR)!!
         pbLoading.visibility = View.VISIBLE
         btnReservation.setOnClickListener(this)
+        btnContact.setOnClickListener(this)
         rvRatingAndReview.layoutManager = LinearLayoutManager(context)
         rvPortofolio.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -173,7 +175,6 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
                         transactionViewModel.postTransaction(transaction)
                         dialog.hide()
                     }
-
                     btnSetPlace.setOnClickListener {
                         if (activity?.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                             startActivityForResult(
@@ -185,6 +186,11 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
                         }
                     }
                 }
+            }
+            btnContact -> {
+                val bundle = bundleOf(Constant.KEY_ID_TAILOR to idTailor)
+                navController.navigate(R.id.chatFragment, bundle)
+
             }
 
         }
@@ -242,7 +248,7 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
     }
 
 
-    private fun showProgressDialog(){
+    private fun showProgressDialog() {
         sweetAlertDialog = SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE)
         sweetAlertDialog.progressHelper.barColor = resources.getColor(R.color.colorDarkBrown);
         sweetAlertDialog.titleText = getString(R.string.progressbar_loading)

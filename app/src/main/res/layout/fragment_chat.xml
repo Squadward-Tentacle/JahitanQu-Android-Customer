@@ -6,6 +6,36 @@
     android:layout_height="match_parent"
     tools:context=".presentation.views.main.chat.ChatFragment">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/white"
+        android:translationZ="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingRight="16dp"
+            android:src="@drawable/ic_arrow_back_black_24dp" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:fontFamily="@font/roboto_medium"
+            android:text="Chat"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvChat"
         android:layout_width="match_parent"
@@ -13,41 +43,41 @@
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar2" />
 
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_margin="8dp"
         android:gravity="center_vertical"
-        app:layout_constraintTop_toBottomOf="@id/rvChat"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rvChat">
 
         <EditText
             android:id="@+id/etChatText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:hint="Type message"
-            android:paddingStart="8dp"
-            android:fontFamily="@font/roboto_light"
+            android:layout_weight="1"
             android:background="@drawable/ic_custom_edittext"
-            android:layout_weight="1" />
+            android:fontFamily="@font/roboto_light"
+            android:hint="Type message"
+            android:padding="8dp"
+            android:paddingStart="8dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSendChat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
             android:layout_marginStart="8dp"
-            app:icon="@drawable/ic_send_black_24dp"
-            app:iconGravity="textEnd"
+            android:layout_weight="2"
+            android:backgroundTint="@color/colorDarkBrown"
             android:text="Send"
-            android:backgroundTint="@color/colorTosca"/>
+            app:icon="@drawable/ic_send_black_24dp"
+            app:iconGravity="textEnd" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

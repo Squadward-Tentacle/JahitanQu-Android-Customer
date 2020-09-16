@@ -8,12 +8,6 @@
         />
 
     <item
-        android:id="@+id/btnChat"
-        android:icon="@drawable/ic_chat_black_24dp"
-        android:title="@string/chat"
-        />
-
-    <item
         android:id="@+id/btnMyOrder"
         android:icon="@drawable/ic_my_order"
         android:title="@string/order"

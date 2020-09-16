@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.jahitanqu_customer.R
+import com.example.jahitanqu_customer.common.utils.Constant
 import com.example.jahitanqu_customer.prefs
 import com.example.jahitanqu_customer.presentation.views.main.chat.adapter.RecycleChatAdapter
 import com.example.jahitanqu_customer.socket
@@ -26,26 +27,10 @@ import java.util.*
 
 class ChatFragment : Fragment(), View.OnClickListener {
     lateinit var recycleChatAdapter: RecycleChatAdapter
+    lateinit var idTailor: String
     var chatList = mutableListOf<com.example.jahitanqu_customer.model.Message>()
-    lateinit var uniqueId: String
     val TAG = "ChatFragment"
     private var hasConnection = false
-    private var startTyping = false
-    private var time = 2
-    private var thread2: Thread? = null
-
-    @SuppressLint("HandlerLeak")
-    var handler: Handler = object : Handler() {
-        override fun handleMessage(msg: Message?) {
-            super.handleMessage(msg)
-            Log.i(TAG, "handleMessage: typing stopped $startTyping")
-            if (time == 0) {
-                Log.i(TAG, "handleMessage: typing stopped time is $time")
-                startTyping = false
-                time = 2
-            }
-        }
-    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,24 +47,17 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        uniqueId = UUID.randomUUID().toString()
-
+        idTailor = arguments?.getString(Constant.KEY_ID_TAILOR)!!
         if (savedInstanceState != null) {
             hasConnection = savedInstanceState.getBoolean("hasConnection")
         }
 
-        if (hasConnection) {
-
-        } else {
+        if (!hasConnection) {
             socket.connect()
-            socket.on("connect user", onNewUser)
+            socket.on("join room", onNewUser)
             socket.on("chat message", onNewMessage)
-            socket.on("on typing", onTyping)
-            val userId = JSONObject()
             try {
-                userId.put("username", prefs.keyFirstname + " Connected")
-                socket.emit("connect user", userId)
+                socket.emit("join room", idTailor)
             } catch (e: JSONException) {
                 e.printStackTrace()
             }
@@ -112,15 +90,6 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 i1: Int,
                 i2: Int
             ) {
-                val onTyping = JSONObject()
-                try {
-                    onTyping.put("typing", true)
-                    onTyping.put("username", prefs.keyFirstname)
-                    onTyping.put("uniqueId", uniqueId)
-                    socket.emit("on typing", onTyping)
-                } catch (e: JSONException) {
-                    e.printStackTrace()
-                }
                 btnSendChat.isEnabled = charSequence.toString().trim { it <= ' ' }.isNotEmpty()
             }
 
@@ -132,48 +101,47 @@ class ChatFragment : Fragment(), View.OnClickListener {
     override fun onClick(p0: View?) {
         when (p0) {
             btnSendChat -> {
-                Log.i(TAG, "sendMessage: ")
                 val message: String = etChatText.text.toString().trim()
                 if (TextUtils.isEmpty(message)) {
-                    Log.i(TAG, "sendMessage:2 ")
                     return
                 }
                 etChatText.setText("")
-                val jsonObject = JSONObject()
-                try {
-                    jsonObject.put("message", message)
-                    jsonObject.put("username", prefs.keyFirstname)
-                    jsonObject.put("uniqueId", uniqueId)
-                } catch (e: JSONException) {
-                    e.printStackTrace()
-                }
-                Log.i(TAG, "sendMessage: 1" + socket.emit("chat message", jsonObject))
-            }
-        }
-    }
-
-    var onNewMessage = Emitter.Listener { args ->
-        activity?.runOnUiThread(Runnable {
-            Log.i(TAG, "run: ")
-            val data = args[0] as JSONObject
-            val username: String
-            val message: String
-            val id: String
-            try {
-                username = data.getString("username")
-                message = data.getString("message")
-                id = data.getString("uniqueId")
-                Log.i(TAG, "run: $username$message$id")
+                Log.i(
+                    TAG,
+                    "sendMessage: 1" + socket.emit(
+                        "chat message",
+                        message,
+                        prefs.keyFirstname,
+                        idTailor
+                    )
+                )
                 chatList.add(
                     com.example.jahitanqu_customer.model.Message(
-                        id,
-                        username,
+                        "1",
+                        prefs.keyFirstname!!,
                         message
                     )
                 )
                 recycleChatAdapter = RecycleChatAdapter(chatList)
                 recycleChatAdapter.notifyDataSetChanged()
-                rvChat.scrollToPosition(chatList.size - 1 )
+                rvChat.scrollToPosition(chatList.size - 1)
+            }
+        }
+    }
+
+    private var onNewMessage = Emitter.Listener { args ->
+        activity?.runOnUiThread(Runnable {
+            try {
+                chatList.add(
+                    com.example.jahitanqu_customer.model.Message(
+                        "2",
+                        args[1].toString(),
+                        args[0].toString()
+                    )
+                )
+                recycleChatAdapter = RecycleChatAdapter(chatList)
+                recycleChatAdapter.notifyDataSetChanged()
+                rvChat.scrollToPosition(chatList.size - 1)
                 Log.i(TAG, "run:5 ")
             } catch (e: Exception) {
                 return@Runnable
@@ -187,103 +155,16 @@ class ChatFragment : Fragment(), View.OnClickListener {
             if (length == 0) {
                 return@Runnable
             }
-            Log.i(TAG, "run: ")
-            Log.i(TAG, "run: " + args.size)
             var username = args[0].toString()
-            try {
-                val `object` = JSONObject(username)
-                username = `object`.getString("username")
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
-            chatList.add(
-                com.example.jahitanqu_customer.model.Message(
-                    username = username
-                )
-            )
             Log.i(TAG, "run: $username")
-        })
-    }
-
-    private var onTyping = Emitter.Listener { args ->
-        activity?.runOnUiThread(Runnable {
-            val data = args[0] as JSONObject
-            Log.i(TAG, "run: " + args[0])
-            try {
-                var typingOrNot = data.getBoolean("typing")
-                val userName =
-                    data.getString("username") + " is Typing......"
-                val id = data.getString("uniqueId")
-                if (id == uniqueId) {
-                    typingOrNot = false
-                } else {
-                }
-                if (typingOrNot) {
-                    if (!startTyping) {
-                        startTyping = true
-                        thread2 = Thread(
-                            object : Runnable {
-                                override fun run() {
-                                    while (time > 0) {
-                                        synchronized(this) {
-                                            try {
-                                                Log.i(
-                                                    TAG,
-                                                    "run: typing $time"
-                                                )
-                                            } catch (e: InterruptedException) {
-                                                e.printStackTrace()
-                                            }
-                                            time--
-                                        }
-                                        handler.sendEmptyMessage(0)
-                                    }
-                                }
-                            }
-                        )
-                        thread2!!.start()
-                    } else {
-                        time = 2
-                    }
-                }
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
         })
     }
 
     override fun onDestroy() {
         super.onDestroy()
         Log.i(TAG, "onDestroy: ")
-        val userId = JSONObject()
-        try {
-            userId.put("username", prefs.keyFirstname + " DisConnected")
-            socket.emit("connect user", userId)
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
         socket.disconnect()
         socket.off("chat message", onNewMessage)
-        socket.off("connect user", onNewUser)
-        socket.off("on typing", onTyping)
-
+        socket.off("join room", onNewUser)
     }
-
-    override fun onStop() {
-        super.onStop()
-        Log.i(TAG, "onDestroy: ")
-        val userId = JSONObject()
-        try {
-            userId.put("username", prefs.keyFirstname + " DisConnected")
-            socket.emit("connect user", userId)
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
-        socket.disconnect()
-        socket.off("chat message", onNewMessage)
-        socket.off("connect user", onNewUser)
-        socket.off("on typing", onTyping)
-    }
-
-
 }
