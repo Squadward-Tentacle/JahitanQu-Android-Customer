@@ -1,7 +1,7 @@
 package com.example.jahitanqu_customer.presentation.views.main.myorder
 
+import android.graphics.Bitmap
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.RatingBar
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -16,10 +17,8 @@ import cn.pedant.SweetAlert.SweetAlertDialog
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
 import com.example.jahitanqu_customer.JahitanQu
-
 import com.example.jahitanqu_customer.R
 import com.example.jahitanqu_customer.common.utils.Constant
-import com.example.jahitanqu_customer.common.utils.Util
 import com.example.jahitanqu_customer.model.Comment
 import com.example.jahitanqu_customer.model.FcmToken
 import com.example.jahitanqu_customer.model.Transaction
@@ -34,9 +33,9 @@ import com.midtrans.sdk.corekit.models.snap.Authentication
 import com.midtrans.sdk.corekit.models.snap.CreditCard
 import com.midtrans.sdk.corekit.models.snap.TransactionResult
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.fragment_account.*
 import kotlinx.android.synthetic.main.fragment_my_order_detail.*
-import java.util.ArrayList
+import net.glxn.qrgen.android.QRCode
+import java.util.*
 import javax.inject.Inject
 
 class MyOrderDetailFragment : Fragment(), View.OnClickListener, TransactionFinishedCallback {
@@ -97,6 +96,7 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener, TransactionFinis
                     .into(ivTransactionImage)
             }
             tvTransactionCost.text = "Rp. ${it.cost}"
+            generateQRCode(it.idTransaction)
             idTransaction = it.idTransaction
             price = it.cost
             idTailor = it.idTailor
@@ -114,8 +114,6 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener, TransactionFinis
                 val alertDialog = SweetAlertDialog(context, SweetAlertDialog.SUCCESS_TYPE)
                 alertDialog.titleText = getString(R.string.Success)
                 alertDialog.show()
-                val btn = alertDialog.findViewById<View>(R.id.confirm_button) as Button
-                btn.setBackgroundColor(resources.getColor(R.color.colorDarkBrown))
             }
         })
 
@@ -305,5 +303,10 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener, TransactionFinis
         sweetAlertDialog.titleText = getString(R.string.progressbar_loading)
         sweetAlertDialog.setCancelable(false)
         sweetAlertDialog.show()
+    }
+
+    private fun generateQRCode(contain:String){
+        val myBitmap: Bitmap = QRCode.from(contain).withSize(150,150).bitmap()
+        ivQrCode.setImageBitmap(myBitmap)
     }
 }

@@ -107,7 +107,7 @@ dependencies {
     //viewpager2
     implementation "androidx.viewpager2:viewpager2:1.0.0"
 
-    //glide
+    //picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
 
     //paging
@@ -133,6 +133,9 @@ dependencies {
 
     //shimmer progress bar
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
+
+    //QRGenerator
+    implementation 'com.github.kenglxn.QRGen:android:2.6.0'
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
