@@ -1,6 +1,6 @@
 package com.example.jahitanqu_customer.presentation.views.main
 
-import android.content.Intent
+import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +9,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.example.jahitanqu_customer.JahitanQu
 import com.example.jahitanqu_customer.R
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_home.*
 
 
@@ -51,7 +52,9 @@ class MainActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.homeFragment,
                 R.id.accountFragment,
-                R.id.myOrderFragment -> bottom_navigation?.visibility = View.VISIBLE
+                R.id.myOrderFragment -> {
+                    bottom_navigation?.visibility = View.VISIBLE
+                }
                 else -> bottom_navigation?.visibility = View.GONE
             }
         }

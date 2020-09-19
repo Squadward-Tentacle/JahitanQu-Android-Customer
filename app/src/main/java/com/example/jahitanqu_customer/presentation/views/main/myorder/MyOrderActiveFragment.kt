@@ -47,7 +47,6 @@ class MyOrderActiveFragment : Fragment(), BaseContract {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_my_order_active, container, false)
     }
 
@@ -71,6 +70,13 @@ class MyOrderActiveFragment : Fragment(), BaseContract {
                 rvOrderActive.visibility = View.VISIBLE
                 shimmerFrameLayout.visibility = View.GONE
                 shimmerFrameLayout.stopShimmer()
+                transactionViewModel.isEmpty.observe(viewLifecycleOwner, Observer {
+                    if (it){
+                        ivEmptyList.visibility = View.VISIBLE
+                    }else{
+                        ivEmptyList.visibility = View.GONE
+                    }
+                })
             }
         })
     }

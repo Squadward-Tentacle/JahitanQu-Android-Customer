@@ -92,6 +92,7 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
         pbLoading.visibility = View.VISIBLE
         btnReservation.setOnClickListener(this)
         btnContact.setOnClickListener(this)
+        btnBack.setOnClickListener(this)
         rvRatingAndReview.layoutManager = LinearLayoutManager(context)
         rvPortofolio.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -193,6 +194,9 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
 
             }
 
+            btnBack ->{
+                navController.navigate(R.id.toTailorListFragment)
+            }
         }
     }
 

@@ -19,6 +19,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.jahitanqu_customer.R
 import com.example.jahitanqu_customer.common.utils.Constant
+import com.example.jahitanqu_customer.prefs
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
@@ -62,113 +63,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         Places.initialize(applicationContext, getString(R.string.google_maps_key))
         placeClient = Places.createClient(this)
-        val token = AutocompleteSessionToken.newInstance();
 
-        searchBar.setOnSearchActionListener(object : MaterialSearchBar.OnSearchActionListener {
-            override fun onSearchStateChanged(enabled: Boolean) {}
-            override fun onSearchConfirmed(text: CharSequence) {
-                startSearch(text.toString(), true, null, true)
-            }
-
-            override fun onButtonClicked(buttonCode: Int) {
-                if (buttonCode == MaterialSearchBar.BUTTON_NAVIGATION) {
-                } else if (buttonCode == MaterialSearchBar.BUTTON_BACK) {
-//                    searchBar.disableSearch()
-                }
-            }
-        })
-
-        searchBar.addTextChangeListener(object : TextWatcher {
-            override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int
-            ) {
-            }
-
-            override fun onTextChanged(
-                s: CharSequence,
-                start: Int,
-                before: Int,
-                count: Int
-            ) {
-                val predictionsRequest: FindAutocompletePredictionsRequest =
-                    FindAutocompletePredictionsRequest.builder()
-                        .setTypeFilter(TypeFilter.ADDRESS)
-                        .setSessionToken(token)
-                        .setQuery(s.toString())
-                        .build()
-                placeClient.findAutocompletePredictions(predictionsRequest)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            val predictionsResponse: FindAutocompletePredictionsResponse? =
-                                task.result
-                            if (predictionsResponse != null) {
-                                predictionList =
-                                    predictionsResponse.autocompletePredictions
-                                val suggestionsList = mutableListOf<String>()
-                                for (i in predictionList.indices) {
-                                    val prediction = predictionList[i]
-                                    suggestionsList.add(prediction.getFullText(null).toString())
-                                }
-                                searchBar.updateLastSuggestions(suggestionsList)
-                                if (!searchBar.isSuggestionsVisible) {
-                                    searchBar.showSuggestionsList()
-                                }
-                            }
-                        } else {
-                            Log.i("mytag", "prediction fetching task unsuccessful")
-                        }
-                    }
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
-        })
-
-        searchBar.setSuggestionsClickListener(object : SuggestionsAdapter.OnItemViewClickListener {
-            override fun OnItemClickListener(position: Int, v: View?) {
-                if (position >= predictionList.size) {
-                    return
-                }
-                val selectedPrediction = predictionList[position]
-                val suggestion: String = searchBar.lastSuggestions[position].toString()
-                searchBar.text = suggestion
-                Handler().postDelayed(Runnable { searchBar.clearSuggestions() }, 1000)
-                (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)?.hideSoftInputFromWindow(
-                    searchBar.windowToken,
-                    InputMethodManager.HIDE_IMPLICIT_ONLY
-                )
-                val placeId = selectedPrediction.placeId
-                val placeFields: List<Place.Field> = listOf(Place.Field.LAT_LNG)
-                val fetchPlaceRequest: FetchPlaceRequest =
-                    FetchPlaceRequest.builder(placeId, placeFields).build()
-                placeClient.fetchPlace(fetchPlaceRequest)
-                    .addOnSuccessListener { p0 ->
-                        val place: Place = p0?.place!!
-                        Log.i("mytag", "Place found: " + place.name)
-                        val latLngOfPlace: LatLng? = place.latLng
-                        if (latLngOfPlace != null) {
-                            mMap.moveCamera(
-                                CameraUpdateFactory.newLatLngZoom(
-                                    latLngOfPlace,
-                                    DEFAULT_ZOOM.toFloat()
-                                )
-                            )
-                        }
-                    }.addOnFailureListener { e ->
-                        if (e is ApiException) {
-                            val apiException: ApiException = e as ApiException
-                            apiException.printStackTrace()
-                            val statusCode: Int = apiException.statusCode
-                            Log.i("mytag", "place not found: " + e.message)
-                            Log.i("mytag", "status code: $statusCode")
-                        }
-                    }
-            }
-
-            override fun OnItemDeleteListener(position: Int, v: View?) {}
-        })
         btn_find.setOnClickListener {
             val currentMarkerLocation = mMap.cameraPosition.target
             val address = getAddress(currentMarkerLocation.latitude,currentMarkerLocation.longitude)
@@ -185,12 +80,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun getAddress(lat: Double, lng: Double): String {
         var geocoder = Geocoder(this, Locale.getDefault())
         var addresses = geocoder.getFromLocation(lat, lng, 1)
-        val address: String = addresses[0].getAddressLine(0)
-        val city: String = addresses[0].locality
-        val state: String = addresses[0].adminArea
-        val country: String = addresses[0].countryName
-        val postalCode: String = addresses[0].postalCode
-        return "${address},${city},${state},${country},${postalCode}"
+        val address = addresses[0].getAddressLine(0)
+        prefs.keySubDistrict = addresses[0].locality
+        prefs.keyCity = addresses[0].subAdminArea
+        prefs.keyPostalCode = addresses[0].postalCode
+        return address
     }
 
     @SuppressLint("MissingPermission")
@@ -230,12 +124,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     e1.printStackTrace()
                 }
             }
-        }
-        mMap.setOnMyLocationButtonClickListener {
-            if (searchBar.isSuggestionsVisible) {
-                searchBar.clearSuggestions()
-            }
-            false
         }
     }
 

@@ -3,10 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginEnd="8dp"
     android:backgroundTint="@android:color/white"
-    android:elevation="10dp"
-    app:cardCornerRadius="10dp">
+    app:cardCornerRadius="4dp"
+    app:cardElevation="2dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,8 +21,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto_regular"
-            android:textColor="@android:color/black"
-            android:text="Lorem Tailor" />
+            android:text="Lorem Tailor"
+            android:textColor="@android:color/black" />
 
         <TextView
             android:id="@+id/tvTransactionNumber"
@@ -28,8 +30,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:fontFamily="@font/roboto_light"
-            android:textColor="@android:color/black"
-            android:text="TR-201001" />
+            android:text="TR-201001"
+            android:textColor="@android:color/black" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -43,8 +45,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/roboto_light"
-                android:textColor="@android:color/black"
-                android:text="2 Sept 2020" />
+                android:text="2 Sept 2020"
+                android:textColor="@android:color/black" />
 
             <TextView
                 android:id="@+id/tvTransactionStatus"

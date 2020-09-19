@@ -25,7 +25,7 @@ class AuthRepository @Inject constructor(
     private val authApi: AuthApi
 ) {
 
-    val isLogin: MutableLiveData<Boolean> = MutableLiveData()
+    val loginState: MutableLiveData<Int> = MutableLiveData(0)
     val isRegister: MutableLiveData<Boolean> = MutableLiveData()
     val isUpdated: MutableLiveData<Boolean> = MutableLiveData(false)
     val isComment: MutableLiveData<Boolean> = MutableLiveData(false)
@@ -56,9 +56,9 @@ class AuthRepository @Inject constructor(
                     prefs.keyPhoneNumber = customer.phone
                     prefs.keyPhotoUrl = customer.imageUrl
                     prefs.keyToken = responseCustomer.token
-                    isLogin.value = true
+                    loginState.value = 1
                 } else {
-                    isLogin.value = false
+                    loginState.value = 3
                 }
             }
 
@@ -75,9 +75,9 @@ class AuthRepository @Inject constructor(
                 val responseCustomer = response.body()
                 if (responseCustomer?.statusCode == 200) {
                     prefs.keyToken = responseCustomer?.token
-                    isLogin.value = true
+                    loginState.value = 1
                 } else {
-                    isLogin.value = false
+                    loginState.value = 2
                 }
             }
 

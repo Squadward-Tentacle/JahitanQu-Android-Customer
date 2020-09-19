@@ -11,14 +11,11 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import cn.pedant.SweetAlert.SweetAlertDialog
-import com.example.jahitanqu_customer.JahitanQu
-import com.example.jahitanqu_customer.R
+import com.example.jahitanqu_customer.*
 import com.example.jahitanqu_customer.common.utils.Util
 import com.example.jahitanqu_customer.model.Customer
 import com.example.jahitanqu_customer.model.FcmToken
-import com.example.jahitanqu_customer.prefs
 import com.example.jahitanqu_customer.presentation.viewmodel.AuthViewModel
-import com.example.jahitanqu_customer.signInGoogle
 import com.facebook.AccessToken
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
@@ -64,25 +61,28 @@ class LoginFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
-        authViewModel.isLogin.observe(viewLifecycleOwner, Observer {
-            if (it) {
-                rlLoading.visibility = View.GONE
-                if (!prefs.keyCustomerFcm.isNullOrEmpty()) {
-                    val fcmToken = FcmToken(
-                        tokenId = prefs.keyIdCustomer!!,
-                        token = prefs.keyCustomerFcm!!
-                    )
-                    authViewModel.postFcm(fcmToken)
+        authViewModel.loginState.observe(viewLifecycleOwner, Observer {
+            when (it) {
+                1 -> {
+                    rlLoading.visibility = View.GONE
+                    if (!prefsFcmToken.keyCustomerFcm.isNullOrEmpty()) {
+                        val fcmToken = FcmToken(
+                            tokenId = prefs.keyIdCustomer!!,
+                            token = prefsFcmToken.keyCustomerFcm!!
+                        )
+                        authViewModel.postFcm(fcmToken)
+                    }
+                    etEmail.setText("")
+                    etPassword.setText("")
+                    navController.navigate(R.id.toHomeActivity)
                 }
-                etEmail.setText("")
-                etPassword.setText("")
-                navController.navigate(R.id.toHomeActivity)
-            } else {
-                rlLoading.visibility = View.GONE
-                SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
-                    .setTitleText(getString(R.string.opps))
-                    .setContentText(getString(R.string.email_password_incorrect))
-                    .show()
+                2 -> {
+                    rlLoading.visibility = View.GONE
+                    SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText(getString(R.string.opps))
+                        .setContentText(getString(R.string.email_password_incorrect))
+                        .show()
+                }
             }
         })
         init()
@@ -158,6 +158,9 @@ class LoginFragment : Fragment(), View.OnClickListener {
             if (it.isSuccessful) {
                 val user = firebaseAuth.currentUser
                 prefs.keyEmail = user?.email
+                prefs.keyFirstname = user?.displayName
+                prefs.keyPhotoUrl = user?.photoUrl.toString()
+                prefs.keyPhoneNumber = user?.phoneNumber
                 authViewModel.getToken()
             }
         }
@@ -191,10 +194,12 @@ class LoginFragment : Fragment(), View.OnClickListener {
                     rlLoading.visibility = View.VISIBLE
                     authViewModel.login(customer)
                 } else {
-                    SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText(getString(R.string.opps))
-                        .setContentText(getString(R.string.please_fill_in_all_fields))
-                        .show()
+                    Util.showAlert(
+                        this.requireContext(),
+                        SweetAlertDialog.WARNING_TYPE,
+                        getString(R.string.opps),
+                        getString(R.string.please_fill_in_all_fields)
+                    )
                 }
             }
         }

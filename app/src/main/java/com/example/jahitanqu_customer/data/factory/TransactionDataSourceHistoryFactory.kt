@@ -14,6 +14,7 @@ class TransactionDataSourceHistoryFactory @Inject constructor(private val transa
 
     val transactionHistoryLiveDataSource =  MutableLiveData<TransactionDataSourceHistory>()
     val showShimmer:LiveData<Boolean> = transactionDataSourceHistory.showShimmer
+    val isEmptyHistory:LiveData<Boolean> = transactionDataSourceHistory.isEmptyHistory
 
     override fun create(): DataSource<Int, Transaction> {
         transactionHistoryLiveDataSource.postValue(transactionDataSourceHistory)

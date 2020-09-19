@@ -11,7 +11,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.jahitanqu_customer.R
 import com.example.jahitanqu_customer.common.utils.Constant
@@ -28,6 +31,7 @@ import java.util.*
 class ChatFragment : Fragment(), View.OnClickListener {
     lateinit var recycleChatAdapter: RecycleChatAdapter
     lateinit var idTailor: String
+    lateinit var navController: NavController
     var chatList = mutableListOf<com.example.jahitanqu_customer.model.Message>()
     val TAG = "ChatFragment"
     private var hasConnection = false
@@ -68,7 +72,10 @@ class ChatFragment : Fragment(), View.OnClickListener {
         rvChat.layoutManager = LinearLayoutManager(context)
         recycleChatAdapter = RecycleChatAdapter(chatList)
         rvChat.adapter = recycleChatAdapter
+
+        navController = Navigation.findNavController(view)
         btnSendChat.setOnClickListener(this)
+        btnBack.setOnClickListener(this)
 
         onTypeButtonEnable()
     }
@@ -125,6 +132,10 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 recycleChatAdapter = RecycleChatAdapter(chatList)
                 recycleChatAdapter.notifyDataSetChanged()
                 rvChat.scrollToPosition(chatList.size - 1)
+            }
+            btnBack ->{
+                val bundle = bundleOf(Constant.KEY_ID_TAILOR to idTailor)
+                navController.navigate(R.id.toTailorDetailFragment,bundle)
             }
         }
     }

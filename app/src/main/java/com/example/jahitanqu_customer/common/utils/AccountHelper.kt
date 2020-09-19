@@ -23,9 +23,14 @@ class AccountHelper(context: Context) {
     val KEY_LONGITUDE = "pref.KeyLongitude"
     val KEY_CUSTOMER = "pref.KeyCustomer"
     val KEY_CUSTOMER_FCM = "pref.keyCustomerFcm"
+    val KEY_SUB_DISTRICT = "pref.KeySubDistrict"
+    val KEY_CITY ="pref.KeyCity"
+    val KEY_POSTAL_CODE = "pref.KeyPostalCode"
 
 
     val prefs: SharedPreferences = context.getSharedPreferences("myPref", 0)
+
+    val prefsFcmToken : SharedPreferences = context.getSharedPreferences("myPrefFcmToken",0)
 
     var keyToken: String?
         get() = prefs.getString(KEY_TOKEN, "")
@@ -67,12 +72,28 @@ class AccountHelper(context: Context) {
         get() = prefs.getFloat(KEY_LONGITUDE, 0.0F)
         set(value) = prefs.edit().putFloat(KEY_LONGITUDE, value!!).apply()
 
-    var keyCustomerFcm: String?
-        get() = prefs.getString(KEY_CUSTOMER_FCM, "")
-        set(value) = prefs.edit().putString(KEY_CUSTOMER_FCM, value!!).apply()
+    var keyCity:String?
+        get() = prefs.getString(KEY_CITY, "")
+        set(value) = prefs.edit().putString(KEY_CITY, value!!).apply()
+
+    var keySubDistrict:String?
+        get() = prefs.getString(KEY_SUB_DISTRICT, "")
+        set(value) = prefs.edit().putString(KEY_SUB_DISTRICT, value!!).apply()
+
+    var keyPostalCode:String?
+        get() = prefs.getString(KEY_POSTAL_CODE, "")
+        set(value) = prefs.edit().putString(KEY_POSTAL_CODE, value!!).apply()
 
     fun clear() {
         prefs.edit().clear().apply()
+    }
+
+    var keyCustomerFcm: String?
+        get() = prefsFcmToken.getString(KEY_CUSTOMER_FCM, "")
+        set(value) = prefsFcmToken.edit().putString(KEY_CUSTOMER_FCM, value!!).apply()
+
+    fun clearFcmToken(){
+        prefsFcmToken.edit().clear().apply()
     }
 
     fun setCustomerPref(customer: Any) {
@@ -80,7 +101,4 @@ class AccountHelper(context: Context) {
         val json = gson.toJson(customer)
         prefs.edit().putString(KEY_CUSTOMER, json).apply()
     }
-
-    val keyCustomer: String?
-        get() = prefs.getString(KEY_CUSTOMER, "")
 }

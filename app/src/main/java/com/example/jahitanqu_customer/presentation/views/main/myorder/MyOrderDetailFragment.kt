@@ -29,9 +29,7 @@ import com.example.jahitanqu_customer.presentation.viewmodel.TransactionViewMode
 import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback
 import com.midtrans.sdk.corekit.core.MidtransSDK
 import com.midtrans.sdk.corekit.core.TransactionRequest
-import com.midtrans.sdk.corekit.models.BankType
-import com.midtrans.sdk.corekit.models.CustomerDetails
-import com.midtrans.sdk.corekit.models.ItemDetails
+import com.midtrans.sdk.corekit.models.*
 import com.midtrans.sdk.corekit.models.snap.Authentication
 import com.midtrans.sdk.corekit.models.snap.CreditCard
 import com.midtrans.sdk.corekit.models.snap.TransactionResult
@@ -199,10 +197,32 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener, TransactionFinis
     }
 
     private fun customerDetail(): CustomerDetails {
+        val billingAddress = BillingAddress()
+        billingAddress.address = prefs.keySubDistrict
+        billingAddress.city = prefs.keyCity
+        billingAddress.countryCode = "IDN"
+        billingAddress.postalCode = prefs.keyPostalCode
+        billingAddress.firstName = prefs.keyFirstname
+        billingAddress.lastName = prefs.keyLastName
+        billingAddress.phone = prefs.keyPhoneNumber
+
+        val shippingAddress = ShippingAddress()
+        shippingAddress.address = prefs.keySubDistrict
+        shippingAddress.city = prefs.keyCity
+        shippingAddress.countryCode = "IDN"
+        shippingAddress.postalCode = prefs.keyPostalCode
+        shippingAddress.firstName = prefs.keyFirstname
+        shippingAddress.lastName = prefs.keyLastName
+        shippingAddress.phone = prefs.keyPhoneNumber
+
         val customerDetail = CustomerDetails()
         customerDetail.firstName = prefs.keyFirstname
+        customerDetail.lastName = prefs.keyLastName
         customerDetail.phone = prefs.keyPhoneNumber
         customerDetail.email = prefs.keyEmail
+        customerDetail.billingAddress = billingAddress
+        customerDetail.shippingAddress = shippingAddress
+
         return customerDetail
     }
 
@@ -212,12 +232,15 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener, TransactionFinis
         qty: Int,
         name: String
     ): TransactionRequest {
-        val request = TransactionRequest("${System.currentTimeMillis()} ", price.toDouble())
-        request.customerDetails = customerDetail()
+
         val detail = ItemDetails(id, price.toDouble(), qty, name)
         val itemDetails = mutableListOf<ItemDetails>()
         itemDetails.add(detail)
+
+        val request = TransactionRequest(id, price.toDouble())
         request.itemDetails = itemDetails as ArrayList<ItemDetails>?
+        request.customerDetails = customerDetail()
+
 
         val creditCard = CreditCard()
         creditCard.isSaveCard = false

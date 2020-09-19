@@ -1,5 +1,8 @@
 package com.example.jahitanqu_customer.common.utils
 
+import android.content.Context
+import cn.pedant.SweetAlert.SweetAlertDialog
+import com.example.jahitanqu_customer.R
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -44,4 +47,10 @@ object Util {
         return true
     }
 
+    fun showAlert(context:Context,type:Int,title:String,content:String){
+        SweetAlertDialog(context, type)
+            .setTitleText(title)
+            .setContentText(content)
+            .show()
+    }
 }

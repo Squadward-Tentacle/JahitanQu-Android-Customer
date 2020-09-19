@@ -61,10 +61,16 @@ class MyOrderHistoryFragment : Fragment(), BaseContract {
                 shimmerFrameLayout.visibility = View.VISIBLE
                 shimmerFrameLayout.startShimmer()
             } else {
-
                 rvOrderHistory.visibility = View.VISIBLE
                 shimmerFrameLayout.visibility = View.GONE
                 shimmerFrameLayout.stopShimmer()
+                transactionViewModel.isEmptyHistory.observe(viewLifecycleOwner, Observer {
+                    if (it){
+                        ivEmptyList.visibility = View.VISIBLE
+                    }else{
+                        ivEmptyList.visibility = View.GONE
+                    }
+                })
             }
         })
     }

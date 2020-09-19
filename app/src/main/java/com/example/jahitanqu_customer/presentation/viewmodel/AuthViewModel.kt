@@ -15,13 +15,13 @@ import javax.inject.Inject
  */
 class AuthViewModel @Inject constructor(private val authRepository: AuthRepository) : ViewModel() {
 
-    val isLogin: LiveData<Boolean>
+    val loginState: LiveData<Int>
     val isRegister: LiveData<Boolean>
     val isUpdated :LiveData<Boolean>
     val isComment :LiveData<Boolean>
 
     init {
-        isLogin = authRepository.isLogin
+        loginState = authRepository.loginState
         isRegister = authRepository.isRegister
         isUpdated = authRepository.isUpdated
         isComment = authRepository.isComment

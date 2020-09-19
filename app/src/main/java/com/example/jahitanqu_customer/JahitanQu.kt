@@ -20,6 +20,9 @@ val prefs: AccountHelper by lazy {
     JahitanQu.prefs!!
 }
 
+val prefsFcmToken:AccountHelper by lazy {
+    JahitanQu.prefsFcmToken!!
+}
 val signInGoogle:GoogleSignInClient by lazy {
     JahitanQu.googleSignInClient!!
 }
@@ -34,6 +37,7 @@ class JahitanQu : Application() {
 
     override fun onCreate() {
         prefs = AccountHelper(applicationContext)
+        prefsFcmToken = AccountHelper(applicationContext)
         initSDKGoogle()
         initSDKFacebook()
         initSDKMidtrans()
@@ -82,6 +86,7 @@ class JahitanQu : Application() {
 
     companion object {
         var prefs: AccountHelper? = null
+        var prefsFcmToken :AccountHelper?=null
         var googleSignInClient: GoogleSignInClient? = null
         var socket: Socket? = null
     }

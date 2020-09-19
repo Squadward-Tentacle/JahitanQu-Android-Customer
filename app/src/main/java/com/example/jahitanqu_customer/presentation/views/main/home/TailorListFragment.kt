@@ -67,6 +67,9 @@ class TailorListFragment : Fragment(),BaseContract {
                 shimmerFrameLayout.stopShimmer()
             }
         })
+        btnBack.setOnClickListener {
+            navController.navigate(R.id.homeFragment)
+        }
 
     }
 

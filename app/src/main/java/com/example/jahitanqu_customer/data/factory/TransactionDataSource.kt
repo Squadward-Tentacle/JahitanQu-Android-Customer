@@ -26,6 +26,7 @@ class TransactionDataSource @Inject constructor(private val transactionApi: Tran
     private val FIRST_PAGE = 1
 
     val showShimmer = MutableLiveData(true)
+    val isEmpty = MutableLiveData(true)
 
     override fun loadInitial(
         params: LoadInitialParams<Int>,
@@ -47,6 +48,7 @@ class TransactionDataSource @Inject constructor(private val transactionApi: Tran
                         gson.fromJson(gson.toJson(res), listOfMyClassObject)
                     callback.onResult(outputList, null, FIRST_PAGE + 1)
                     showShimmer.value = false
+                    isEmpty.value = outputList.isEmpty()
                 }
 
             })

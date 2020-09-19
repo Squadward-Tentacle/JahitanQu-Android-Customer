@@ -43,6 +43,4 @@ class TailorViewModel @Inject constructor(
     fun getTailorById(idTailor:String){
         tailorRepository.getTailorById(idTailor)
     }
-
-
 }

@@ -2,6 +2,7 @@ package com.example.jahitanqu_customer.service
 
 import android.util.Log
 import com.example.jahitanqu_customer.prefs
+import com.example.jahitanqu_customer.prefsFcmToken
 import com.google.firebase.messaging.FirebaseMessagingService
 
 /**
@@ -12,7 +13,7 @@ class MessagingService: FirebaseMessagingService() {
 
     override fun onNewToken(p0: String) {
         Log.d("TAG","TOKEN : $p0")
-        prefs.keyCustomerFcm = p0
+        prefsFcmToken.keyCustomerFcm = p0
     }
 
 }

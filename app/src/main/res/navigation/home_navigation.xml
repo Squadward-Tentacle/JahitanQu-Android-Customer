@@ -7,47 +7,37 @@
 
     <action
         android:id="@+id/toHomeFragment"
-        app:destination="@id/homeFragment"
-        app:popUpTo="@+id/toHomeFragment"
-        app:popUpToInclusive="true"
-        />
+        app:destination="@id/homeFragment" />
 
     <action
         android:id="@+id/toAccountFragment"
-        app:destination="@id/accountFragment"
-        app:popUpTo="@+id/toAccountFragment"
-        app:popUpToInclusive="true"
-        />
+        app:destination="@id/accountFragment" />
 
     <action
         android:id="@+id/toTailorListFragment"
-        app:destination="@id/tailorListFragment"
-        app:popUpTo="@+id/toTailorListFragment"
-        app:popUpToInclusive="true"
-        />
+        app:destination="@id/tailorListFragment" />
 
     <action
         android:id="@+id/toMyOrderFragment"
-        app:destination="@id/myOrderFragment"
-        app:popUpTo="@+id/toMyOrderFragment"
-        app:popUpToInclusive="true"
-        />
+        app:destination="@id/myOrderFragment" />
 
     <action
         android:id="@+id/toChatFragment"
-        app:destination="@id/chatFragment"
-        app:popUpTo="@+id/toChatFragment"
-        app:popUpToInclusive="true"
-        />
+        app:destination="@id/chatFragment" />
 
     <action
         android:id="@+id/toMyOrderDetailFragment"
         app:destination="@id/myOrderDetailFragment"
-        />
+        app:popUpTo="@+id/toMyOrderDetailFragment"
+        app:popUpToInclusive="true" />
+
 
     <action
         android:id="@+id/toTailorDetailFragment"
-        app:destination="@id/tailorDetailFragment"/>
+        app:destination="@id/tailorDetailFragment"
+        app:popUpTo="@+id/toTailorDetailFragment"
+        app:popUpToInclusive="true" />
+
 
     <fragment
         android:id="@+id/homeFragment"
@@ -78,8 +68,7 @@
         android:id="@+id/chatFragment"
         android:name="com.example.jahitanqu_customer.presentation.views.main.chat.ChatFragment"
         android:label="fragment_chat"
-        tools:layout="@layout/fragment_chat" />
-
+        tools:layout="@layout/fragment_chat"/>
     <fragment
         android:id="@+id/tailorDetailFragment"
         android:name="com.example.jahitanqu_customer.presentation.views.main.home.TailorDetailFragment"

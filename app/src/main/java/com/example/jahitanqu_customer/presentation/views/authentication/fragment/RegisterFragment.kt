@@ -16,6 +16,7 @@ import com.example.jahitanqu_customer.common.utils.Util
 import com.example.jahitanqu_customer.model.Customer
 import com.example.jahitanqu_customer.model.FcmToken
 import com.example.jahitanqu_customer.prefs
+import com.example.jahitanqu_customer.prefsFcmToken
 import com.example.jahitanqu_customer.presentation.viewmodel.AuthViewModel
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_register.*
@@ -47,10 +48,10 @@ class RegisterFragment : Fragment(), View.OnClickListener {
         navController = Navigation.findNavController(view)
         authViewModel.isRegister.observe(viewLifecycleOwner, Observer {
             if (it) {
-                if (!prefs.keyCustomerFcm.isNullOrEmpty()) {
+                if (!prefsFcmToken.keyCustomerFcm.isNullOrEmpty()) {
                     val fcmToken = FcmToken(
                         tokenId = prefs.keyIdCustomer!!,
-                        token = prefs.keyCustomerFcm!!
+                        token = prefsFcmToken.keyCustomerFcm!!
                     )
                     authViewModel.postFcm(fcmToken)
                 }
