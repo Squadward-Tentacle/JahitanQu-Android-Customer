@@ -266,23 +266,27 @@ class AccountFragment : Fragment(), View.OnClickListener {
             profile_image.setImageBitmap(imageBitmap)
         }
         if (requestCode == SELECT_FILE_FROM_STORAGE && resultCode == Activity.RESULT_OK) {
-            val originalPath = getOriginalPathFromUri(data?.data!!)
-            val imageFile = File(originalPath)
-            photoFile = imageFile
-            val imageBitmap = BitmapFactory.decodeFile(imageFile.absolutePath)
-            profile_image.setImageBitmap(imageBitmap)
+            if(data != null){
+                val originalPath = getOriginalPathFromUri(data?.data!!)
+                val imageFile = File(originalPath)
+                photoFile = imageFile
+                val imageBitmap = BitmapFactory.decodeFile(imageFile.absolutePath)
+                profile_image.setImageBitmap(imageBitmap)
+            }
         }
         if (requestCode == REQUEST_CODE_MAPS) {
-            val latitude = data!!.getDoubleExtra(Constant.KEY_LATITUDE, 0.0)
-            val longitude = data.getDoubleExtra(Constant.KEY_LONGITUDE, 0.0)
-            val addresses = data.getStringExtra(Constant.KEY_ADDRESS)
-            address = Address(
-                addresses,
-                latitude.toFloat(),
-                longitude.toFloat(),
-                2
-            )
-            etPlace.setText(addresses)
+            if (data != null){
+                val latitude = data!!.getDoubleExtra(Constant.KEY_LATITUDE, 0.0)
+                val longitude = data.getDoubleExtra(Constant.KEY_LONGITUDE, 0.0)
+                val addresses = data.getStringExtra(Constant.KEY_ADDRESS)
+                address = Address(
+                    addresses,
+                    latitude.toFloat(),
+                    longitude.toFloat(),
+                    2
+                )
+                etPlace.setText(addresses)
+            }
         }
     }
 

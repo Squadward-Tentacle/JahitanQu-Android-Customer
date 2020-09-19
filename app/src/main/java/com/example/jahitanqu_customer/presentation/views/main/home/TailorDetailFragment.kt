@@ -194,7 +194,7 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
 
             }
 
-            btnBack ->{
+            btnBack -> {
                 navController.navigate(R.id.toTailorListFragment)
             }
         }
@@ -203,16 +203,19 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_MAPS) {
-            val latitude = data!!.getDoubleExtra(Constant.KEY_LATITUDE, 0.0)
-            val longitude = data.getDoubleExtra(Constant.KEY_LONGITUDE, 0.0)
-            val addresses = data.getStringExtra(Constant.KEY_ADDRESS)
-            address = Address(
-                addresses,
-                latitude.toFloat(),
-                longitude.toFloat(),
-                2
-            )
-            transactionViewModel.setAddress(address)
+            if (data != null) {
+                val latitude = data!!.getDoubleExtra(Constant.KEY_LATITUDE, 0.0)
+                val longitude = data.getDoubleExtra(Constant.KEY_LONGITUDE, 0.0)
+                val addresses = data.getStringExtra(Constant.KEY_ADDRESS)
+                address = Address(
+                    addresses,
+                    latitude.toFloat(),
+                    longitude.toFloat(),
+                    2
+                )
+                transactionViewModel.setAddress(address)
+
+            }
         }
     }
 

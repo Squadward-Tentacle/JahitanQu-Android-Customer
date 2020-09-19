@@ -1,5 +1,8 @@
 package com.example.jahitanqu_customer.presentation.views.main.myorder
 
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -19,12 +22,15 @@ import com.afollestad.materialdialogs.customview.customView
 import com.example.jahitanqu_customer.JahitanQu
 import com.example.jahitanqu_customer.R
 import com.example.jahitanqu_customer.common.utils.Constant
+import com.example.jahitanqu_customer.model.Address
 import com.example.jahitanqu_customer.model.Comment
 import com.example.jahitanqu_customer.model.FcmToken
 import com.example.jahitanqu_customer.model.Transaction
 import com.example.jahitanqu_customer.prefs
 import com.example.jahitanqu_customer.presentation.viewmodel.AuthViewModel
 import com.example.jahitanqu_customer.presentation.viewmodel.TransactionViewModel
+import com.example.jahitanqu_customer.presentation.views.maps.MapsActivity
+import com.example.jahitanqu_customer.presentation.views.scanner.ScanQrCodeActivity
 import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback
 import com.midtrans.sdk.corekit.core.MidtransSDK
 import com.midtrans.sdk.corekit.core.TransactionRequest
@@ -54,11 +60,8 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener, TransactionFinis
     lateinit var sweetAlertDialog: SweetAlertDialog
 
     lateinit var idTailor: String
-
-    private lateinit var idTransaction: String
-
+    lateinit var idTransaction: String
     var price: Int = 0
-
     lateinit var name: String
 
 
@@ -104,6 +107,10 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener, TransactionFinis
 
         transactionViewModel.isUpdate.observe(viewLifecycleOwner, Observer {
             if (it) {
+                sweetAlertDialog.hide()
+                val alertDialog = SweetAlertDialog(context, SweetAlertDialog.SUCCESS_TYPE)
+                alertDialog.titleText = getString(R.string.Success)
+                alertDialog.show()
                 navController.navigate(R.id.toMyOrderFragment)
             }
         })
@@ -184,8 +191,14 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener, TransactionFinis
                 }
             }
             btnFinishedTransaction -> {
-                transactionViewModel.putTransaction(idTransaction,"9")
-                authViewModel.pushNotification(idTailor, FcmToken(message = "Transaction Finished"))
+                if (activity?.checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                    startActivityForResult(
+                        Intent(this.context, ScanQrCodeActivity::class.java),
+                        Constant.QRCODE_REQUEST_CODE
+                    )
+                } else {
+                    checkPermission(Manifest.permission.CAMERA)
+                }
             }
 
             btnBack -> {
@@ -297,7 +310,7 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener, TransactionFinis
     }
 
 
-    private fun showProgressDialog(){
+    private fun showProgressDialog() {
         sweetAlertDialog = SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE)
         sweetAlertDialog.progressHelper.barColor = resources.getColor(R.color.colorDarkBrown);
         sweetAlertDialog.titleText = getString(R.string.progressbar_loading)
@@ -305,8 +318,62 @@ class MyOrderDetailFragment : Fragment(), View.OnClickListener, TransactionFinis
         sweetAlertDialog.show()
     }
 
-    private fun generateQRCode(contain:String){
-        val myBitmap: Bitmap = QRCode.from(contain).withSize(150,150).bitmap()
+    private fun generateQRCode(contain: String) {
+        val myBitmap: Bitmap = QRCode.from(contain).withSize(150, 150).bitmap()
         ivQrCode.setImageBitmap(myBitmap)
     }
+
+    private fun checkPermission(permission: String) {
+        when (permission) {
+            Manifest.permission.CAMERA -> {
+                if (activity?.checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(
+                        arrayOf(
+                            Manifest.permission.CAMERA
+                        ),
+                        Constant.REQUEST_READ_CAMERA_PERMISSION
+                    )
+                }
+            }
+        }
+
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == Constant.REQUEST_READ_CAMERA_PERMISSION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startActivityForResult(
+                    Intent(this.context, ScanQrCodeActivity::class.java),
+                    Constant.QRCODE_REQUEST_CODE
+                )
+            } else {
+                Toast.makeText(context, "camera permission denied", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == Constant.QRCODE_REQUEST_CODE) {
+            if (data != null) {
+                val transactionId = data!!.getStringExtra(Constant.KEY_ID_TRANSACTION)
+                if (transactionId == idTransaction) {
+                    showProgressDialog()
+                    transactionViewModel.putTransaction(idTransaction, "9")
+                    authViewModel.pushNotification(
+                        idTailor,
+                        FcmToken(message = "Transaction Finished")
+                    )
+                }
+
+            }
+
+        }
+    }
+
 }

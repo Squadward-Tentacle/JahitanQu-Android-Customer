@@ -21,4 +21,6 @@ object Constant {
     const val KEY_ADDRESS = "address"
     const val BACKEND_SERVER_URL = "http://34.101.198.49:8087"
     const val CHAT_SERVER_URL ="http://34.101.198.49:8087/socket.io/"
+    const val QRCODE_REQUEST_CODE = 102
+    const val REQUEST_READ_CAMERA_PERMISSION = 103
 }
