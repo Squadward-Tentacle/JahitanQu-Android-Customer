@@ -24,4 +24,9 @@ object Constant {
     const val QRCODE_REQUEST_CODE = 102
     const val REQUEST_READ_CAMERA_PERMISSION = 103
     const val REQUEST_READ_FINE_LOCATION_PERMISSION = 104
+    const val REQUEST_CODE_MAPS = 101
+    const val OPEN_CAMERA_REQUEST_CODE = 77
+    const val SELECT_FILE_FROM_STORAGE = 88
+    const val REQUEST_READ_STORAGE_PERMISSION = 99
+    const val RC_SIGN_IN = 21
 }

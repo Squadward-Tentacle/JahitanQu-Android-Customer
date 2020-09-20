@@ -1,9 +1,6 @@
 package com.example.jahitanqu_customer.presentation.views.main.chat
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
-import android.os.Message
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
@@ -24,8 +21,6 @@ import com.example.jahitanqu_customer.socket
 import com.github.nkzawa.emitter.Emitter
 import kotlinx.android.synthetic.main.fragment_chat.*
 import org.json.JSONException
-import org.json.JSONObject
-import java.util.*
 
 
 class ChatFragment : Fragment(), View.OnClickListener {
@@ -133,9 +128,8 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 recycleChatAdapter.notifyDataSetChanged()
                 rvChat.scrollToPosition(chatList.size - 1)
             }
-            btnBack ->{
-                val bundle = bundleOf(Constant.KEY_ID_TAILOR to idTailor)
-                navController.navigate(R.id.toTailorDetailFragment,bundle)
+            btnBack -> {
+                activity?.onBackPressed()
             }
         }
     }

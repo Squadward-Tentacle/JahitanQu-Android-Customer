@@ -12,6 +12,8 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.example.jahitanqu_customer.*
+import com.example.jahitanqu_customer.common.Common
+import com.example.jahitanqu_customer.common.utils.Constant
 import com.example.jahitanqu_customer.common.utils.Util
 import com.example.jahitanqu_customer.model.Customer
 import com.example.jahitanqu_customer.model.FcmToken
@@ -43,8 +45,6 @@ class LoginFragment : Fragment(), View.OnClickListener {
     @Inject
     lateinit var authViewModel: AuthViewModel
 
-    private val RC_SIGN_IN: Int = 21
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,27 +65,33 @@ class LoginFragment : Fragment(), View.OnClickListener {
             when (it) {
                 1 -> {
                     rlLoading.visibility = View.GONE
-                    if (!prefsFcmToken.keyCustomerFcm.isNullOrEmpty()) {
-                        val fcmToken = FcmToken(
-                            tokenId = prefs.keyIdCustomer!!,
-                            token = prefsFcmToken.keyCustomerFcm!!
-                        )
-                        authViewModel.postFcm(fcmToken)
-                    }
+                    postFcmToken()
                     etEmail.setText("")
                     etPassword.setText("")
                     navController.navigate(R.id.toHomeActivity)
                 }
                 2 -> {
                     rlLoading.visibility = View.GONE
-                    SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
-                        .setTitleText(getString(R.string.opps))
-                        .setContentText(getString(R.string.email_password_incorrect))
-                        .show()
+                    Common.showPopUpDialog(
+                        requireContext(),
+                        getString(R.string.opps),
+                        getString(R.string.email_password_incorrect),
+                        SweetAlertDialog.ERROR_TYPE
+                    )
                 }
             }
         })
         init()
+    }
+
+    private fun postFcmToken() {
+        if (!prefsFcmToken.keyCustomerFcm.isNullOrEmpty()) {
+            val fcmToken = FcmToken(
+                tokenId = prefs.keyIdCustomer!!,
+                token = prefsFcmToken.keyCustomerFcm!!
+            )
+            authViewModel.postFcm(fcmToken)
+        }
     }
 
     private fun init() {
@@ -98,7 +104,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         callbackManager.onActivityResult(requestCode, resultCode, data)
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == RC_SIGN_IN) {
+        if (requestCode == Constant.RC_SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val account = task.getResult(ApiException::class.java)!!
@@ -171,7 +177,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
             btnLoginGoogle -> {
                 rlLoading.visibility = View.VISIBLE
                 val signInIntent: Intent = signInGoogle.signInIntent
-                startActivityForResult(signInIntent, RC_SIGN_IN)
+                startActivityForResult(signInIntent, Constant.RC_SIGN_IN)
             }
             btnLoginFb -> {
                 rlLoading.visibility = View.VISIBLE
@@ -183,26 +189,29 @@ class LoginFragment : Fragment(), View.OnClickListener {
                 navController.navigate(R.id.toRegisterFragment)
             }
             btnLogin -> {
-
                 val email = etEmail.text.toString()
                 val password = etPassword.text.toString()
                 if (Util.validationInput(email, password)) {
-                    val customer = Customer(
-                        email = email,
-                        password = password
-                    )
-                    rlLoading.visibility = View.VISIBLE
-                    authViewModel.login(customer)
+                    login(email, password)
                 } else {
-                    Util.showAlert(
-                        this.requireContext(),
-                        SweetAlertDialog.WARNING_TYPE,
+                    Common.showPopUpDialog(
+                        requireContext(),
                         getString(R.string.opps),
-                        getString(R.string.please_fill_in_all_fields)
+                        getString(R.string.please_fill_in_all_fields),
+                        SweetAlertDialog.WARNING_TYPE
                     )
                 }
             }
         }
+    }
+
+    private fun login(email: String, password: String) {
+        val customer = Customer(
+            email = email,
+            password = password
+        )
+        rlLoading.visibility = View.VISIBLE
+        authViewModel.login(customer)
     }
 
     override fun onResume() {

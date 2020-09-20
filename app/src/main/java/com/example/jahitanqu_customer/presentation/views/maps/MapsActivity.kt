@@ -71,7 +71,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             intent.putExtra(Constant.KEY_LATITUDE, currentMarkerLocation.latitude)
             intent.putExtra(Constant.KEY_LONGITUDE, currentMarkerLocation.longitude)
             intent.putExtra(Constant.KEY_ADDRESS,address)
-            setResult(101, intent)
+            setResult(Constant.REQUEST_CODE_MAPS, intent)
             finish()
         }
 

@@ -12,6 +12,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog
 import com.example.jahitanqu_customer.JahitanQu
 
 import com.example.jahitanqu_customer.R
+import com.example.jahitanqu_customer.common.Common
 import com.example.jahitanqu_customer.common.utils.Util
 import com.example.jahitanqu_customer.model.Customer
 import com.example.jahitanqu_customer.model.FcmToken
@@ -29,7 +30,6 @@ class RegisterFragment : Fragment(), View.OnClickListener {
     @Inject
     lateinit var authViewModel: AuthViewModel
     lateinit var navController: NavController
-    lateinit var sweetAlertDialog: SweetAlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,27 +46,38 @@ class RegisterFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
+        init()
         authViewModel.isRegister.observe(viewLifecycleOwner, Observer {
             if (it) {
-                if (!prefsFcmToken.keyCustomerFcm.isNullOrEmpty()) {
-                    val fcmToken = FcmToken(
-                        tokenId = prefs.keyIdCustomer!!,
-                        token = prefsFcmToken.keyCustomerFcm!!
-                    )
-                    authViewModel.postFcm(fcmToken)
-                }
-                sweetAlertDialog.hide()
+                postFcmToken()
+                Common.dismissProgressDialog()
                 navController.navigate(R.id.toHomeActivity)
             } else {
-                sweetAlertDialog.hide()
-                SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
-                    .setTitleText(getString(R.string.opps))
-                    .setContentText(getString(R.string.registration_failed))
-                    .show()
+                Common.dismissProgressDialog()
+                Common.showPopUpDialog(
+                    requireContext(),
+                    getString(R.string.opps),
+                    getString(R.string.registration_failed),
+                    SweetAlertDialog.ERROR_TYPE
+                )
             }
         })
+
+    }
+
+    private fun init() {
         btnRegister.setOnClickListener(this)
         btnLoginNow.setOnClickListener(this)
+    }
+
+    private fun postFcmToken() {
+        if (!prefsFcmToken.keyCustomerFcm.isNullOrEmpty()) {
+            val fcmToken = FcmToken(
+                tokenId = prefs.keyIdCustomer!!,
+                token = prefsFcmToken.keyCustomerFcm!!
+            )
+            authViewModel.postFcm(fcmToken)
+        }
     }
 
     override fun onClick(p0: View?) {
@@ -78,14 +89,7 @@ class RegisterFragment : Fragment(), View.OnClickListener {
                 val lastname = etLastName.text.toString()
                 val confirmPassword = etConfirmPassword.text.toString()
                 if (Util.validationInput(email, firstname, password, lastname, confirmPassword)) {
-                    val customer = Customer(
-                        email = email,
-                        password = password,
-                        firstname = firstname,
-                        lastname = lastname
-                    )
-                    showProgressDialog()
-                    authViewModel.register(customer)
+                    register(email, password, firstname, lastname)
                 } else {
                     SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
                         .setTitleText(getString(R.string.opps))
@@ -99,13 +103,14 @@ class RegisterFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    private fun showProgressDialog() {
-        sweetAlertDialog = SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE)
-        sweetAlertDialog.progressHelper.barColor = resources.getColor(R.color.colorDarkBrown);
-        sweetAlertDialog.titleText = getString(R.string.progressbar_loading)
-        sweetAlertDialog.setCancelable(false)
-        sweetAlertDialog.show()
+    private fun register(email: String, password: String, firstname: String, lastname: String) {
+        val customer = Customer(
+            email = email,
+            password = password,
+            firstname = firstname,
+            lastname = lastname
+        )
+        Common.showProgressDialog(requireContext())
+        authViewModel.register(customer)
     }
-
-
 }

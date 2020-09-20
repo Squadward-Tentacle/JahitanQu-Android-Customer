@@ -46,11 +46,4 @@ object Util {
         }
         return true
     }
-
-    fun showAlert(context:Context,type:Int,title:String,content:String){
-        SweetAlertDialog(context, type)
-            .setTitleText(title)
-            .setContentText(content)
-            .show()
-    }
 }

@@ -23,6 +23,7 @@ import com.afollestad.materialdialogs.bottomsheets.setPeekHeight
 import com.afollestad.materialdialogs.customview.customView
 import com.example.jahitanqu_customer.JahitanQu
 import com.example.jahitanqu_customer.R
+import com.example.jahitanqu_customer.common.Common
 import com.example.jahitanqu_customer.common.utils.Constant
 import com.example.jahitanqu_customer.model.Address
 import com.example.jahitanqu_customer.model.FcmToken
@@ -56,14 +57,9 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
 
     lateinit var navController: NavController
 
-    lateinit var sweetAlertDialog: SweetAlertDialog
-
     lateinit var idTailor: String
 
     lateinit var address: Address
-
-    private val REQUEST_CODE_MAPS = 101
-    private val REQUEST_READ_FINE_LOCATION_PERMISSION = 97
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -108,12 +104,13 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
     private fun observeSuccessPost() {
         transactionViewModel.isSuccessPost.observe(viewLifecycleOwner, Observer {
             if (it) {
-                sweetAlertDialog.hide()
-                val alertDialog = SweetAlertDialog(context, SweetAlertDialog.SUCCESS_TYPE)
-                alertDialog.titleText = getString(R.string.transaction_success)
-                alertDialog.show()
-                val btn = alertDialog.findViewById<View>(R.id.confirm_button) as Button
-                btn.setBackgroundColor(resources.getColor(R.color.colorDarkBrown))
+                Common.dismissProgressDialog()
+                Common.showPopUpDialog(
+                    requireContext(),
+                    getString(R.string.success),
+                    getString(R.string.transaction_success),
+                    SweetAlertDialog.SUCCESS_TYPE
+                )
                 authViewModel.pushNotification(idTailor, FcmToken(message = "Waiting Confirmation"))
                 navController.navigate(R.id.toMyOrderFragment)
             }
@@ -146,9 +143,12 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
         when (p0) {
             btnReservation -> {
                 if (prefs.keyIdCustomer.isNullOrEmpty()) {
-                    SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText(getString(R.string.not_found_id_customer))
-                        .show()
+                    Common.showPopUpDialog(
+                        requireContext(),
+                        getString(R.string.opps),
+                        getString(R.string.not_found_id_customer),
+                        SweetAlertDialog.WARNING_TYPE
+                    )
                 } else {
                     val dialog = MaterialDialog(activity?.window!!.context, BottomSheet())
                         .cornerRadius(16f)
@@ -158,51 +158,36 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
                     val addressEditText = dialog.findViewById<EditText>(R.id.etAddressBooking)
                     val booking = dialog.findViewById<Button>(R.id.btnBookin)
                     val btnSetPlace = dialog.findViewById<Button>(R.id.btnSetPlace)
+                    dialog.show()
 
                     transactionViewModel.liveDataAddress.observe(viewLifecycleOwner, Observer {
                         addressEditText.setText(it.addressName)
                     })
 
-                    dialog.show()
-
                     booking.setOnClickListener {
-                        showProgressDialog()
-                        val transaction = Transaction(
-                            idCustomer = prefs.keyIdCustomer!!,
-                            idTailor = idTailor,
-                            address = address,
-                            status = 1
-                        )
-                        transactionViewModel.postTransaction(transaction)
                         dialog.hide()
+                        Common.showProgressDialog(this.requireContext())
+                        postTransaction()
                     }
                     btnSetPlace.setOnClickListener {
-                        if (activity?.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                            startActivityForResult(
-                                Intent(this.context, MapsActivity::class.java),
-                                REQUEST_CODE_MAPS
-                            )
-                        } else {
-                            checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                        }
+                        openMaps()
                     }
                 }
             }
             btnContact -> {
                 val bundle = bundleOf(Constant.KEY_ID_TAILOR to idTailor)
                 navController.navigate(R.id.chatFragment, bundle)
-
             }
 
             btnBack -> {
-                navController.navigate(R.id.toTailorListFragment)
+                activity?.onBackPressed()
             }
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE_MAPS) {
+        if (requestCode == Constant.REQUEST_CODE_MAPS) {
             if (data != null) {
                 val latitude = data!!.getDoubleExtra(Constant.KEY_LATITUDE, 0.0)
                 val longitude = data.getDoubleExtra(Constant.KEY_LONGITUDE, 0.0)
@@ -227,7 +212,7 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
                         arrayOf(
                             Manifest.permission.ACCESS_FINE_LOCATION
                         ),
-                        REQUEST_READ_FINE_LOCATION_PERMISSION
+                        Constant.REQUEST_READ_FINE_LOCATION_PERMISSION
                     )
                 }
             }
@@ -240,11 +225,11 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_READ_FINE_LOCATION_PERMISSION) {
+        if (requestCode == Constant.REQUEST_READ_FINE_LOCATION_PERMISSION) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startActivityForResult(
                     Intent(this.context, MapsActivity::class.java),
-                    REQUEST_CODE_MAPS
+                    Constant.REQUEST_CODE_MAPS
                 )
             } else {
                 SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
@@ -254,13 +239,25 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
         }
     }
 
+    private fun openMaps() {
+        if (activity?.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            startActivityForResult(
+                Intent(this.context, MapsActivity::class.java),
+                Constant.REQUEST_CODE_MAPS
+            )
+        } else {
+            checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+    }
 
-    private fun showProgressDialog() {
-        sweetAlertDialog = SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE)
-        sweetAlertDialog.progressHelper.barColor = resources.getColor(R.color.colorDarkBrown);
-        sweetAlertDialog.titleText = getString(R.string.progressbar_loading)
-        sweetAlertDialog.setCancelable(false)
-        sweetAlertDialog.show()
+    private fun postTransaction() {
+        val transaction = Transaction(
+            idCustomer = prefs.keyIdCustomer!!,
+            idTailor = idTailor,
+            address = address,
+            status = 1
+        )
+        transactionViewModel.postTransaction(transaction)
     }
 
 }

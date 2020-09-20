@@ -68,7 +68,7 @@ class TailorListFragment : Fragment(),BaseContract {
             }
         })
         btnBack.setOnClickListener {
-            navController.navigate(R.id.homeFragment)
+            activity?.onBackPressed()
         }
 
     }

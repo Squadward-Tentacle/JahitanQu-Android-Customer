@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.example.jahitanqu_customer.JahitanQu
 import com.example.jahitanqu_customer.R
+import com.example.jahitanqu_customer.common.Common
 import com.example.jahitanqu_customer.common.utils.Constant
 import com.example.jahitanqu_customer.common.utils.Util
 import com.example.jahitanqu_customer.model.Address
@@ -40,12 +41,6 @@ import javax.inject.Inject
 
 class AccountFragment : Fragment(), View.OnClickListener {
 
-    private val OPEN_CAMERA_REQUEST_CODE = 77
-    private val SELECT_FILE_FROM_STORAGE = 88
-    private val REQUEST_READ_STORAGE_PERMISSION = 99
-    private val REQUEST_READ_CAMERA_PERMISSION = 98
-    private val REQUEST_READ_FINE_LOCATION_PERMISSION = 97
-    private val REQUEST_CODE_MAPS = 101
     lateinit var currentPhotoPath: String
     lateinit var photoFile: File
 
@@ -55,7 +50,6 @@ class AccountFragment : Fragment(), View.OnClickListener {
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
 
-    lateinit var sweetAlertDialog: SweetAlertDialog
 
     lateinit var address: Address
 
@@ -76,14 +70,19 @@ class AccountFragment : Fragment(), View.OnClickListener {
         authViewModel.isUpdated.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             if (it) {
                 initEditText()
-                sweetAlertDialog.hide()
-                val alertDialog = SweetAlertDialog(context, SweetAlertDialog.SUCCESS_TYPE)
-                alertDialog.titleText = getString(R.string.edit_account)
-                alertDialog.show()
-                val btn = alertDialog.findViewById<View>(R.id.confirm_button) as Button
-                btn.setBackgroundColor(resources.getColor(R.color.colorDarkBrown))
+                Common.dismissProgressDialog()
+                Common.showPopUpDialog(
+                    requireContext(),
+                    getString(R.string.success),
+                    getString(R.string.edit_account),
+                    SweetAlertDialog.SUCCESS_TYPE
+                )
             }
         })
+        init()
+    }
+
+    private fun init() {
         photoFile = File("")
         initEditText()
         address = Address(
@@ -97,7 +96,7 @@ class AccountFragment : Fragment(), View.OnClickListener {
         btnCamera.setOnClickListener(this)
         btnLogout.setOnClickListener(this)
         btnCamera.isClickable = false
-        btnPlace.isClickable =false
+        btnPlace.isClickable = false
         btnPlace.isEnabled = false
         btnPlace.setOnClickListener(this)
         btnCancel.setOnClickListener(this)
@@ -153,7 +152,7 @@ class AccountFragment : Fragment(), View.OnClickListener {
                             address = address,
                             phone = phone
                         )
-                        showProgressDialog()
+                        Common.showProgressDialog(this.requireContext())
                         authViewModel.updateCustomer(customer, photoFile)
                     } else {
                         Toast.makeText(
@@ -174,7 +173,7 @@ class AccountFragment : Fragment(), View.OnClickListener {
                 if (activity?.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     startActivityForResult(
                         Intent(this.context, MapsActivity::class.java),
-                        REQUEST_CODE_MAPS
+                        Constant.REQUEST_CODE_MAPS
                     )
                 } else {
                     checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -255,18 +254,18 @@ class AccountFragment : Fragment(), View.OnClickListener {
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
         startActivityForResult(
             cameraIntent,
-            OPEN_CAMERA_REQUEST_CODE
+            Constant.OPEN_CAMERA_REQUEST_CODE
         )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == OPEN_CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == Constant.OPEN_CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             val imageBitmap = BitmapFactory.decodeFile(photoFile.absolutePath)
             profile_image.setImageBitmap(imageBitmap)
         }
-        if (requestCode == SELECT_FILE_FROM_STORAGE && resultCode == Activity.RESULT_OK) {
-            if(data != null){
+        if (requestCode == Constant.SELECT_FILE_FROM_STORAGE && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
                 val originalPath = getOriginalPathFromUri(data?.data!!)
                 val imageFile = File(originalPath)
                 photoFile = imageFile
@@ -274,8 +273,8 @@ class AccountFragment : Fragment(), View.OnClickListener {
                 profile_image.setImageBitmap(imageBitmap)
             }
         }
-        if (requestCode == REQUEST_CODE_MAPS) {
-            if (data != null){
+        if (requestCode == Constant.REQUEST_CODE_MAPS) {
+            if (data != null) {
                 val latitude = data!!.getDoubleExtra(Constant.KEY_LATITUDE, 0.0)
                 val longitude = data.getDoubleExtra(Constant.KEY_LONGITUDE, 0.0)
                 val addresses = data.getStringExtra(Constant.KEY_ADDRESS)
@@ -309,7 +308,7 @@ class AccountFragment : Fragment(), View.OnClickListener {
             Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
         startActivityForResult(
             selectFileIntent,
-            SELECT_FILE_FROM_STORAGE
+            Constant.SELECT_FILE_FROM_STORAGE
         )
     }
 
@@ -335,7 +334,7 @@ class AccountFragment : Fragment(), View.OnClickListener {
                             Manifest.permission.READ_EXTERNAL_STORAGE,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE
                         ),
-                        REQUEST_READ_STORAGE_PERMISSION
+                        Constant.REQUEST_READ_STORAGE_PERMISSION
                     )
                 }
             }
@@ -345,7 +344,7 @@ class AccountFragment : Fragment(), View.OnClickListener {
                         arrayOf(
                             Manifest.permission.CAMERA
                         ),
-                        REQUEST_READ_CAMERA_PERMISSION
+                        Constant.REQUEST_READ_CAMERA_PERMISSION
                     )
                 }
             }
@@ -355,7 +354,7 @@ class AccountFragment : Fragment(), View.OnClickListener {
                         arrayOf(
                             Manifest.permission.ACCESS_FINE_LOCATION
                         ),
-                        REQUEST_READ_FINE_LOCATION_PERMISSION
+                        Constant.REQUEST_READ_FINE_LOCATION_PERMISSION
                     )
                 }
             }
@@ -369,25 +368,25 @@ class AccountFragment : Fragment(), View.OnClickListener {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_READ_CAMERA_PERMISSION) {
+        if (requestCode == Constant.REQUEST_READ_CAMERA_PERMISSION) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 openCamera()
             } else {
                 Toast.makeText(context, "camera permission denied", Toast.LENGTH_LONG).show();
             }
         }
-        if (requestCode == REQUEST_READ_STORAGE_PERMISSION) {
+        if (requestCode == Constant.REQUEST_READ_STORAGE_PERMISSION) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 browseFile()
             } else {
                 Toast.makeText(context, "storage permission denied", Toast.LENGTH_LONG).show();
             }
         }
-        if (requestCode == REQUEST_READ_FINE_LOCATION_PERMISSION) {
+        if (requestCode == Constant.REQUEST_READ_FINE_LOCATION_PERMISSION) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startActivityForResult(
                     Intent(this.context, MapsActivity::class.java),
-                    REQUEST_CODE_MAPS
+                    Constant.REQUEST_CODE_MAPS
                 )
             } else {
                 Toast.makeText(context, "location permission denied", Toast.LENGTH_LONG).show();
@@ -395,11 +394,4 @@ class AccountFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    private fun showProgressDialog(){
-        sweetAlertDialog = SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE)
-        sweetAlertDialog.progressHelper.barColor = resources.getColor(R.color.colorDarkBrown);
-        sweetAlertDialog.titleText = getString(R.string.progressbar_loading)
-        sweetAlertDialog.setCancelable(false)
-        sweetAlertDialog.show()
-    }
 }
