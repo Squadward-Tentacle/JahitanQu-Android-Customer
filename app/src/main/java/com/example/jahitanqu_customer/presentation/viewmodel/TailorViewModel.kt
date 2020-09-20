@@ -9,6 +9,7 @@ import androidx.paging.PagedList
 import com.example.jahitanqu_customer.data.factory.TailorDataSource
 import com.example.jahitanqu_customer.data.factory.TailorDataSourceFactory
 import com.example.jahitanqu_customer.data.repository.TailorRepository
+import com.example.jahitanqu_customer.model.Address
 import com.example.jahitanqu_customer.model.Tailor
 import javax.inject.Inject
 
@@ -34,6 +35,7 @@ class TailorViewModel @Inject constructor(
 
     val tailor:LiveData<Tailor> = tailorRepository.tailor
     val tailorTopRatedList: LiveData<List<Tailor>> = tailorRepository.tailorTopRatedList
+    val tailorNearbyList:LiveData<List<Tailor>> = tailorRepository.tailorNearbyList
 
 
     fun getTopRatedTailor() {
@@ -42,5 +44,9 @@ class TailorViewModel @Inject constructor(
 
     fun getTailorById(idTailor:String){
         tailorRepository.getTailorById(idTailor)
+    }
+
+    fun getNearbyTailor(address: Address){
+        tailorRepository.getNearbyTailor(address)
     }
 }

@@ -1,5 +1,8 @@
 package com.example.jahitanqu_customer.presentation.views.main.home
 
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -7,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -16,20 +18,23 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.example.jahitanqu_customer.JahitanQu
 import com.example.jahitanqu_customer.R
 import com.example.jahitanqu_customer.common.BaseContract
-import com.example.jahitanqu_customer.model.FcmToken
-import com.example.jahitanqu_customer.prefs
-import com.example.jahitanqu_customer.presentation.viewmodel.AuthViewModel
+import com.example.jahitanqu_customer.common.utils.Constant
+import com.example.jahitanqu_customer.model.Address
 import com.example.jahitanqu_customer.presentation.viewmodel.TailorViewModel
+import com.example.jahitanqu_customer.presentation.views.main.home.adapter.RecycleNearbyTailorAdapter
+import com.example.jahitanqu_customer.presentation.views.main.home.adapter.RecycleNearbyTailorViewHolder
 import com.example.jahitanqu_customer.presentation.views.main.home.adapter.RecycleTopRatedTailorAdapter
 import com.example.jahitanqu_customer.presentation.views.main.home.slider.SliderAdapter
 import com.example.jahitanqu_customer.presentation.views.main.home.slider.SliderItem
+import com.example.jahitanqu_customer.presentation.views.maps.MapsActivity
+import com.example.jahitanqu_customer.service.GpsTracker
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_home.*
 import javax.inject.Inject
-import kotlin.math.abs
 
 class HomeFragment : Fragment(), View.OnClickListener, BaseContract {
 
@@ -37,7 +42,11 @@ class HomeFragment : Fragment(), View.OnClickListener, BaseContract {
 
     lateinit var recycleTopRatedTailorAdapter: RecycleTopRatedTailorAdapter
 
+    lateinit var recycleNearbyTailorAdapter: RecycleNearbyTailorAdapter
+
     lateinit var handler: Handler
+
+    lateinit var gpsTracker: GpsTracker
 
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
@@ -62,19 +71,54 @@ class HomeFragment : Fragment(), View.OnClickListener, BaseContract {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
-        handler = Handler()
-        btnViewAll.setOnClickListener(this)
-        tailorViewModel.getTopRatedTailor()
-        rvTopTailor.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        recycleTopRatedTailorAdapter = RecycleTopRatedTailorAdapter(listOf())
-        rvTopTailor.adapter = recycleTopRatedTailorAdapter
+        init()
+        checkingPermission()
         tailorViewModel.tailorTopRatedList.observe(viewLifecycleOwner, Observer { it ->
             recycleTopRatedTailorAdapter = RecycleTopRatedTailorAdapter(it)
             recycleTopRatedTailorAdapter.baseContract = this
-            recycleTopRatedTailorAdapter.showShimmer =false
+            recycleTopRatedTailorAdapter.showShimmer = false
             rvTopTailor.adapter = recycleTopRatedTailorAdapter
         })
+
+        tailorViewModel.tailorNearbyList.observe(viewLifecycleOwner, Observer { it ->
+            recycleNearbyTailorAdapter = RecycleNearbyTailorAdapter(it)
+            recycleNearbyTailorAdapter.baseContract = this
+            recycleNearbyTailorAdapter.showShimmer = false
+            rvNearbyTailor.adapter = recycleNearbyTailorAdapter
+        })
+
         createImageSlider()
+    }
+
+    private fun init() {
+        handler = Handler()
+        btnViewAll.setOnClickListener(this)
+        tailorViewModel.getTopRatedTailor()
+
+        rvTopTailor.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        recycleTopRatedTailorAdapter = RecycleTopRatedTailorAdapter(listOf())
+        rvTopTailor.adapter = recycleTopRatedTailorAdapter
+
+        rvNearbyTailor.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        recycleNearbyTailorAdapter = RecycleNearbyTailorAdapter(listOf())
+        rvNearbyTailor.adapter = recycleNearbyTailorAdapter
+    }
+
+    private fun getCurrentLatLng() {
+        gpsTracker = GpsTracker(requireContext())
+        if (gpsTracker.canGetLocation) {
+            val latitude = gpsTracker.latitude
+            val longitude = gpsTracker.longitude
+            val address = Address(
+                latitude = latitude.toFloat(),
+                longitude = longitude.toFloat()
+            )
+            tailorViewModel.getNearbyTailor(address)
+        } else {
+            gpsTracker.showSettingsAlert()
+        }
     }
 
     override fun onClick(p0: View?) {
@@ -128,7 +172,48 @@ class HomeFragment : Fragment(), View.OnClickListener, BaseContract {
 
     override fun onResume() {
         super.onResume()
-        handler.postDelayed(sliderRunnable,3000)
+        handler.postDelayed(sliderRunnable, 3000)
+    }
+
+    private fun checkingPermission() {
+        if (activity?.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            getCurrentLatLng()
+        } else {
+            checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+
+    }
+
+    private fun checkPermission(permission: String) {
+        when (permission) {
+            Manifest.permission.ACCESS_FINE_LOCATION -> {
+                if (activity?.checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(
+                        arrayOf(
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        ),
+                        Constant.REQUEST_READ_FINE_LOCATION_PERMISSION
+                    )
+                }
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == Constant.REQUEST_READ_FINE_LOCATION_PERMISSION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getCurrentLatLng()
+            } else {
+                SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText(getString(R.string.location_denied))
+                    .show()
+            }
+        }
     }
 
 }

@@ -2,11 +2,10 @@ package com.example.jahitanqu_customer.data.server.apiInterface
 
 import com.example.jahitanqu_customer.common.utils.Constant
 import com.example.jahitanqu_customer.data.server.ApiEndPoint
+import com.example.jahitanqu_customer.model.Address
 import com.example.jahitanqu_customer.model.Wrapper
 import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Path
+import retrofit2.http.*
 
 /**
  * Created by Maulana Ibrahim on 07/September/2020
@@ -29,5 +28,11 @@ interface TailorApi {
     fun getTailorById(
         @Header(Constant.KEY_AUTHORIZATION) auth: String,
         @Path(Constant.KEY_ID_TAILOR) idTailor:String
+    ):Call<Wrapper>
+
+    @POST(ApiEndPoint.ENDPOINT_GET_NEARBY_TAILOR)
+    fun getNearbyTailor(
+        @Header(Constant.KEY_AUTHORIZATION) auth:String,
+        @Body address: Address
     ):Call<Wrapper>
 }

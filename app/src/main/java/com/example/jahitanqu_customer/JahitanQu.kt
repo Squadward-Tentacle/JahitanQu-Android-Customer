@@ -1,6 +1,7 @@
 package com.example.jahitanqu_customer
 
 import android.app.Application
+import android.content.Context
 import com.example.jahitanqu_customer.common.utils.AccountHelper
 import com.example.jahitanqu_customer.common.utils.Constant
 import com.example.jahitanqu_customer.di.component.ApplicationComponent
@@ -75,6 +76,7 @@ class JahitanQu : Application() {
             )
             .buildSDK()
     }
+
 
     private fun initSocket(){
         try {

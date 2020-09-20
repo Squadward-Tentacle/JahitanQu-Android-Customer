@@ -58,7 +58,7 @@ class AuthRepository @Inject constructor(
                     prefs.keyToken = responseCustomer.token
                     loginState.value = 1
                 } else {
-                    loginState.value = 3
+                    loginState.value = 2
                 }
             }
 

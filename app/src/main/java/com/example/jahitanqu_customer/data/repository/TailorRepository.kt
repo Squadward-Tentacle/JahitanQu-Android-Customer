@@ -2,6 +2,7 @@ package com.example.jahitanqu_customer.data.repository
 
 import androidx.lifecycle.MutableLiveData
 import com.example.jahitanqu_customer.data.server.apiInterface.TailorApi
+import com.example.jahitanqu_customer.model.Address
 import com.example.jahitanqu_customer.model.Tailor
 import com.example.jahitanqu_customer.model.Wrapper
 import com.example.jahitanqu_customer.prefs
@@ -20,6 +21,7 @@ import javax.inject.Inject
 class TailorRepository @Inject constructor(private val tailorApi: TailorApi) {
 
     val tailorTopRatedList: MutableLiveData<List<Tailor>> = MutableLiveData()
+    val tailorNearbyList:MutableLiveData<List<Tailor>> = MutableLiveData()
     val tailor: MutableLiveData<Tailor> = MutableLiveData()
 
     fun getTopRatedTailor() {
@@ -58,6 +60,26 @@ class TailorRepository @Inject constructor(private val tailorApi: TailorApi) {
                     Tailor::class.java
                 )
             }
+        })
+    }
+
+    fun getNearbyTailor(address: Address){
+        tailorApi.getNearbyTailor(prefs.keyToken!!,address).enqueue(object :Callback<Wrapper>{
+            override fun onFailure(call: Call<Wrapper>, t: Throwable) {
+                println(t.localizedMessage)
+            }
+
+            override fun onResponse(call: Call<Wrapper>, response: Response<Wrapper>) {
+                val tailorResponse = response.body()?.payload
+                if (response.body()?.statusCode == 200){
+                    val listOfMyClassObject: Type = object : TypeToken<List<Tailor?>?>() {}.type
+                    val gson = Gson()
+                    val outputList: List<Tailor> =
+                        gson.fromJson(gson.toJson(tailorResponse), listOfMyClassObject)
+                    tailorNearbyList.value = outputList
+                }
+            }
+
         })
     }
 
