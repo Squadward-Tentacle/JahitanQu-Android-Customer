@@ -73,6 +73,7 @@ class HomeFragment : Fragment(), View.OnClickListener, BaseContract {
         navController = Navigation.findNavController(view)
         init()
         checkingPermission()
+        createImageSlider()
         tailorViewModel.tailorTopRatedList.observe(viewLifecycleOwner, Observer { it ->
             recycleTopRatedTailorAdapter = RecycleTopRatedTailorAdapter(it)
             recycleTopRatedTailorAdapter.baseContract = this
@@ -86,8 +87,6 @@ class HomeFragment : Fragment(), View.OnClickListener, BaseContract {
             recycleNearbyTailorAdapter.showShimmer = false
             rvNearbyTailor.adapter = recycleNearbyTailorAdapter
         })
-
-        createImageSlider()
     }
 
     private fun init() {
@@ -170,10 +169,6 @@ class HomeFragment : Fragment(), View.OnClickListener, BaseContract {
         handler.removeCallbacks(sliderRunnable)
     }
 
-    override fun onResume() {
-        super.onResume()
-        handler.postDelayed(sliderRunnable, 3000)
-    }
 
     private fun checkingPermission() {
         if (activity?.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {

@@ -3,6 +3,7 @@ package com.example.jahitanqu_customer.presentation.views.main.home
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -61,6 +62,9 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
 
     lateinit var address: Address
 
+    var latitude: Float = 0.0f
+
+    var longitude: Float = 0.0f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,6 +93,7 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
         btnReservation.setOnClickListener(this)
         btnContact.setOnClickListener(this)
         btnBack.setOnClickListener(this)
+        btnToLocation.setOnClickListener(this)
         rvRatingAndReview.layoutManager = LinearLayoutManager(context)
         rvPortofolio.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -131,6 +136,8 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
             tvTailorAddress.text = it.address.addressName
             rbRatingTailor.rating = it.rating.toFloat()
             tvTailorDescription.text = it.description
+            latitude = it.address.latitude
+            longitude = it.address.longitude
             recycleCommentAdapter = RecycleCommentAdapter(it.comment)
             rvRatingAndReview.adapter = recycleCommentAdapter
             recyclePortofolioAdapter = RecyclePortofolioAdapter(it.portofolio)
@@ -177,6 +184,14 @@ class TailorDetailFragment : Fragment(), View.OnClickListener {
             btnContact -> {
                 val bundle = bundleOf(Constant.KEY_ID_TAILOR to idTailor)
                 navController.navigate(R.id.chatFragment, bundle)
+            }
+
+            btnToLocation -> {
+                val intent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("http://maps.google.com/maps?daddr=${latitude},${longitude}")
+                )
+                startActivity(intent)
             }
 
             btnBack -> {

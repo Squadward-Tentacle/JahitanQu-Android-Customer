@@ -55,7 +55,7 @@
         android:layout_height="150dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="8dp"
-        android:src="@drawable/ic_location" />
+        android:src="@drawable/ic_my_current_loc" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnBookin"
